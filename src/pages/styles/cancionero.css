@@ -1,0 +1,75 @@
+.screen_principal {
+    position: relative;
+}
+.box_himnarioverde {
+    width: 231px;
+    height: 134px;
+    background: #4AC56C;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    position: relative;
+    background-image: url('../../img/himnarioverde.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.box_himnariopoder {
+    width: 231px;
+    height: 134px;
+    background: #B0DAEB;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    position: relative;
+    background-image: url('../../img/Himpoder.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+
+.box_himnariojovenes {
+    width: 231px;
+    height: 134px;
+    background: #FF7D00;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    position: relative;
+    background-image: url('../../img/HF.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+
+.box_himnario-title {
+    position: absolute;
+    bottom: 0px;
+    width: 231px;
+    height: 34px;
+    background: rgba(255, 255, 255, 0.63);
+    border-radius: 10px;
+    text-align: center;
+    color: black;
+    font-size: 20px;
+}
+
+.banner {
+    background: #D5D5D5;
+    border-radius: 5px;
+    padding: 1em;
+    text-align: center;
+}
+.banner p {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 25px;
+    color: #2A71B3;
+}
+
+@media only screen and (max-width: 768px) {
+    .screen_principal {
+        height: 90vh;
+    }
+    .banner {
+        height: 150px;
+    }
+}

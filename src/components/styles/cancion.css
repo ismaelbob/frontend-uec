@@ -1,0 +1,15 @@
+.box_cancion {
+    background-color: rgb(223, 223, 223);
+    padding: .5em;
+    margin: .5em 0;
+    cursor: pointer;
+}
+.box_cancion:hover {
+    background-color: rgb(214, 214, 214);
+}
+.box_cancion h4 {
+    margin: 0;
+}
+.box_cancion p {
+    margin: 0;
+}

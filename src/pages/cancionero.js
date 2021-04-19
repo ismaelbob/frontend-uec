@@ -3,21 +3,6 @@ import {Link} from 'react-router-dom'
 import './styles/cancionero.css'
 
 class Cancionero extends React.Component {
-    state = {
-        datos: [],
-    }
-
-    componentDidMount() {
-        //this.traerDatos()
-    }
-
-    traerDatos = () => {
-        fetch('https://uecapi.herokuapp.com/himverde/getcanciones.php')
-            .then(response => response.json())
-            .then(data => this.setState({datos: data}))
-            .catch(error => console.log(`Ocurrio un error: ${error}`))
-    }
-
     render () {
         return (
             <div className="container screen_principal">

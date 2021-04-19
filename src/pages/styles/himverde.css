@@ -1,0 +1,38 @@
+.barra_menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+.barra_menu-add {
+    position: fixed;
+    bottom: 15px;
+    right: 10px;
+}
+.barra_menu-back {
+    position: absolute;
+    top: -48px;
+    left: 0;
+}
+.barra_menu-search {
+    width: 100%;
+}
+
+@media only screen and (min-width: 768px) {
+    .barra_menu {
+        justify-content: space-between;
+    }
+    .barra_menu-add {
+        display: inline-block;
+        position: static;
+    }
+    .barra_menu-back {
+        display: inline-block;
+        position: static;
+    }
+    .barra_menu-search {
+        display: flex;
+        justify-content: center;
+        min-width: 500px;
+    }
+}

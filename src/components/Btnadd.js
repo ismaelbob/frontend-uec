@@ -1,18 +1,18 @@
 import React from 'react'
-import './styles/btnback.css'
+import './styles/btnadd.css'
 import {Link} from 'react-router-dom'
-import backicon from '../img/back.svg'
+import backicon from '../img/add.svg'
 
-class Btnback extends React.Component {
+class Btnadd extends React.Component {
     render () {
         return (
-            <div className="box_btnback">
+            <div className="box_btnadd">
                 <Link to={this.props.url} className="d-flex">
                     <img src={backicon} alt="<"/>
-                    <div>Atras</div>
+                    <div>Nuevo</div>
                 </Link>
             </div>
         )
     }
 }
-export default Btnback
+export default Btnadd

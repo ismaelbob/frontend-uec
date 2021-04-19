@@ -1,36 +1,36 @@
-.box_btnback {
+.box_btnedit {
     display: flex;
     align-items: center;
-    width: 40px;
-    height: 40px;
-    background: #D4D4D4;
-    border-radius: 40px;
-    padding: 8px 8px;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: #B0DAEB;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 40px;
+    padding: 13px 13px;
 }
-.box_btnback:hover {
-    background-color: #cecece;
+.box_btnedit:hover {
+    background: #92c9df;
 }
-.box_btnback a {
+.box_btnedit a {
     color: rgb(0, 0, 0);
     text-decoration: none;
     width: 100%;
 }
-.box_btnback img {
+.box_btnedit img {
     width: 23px;
 }
-.box_btnback div {
+.box_btnedit div {
     display: none;
-    color: #FF7D00;
 }
 
 @media only screen and (min-width: 768px) {
-    .box_btnback {
+    .box_btnedit {
         width: 100px;
+        height: 40px;
         padding: 0px 10px;
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     }
-    .box_btnback a div {
+    .box_btnedit a div {
         display: inline-block;
         margin-left: 8px;
     }

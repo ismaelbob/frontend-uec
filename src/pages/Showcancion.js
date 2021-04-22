@@ -1,73 +1,68 @@
-import React from 'react'
+import { useState, useEffect, useContext } from 'react'
 import './styles/showcancion.css'
 import Btnedit from '../components/Btnedit'
 import Btnplay from '../components/Btnplay'
 import Btnback from '../components/Btnback'
 import Loader from '../components/Loader'
 
-class Showcancion extends React.Component {
-    state = {
-        idcancion: null,
-        datoCancion: [],
-        versos: [],
-    }
-    componentDidMount () {
-        this.setState({idcancion: this.props.match.params.id})
-        this.getDatosCancion()
-    }
+import HimnarioContext from '../context'
 
-    getDatosCancion = () => {
-        fetch(`https://uecapi.herokuapp.com/himverde/getcancion.php?id=${this.props.match.params.id}`)
-            .then( response => response.json())
-            .then(data => this.setState({datoCancion: data}))
-            .catch(error => console.log(`Ocurrio un error: ${error}`))
-    }
+function Showcancion (props) {
+    const [datoCancion, setDatoCancion] = useState([])
+    const {datos, estado, getDatos} = useContext(HimnarioContext)
 
-    render () {
-        if (this.state.datoCancion.length === 0) {
-            return (
-                <div className="container d-flex justify-content-center mt-2">
-                    <Loader/>
-                </div>
-            )
+    useEffect(() => {
+        if (!datos?.length) {
+            getDatos()
         }
-        const letraCorregida = this.state.datoCancion.letra
-        const versos = letraCorregida.split('\r\n\r\n')
+        setDatoCancion(datos[props.match.params.id - 1])
+    }, [])
+    useEffect(() => {
+        setDatoCancion(datos[props.match.params.id - 1])
+        
+    }, [datos])
+
+    if (!estado || datoCancion.length === 0) {
         return (
-            <div className="container mt-2 d-flex flex-column align-items-center">
-                <div className="box_header">
-                    <div><h5>{this.state.datoCancion.idcancion}</h5></div>
-                    <div className="box_header-title">
-                        <h5>{this.state.datoCancion.titulo}</h5>
-                        <h6>{this.state.datoCancion.autor}</h6>
-                    </div>
-                    <div>
-                        {this.state.datoCancion.nota}
-                    </div>
-                </div>
-
-                <div className="position-relative w-100">
-                    <div className="menu_buttom">
-                        <div className="box_button-back"><Btnback url='/cancionero/himnarioverde'/></div>
-                        {this.state.datoCancion.enlace !== '' && <div className="box_botton-play"><Btnplay url={this.state.datoCancion.enlace}/></div>}
-                        <div className="menu_buttom-edit"><Btnedit url="#"/></div>
-                    </div>
-                </div>
-
-                <div className="box_contenido">
-                    {versos.map((verso, id) => {
-                        return (
-                            <div 
-                                className={verso.charAt(0) === '%'? 'box_contenido-coro': 'box_contenido-verso'} 
-                                key={id}
-                            >
-                                {verso.charAt(0) === '%' ? verso.slice(1, verso.length - 1) : verso}
-                            </div>
-                        )
-                    })}
-                </div>
+            <div className="container d-flex justify-content-center mt-2">
+                <Loader/>
             </div>
         )
     }
+    return (
+        <div className="container mt-2 d-flex flex-column align-items-center">
+            <div className="box_header">
+                <div><h5>{datoCancion.idcancion}</h5></div>
+                <div className="box_header-title">
+                    <h5>{datoCancion.titulo}</h5>
+                    <h6>{datoCancion.autor}</h6>
+                </div>
+                <div>
+                    {datoCancion.nota}
+                </div>
+            </div>
+
+            <div className="position-relative w-100">
+                <div className="menu_buttom">
+                    <div className="box_button-back"><Btnback url='/cancionero/himnarioverde'/></div>
+                    {datoCancion.enlace !== '' && <div className="box_botton-play"><Btnplay url={datoCancion.enlace}/></div>}
+                    <div className="menu_buttom-edit"><Btnedit url="#"/></div>
+                </div>
+            </div>
+
+            <div className="box_contenido">
+                {datoCancion.letra.split('\r\n\r\n').map((verso, id) => {
+                    return (
+                        <div 
+                            className={verso.charAt(0) === '%'? 'box_contenido-coro': 'box_contenido-verso'} 
+                            key={id}
+                        >
+                            {verso.charAt(0) === '%' ? verso.slice(1, verso.length - 1) : verso}
+                        </div>
+                    )
+                })}
+            </div>
+        </div>
+    )
 }
 export default Showcancion

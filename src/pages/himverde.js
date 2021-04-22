@@ -1,96 +1,85 @@
-import React from 'react'
+import {useContext, useEffect, useMemo, useState} from 'react'
 import './styles/himverde.css'
 import Btnadd from '../components/Btnadd'
 import Btnback from '../components/Btnback'
 import Searchbox from '../components/Searchbox'
-import Loader from '../components/Loader'
 import Cancion from '../components/Cancion'
+import Loader from '../components/Loader'
 
-class Himverde extends React.Component {
-    state = {
-        datos: [],
-        buscar: '',
-        datosFiltrados: [],
-        buscando: true,
-        error: null,
-    }
+import HimnarioContext from '../context'
 
-    componentDidMount() {
-        this.traerDatos()
-    }
+function Himverde () {
+    const [buscar, setBuscar] = useState('')
+    const [datosFiltrados, setDatosFiltrados] = useState([])
 
-    traerDatos = async () => {
-        this.setState({buscando: true, error: null})
-        try {
-            await fetch('https://uecapi.herokuapp.com/himverde/getcanciones.php')
-                .then(response => response.json())
-                .then(data => this.setState({datos: data, buscando: false}))
-            this.setState({datosFiltrados: this.state.datos})
-        } catch (error) {
-            this.setState({buscando: false, error: error})
+    const {datos, getDatos} = useContext(HimnarioContext)
+
+
+    useEffect(() => {
+        if (!datos?.length) {
+            getDatos()
         }
-    }
-    handleChange = async ({target: {value}}) => {
-        await this.setState({buscar: value})
-        const resultado = await this.state.datos.filter(cancion => {
+    }, [])
+
+    useMemo(() => {
+        const resultado = datos.filter(cancion => {
             return `${cancion.idcancion} ${cancion.titulo} ${cancion.letra}`
                 .toLowerCase()
-                .includes(this.state.buscar.toLowerCase())
+                .includes(buscar.toLowerCase())
         })
-        this.setState({datosFiltrados: resultado})
-    }
-    handleClick = (event) => {
-        this.setState({buscar: '', datosFiltrados: this.state.datos})
+        setDatosFiltrados(resultado)
+    }, [datos, buscar])
+
+    const handleChange = ({target: {value}}) => {
+        setBuscar(value)
     }
 
-    render () {
-        if (this.state.buscando) {
-            return (
-                <div className="container d-flex justify-content-center mt-4">
-                    <Loader/>
-                </div>
-            )
-        }
-        if (this.state.error) {
-            return (
-                <div className="container mt-2 d-flex justify-content-center">
-                    Ocurrio un error al traer los datos, actualice la pagina
-                </div>
-            )
-        }
-        if (this.state.datosFiltrados.length === 0) {
-            return (
-                <div className="container">
-                    <h4 className="text-center mt-3 mt-md-2">Himnario verde</h4>
-                    <div className="barra_menu">
-                        <div className="barra_menu-back"><Btnback url="/cancionero"/></div>
-                        <div className="barra_menu-search"><Searchbox buscar={this.handleChange} val={this.state.buscar} onClick={this.handleClick}/></div>
-                        <div className="barra_menu-add"><Btnadd url="/cancionero/nuevacancion/:him_verde"/></div>
-                    </div>
-                    <div className="text-center mt-2">
-                        <h6>No hay resultados</h6>
-                    </div>
-                </div>
-            )
-        }
+    const handleClick = (event) => {
+        setBuscar('')
+        setDatosFiltrados(datos)
+    }
+
+    if(datos.length === 0) {
+        return (
+            <div className="container mt-2 d-flex justify-content-center">
+                <Loader/>
+            </div>
+        )
+    }
+
+    if (datosFiltrados.length === 0) {
         return (
             <div className="container">
                 <h4 className="text-center mt-3 mt-md-2">Himnario verde</h4>
                 <div className="barra_menu">
                     <div className="barra_menu-back"><Btnback url="/cancionero"/></div>
-                    <div className="barra_menu-search"><Searchbox buscar={this.handleChange} val={this.state.buscar} onClick={this.handleClick}/></div>
-                    <div className="barra_menu-add"><Btnadd url="/cancionero/nuevacancion/himnarioverde"/></div>
+                    <div className="barra_menu-search"><Searchbox buscar={handleChange} val={buscar} onClick={handleClick}/></div>
+                    <div className="barra_menu-add"><Btnadd url="/cancionero/nuevacancion/:him_verde"/></div>
                 </div>
-                <div>
-                    {this.state.datosFiltrados.map(cancion => {
-                        return (
-                            <Cancion key={cancion.idcancion} cancion={cancion}/>
-                        )
-                    })}
+                <div className="text-center mt-2">
+                    <h6>No hay resultados</h6>
                 </div>
             </div>
         )
     }
+    return (
+        <div className="container">
+            <h4 className="text-center mt-3 mt-md-2">Himnario verde</h4>
+            <div className="barra_menu">
+                <div className="barra_menu-back"><Btnback url="/cancionero"/></div>
+                <div className="barra_menu-search"><Searchbox buscar={handleChange} val={buscar} onClick={handleClick}/></div>
+                <div className="barra_menu-add"><Btnadd url="/cancionero/nuevacancion/himnarioverde"/></div>
+            </div>
+            <div>
+                {datosFiltrados.map(cancion => {
+                    return (
+                        <Cancion key={cancion.idcancion} cancion={cancion}/>
+                    )
+                })}
+            </div>
+        </div>
+    )
+
 }
 
 export default Himverde

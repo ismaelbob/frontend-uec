@@ -10,22 +10,26 @@ import Noticias from './pages/Noticias'
 import Ofrendas from './pages/Ofrendas'
 import NotFound from './pages/NotFound'
 
+import HimnarioProvider from './context/Provider'
+
 function App () {
     return (
-        <BrowserRouter>
-            <Layout>
-                <Switch>
-                    <Route path="/" exact component={Home}/>
-                    <Route path="/cancionero" exact component={Cancionero}/>
-                    <Route path="/cancionero/himnarioverde" exact component={Himverde}/>
-                    <Route path="/cancionero/himnarioverde/:id" exact component={Showcancion}/>
-                    <Route path="/cancionero/nuevacancion/:himnario" exact component={Addcancion}/>
-                    <Route path="/noticias" exact component={Noticias}/>
-                    <Route path="/ofrendas" exact component={Ofrendas}/>
-                    <Route component={NotFound}/>
-                </Switch>
-            </Layout>
-        </BrowserRouter>
+        <HimnarioProvider>
+            <BrowserRouter>
+                <Layout>
+                    <Switch>
+                        <Route path="/" exact component={Home}/>
+                        <Route path="/cancionero" exact component={Cancionero}/>
+                        <Route path="/cancionero/himnarioverde" exact component={Himverde}/>
+                        <Route path="/cancionero/himnarioverde/:id" exact component={Showcancion}/>
+                        <Route path="/cancionero/nuevacancion/:himnario" exact component={Addcancion}/>
+                        <Route path="/noticias" exact component={Noticias}/>
+                        <Route path="/ofrendas" exact component={Ofrendas}/>
+                        <Route component={NotFound}/>
+                    </Switch>
+                </Layout>
+            </BrowserRouter>
+        </HimnarioProvider>
     )
 }
 

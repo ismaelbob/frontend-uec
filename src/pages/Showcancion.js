@@ -46,7 +46,7 @@ function Showcancion (props) {
                 <div className="menu_buttom">
                     <div className="box_button-back"><Btnback url='/cancionero/himnarioverde'/></div>
                     {datoCancion.enlace !== '' && <div className="box_botton-play"><Btnplay url={datoCancion.enlace}/></div>}
-                    <div className="menu_buttom-edit"><Btnedit url="#"/></div>
+                    <div className="menu_buttom-edit"><Btnedit url={`/cancionero/editar/himnarioverde/${datoCancion.idcancion}`}/></div>
                 </div>
             </div>
 

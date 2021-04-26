@@ -1,0 +1,30 @@
+.box_form-message {
+    position: fixed;
+    bottom: -18px;
+    left: 0px;
+    width: 100%;
+}
+.box_form-refreshbtn {
+    background-color: #dddddd;
+    border: 1px solid #d2d2d2;
+    border-radius: 3px;
+    padding: 0 7px;
+}
+.box_form-refreshbtn:hover {
+    background-color: #d3d3d3
+}
+.box_form-refreshbtn img {
+    width: 30px;
+}
+
+.box_form-mgsid {
+    text-align: right;
+    font-style: italic;
+    font-size: 14px;
+}
+
+@media only screen and (min-width:768px) {
+    .box_form-message {
+        position: relative;
+    }
+}

@@ -60,7 +60,9 @@ class Addcancion extends React.Component {
         event.preventDefault()
         this.setState({cargando: true, errorMessage: null})
         try {
-            console.log('Guardando...')
+            fetch('https://uecapi.herokuapp.com/himverde/addCancion.php', {method: 'POST', body: JSON.stringify(this.state.datosCancion)})
+                .then(respuesta => respuesta.json())
+                .then(data => this.setState({respuesta: data.estado}))
             this.setState({cargando: false})
         } catch (error) {
             this.setState({errorMessage: error, cargando: false})

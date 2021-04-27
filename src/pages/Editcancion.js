@@ -66,6 +66,7 @@ class Editcancion extends React.Component {
                 .then(response => response.json())
                 .then(res => this.setState({respuesta: res.estado}))
             this.setState({cargando: false})
+            this.props.history.push(`/cancionero/${this.props.match.params.himnario}/${this.props.match.params.id}`)
         } catch (error) {
             this.setState({errorMessage: error, cargando: false})
         }

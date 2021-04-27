@@ -15,11 +15,12 @@ function Showcancion (props) {
         if (!datos?.length) {
             getDatos()
         }
-        setDatoCancion(datos[props.match.params.id - 1])
+        // eslint-disable-next-line
     }, [])
     useEffect(() => {
         setDatoCancion(datos[props.match.params.id - 1])
-        
+        setDatoCancion(datos[props.match.params.id - 1])
+        // eslint-disable-next-line
     }, [datos])
 
     if (!estado || datoCancion.length === 0) {
@@ -28,6 +29,15 @@ function Showcancion (props) {
                 <Loader/>
             </div>
         )
+    }
+
+    let versos = []
+    if (datoCancion.letra.includes('\r\n\r\n')) {
+        versos = datoCancion.letra.split('\r\n\r\n')
+    } else {
+        if (datoCancion.letra.includes('\n\n')) {
+            versos = datoCancion.letra.split('\n\n')
+        }
     }
     return (
         <div className="container mt-2 d-flex flex-column align-items-center">
@@ -51,9 +61,9 @@ function Showcancion (props) {
             </div>
 
             <div className="box_contenido">
-                {datoCancion.letra.split('\r\n\r\n').map((verso, id) => {
+                {versos.map((verso, id) => {
                     return (
-                        <div 
+                        <div
                             className={verso.charAt(0) === '%'? 'box_contenido-coro': 'box_contenido-verso'} 
                             key={id}
                         >

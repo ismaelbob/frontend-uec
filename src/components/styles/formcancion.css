@@ -6,9 +6,9 @@
 }
 .box_form-refreshbtn {
     background-color: #dddddd;
-    border: 1px solid #d2d2d2;
-    border-radius: 3px;
-    padding: 0 7px;
+    border: 1px solid #cecece;
+    border-radius: 40px;
+    padding: 0 3px;
 }
 .box_form-refreshbtn:hover {
     background-color: #d3d3d3

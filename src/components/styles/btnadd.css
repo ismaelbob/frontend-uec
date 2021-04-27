@@ -4,13 +4,13 @@
     justify-content: center;
     width: 50px;
     height: 50px;
-    background: #4AC56C;
+    background: #dddddd;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 40px;
-    padding: 13px 13px;
+    padding: 13px 10px;
 }
 .box_btnadd:hover {
-    background: #3eb6   60;
+    background: #cecece;
 }
 .box_btnadd a {
     color: rgb(0, 0, 0);
@@ -18,10 +18,11 @@
     width: 100%;
 }
 .box_btnadd img {
-    width: 23px;
+    width: 30px;
 }
 .box_btnadd div {
     display: none;
+    color: rgb(0, 151, 43);
 }
 
 @media only screen and (min-width: 768px) {
@@ -29,6 +30,9 @@
         width: 100px;
         height: 40px;
         padding: 0px 10px;
+    }
+    .box_btnadd img {
+        width: 23px;
     }
     .box_btnadd a div {
         display: inline-block;

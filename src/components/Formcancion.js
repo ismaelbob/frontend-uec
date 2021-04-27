@@ -5,7 +5,7 @@ import icon from '../img/refresh.svg'
 class Formcancion extends React.Component {
     render () {
         return (
-            <form onSubmit={this.props.onSubmit} className="needs-validation was-validated" noValidate>
+            <form onSubmit={this.props.onSubmit} className="needs-validation" noValidate id='form-cancion'>
                 <div className="box_form mt-4">
                         <div className="row">
                             <div className="col-12 col-md-5">

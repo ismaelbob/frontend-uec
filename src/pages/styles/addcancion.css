@@ -17,5 +17,15 @@
     color: #0056A6;
     margin-left: 8px;
 }
-
+.box_headernew-back {
+    position: fixed;
+    right: 10px;
+    bottom: 20px;
+    z-index: 1;
+}
+@media only screen and (min-width: 768px) {
+    .box_headernew-back {
+        position: static;
+    }
+}
 

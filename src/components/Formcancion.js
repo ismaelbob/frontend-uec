@@ -13,7 +13,7 @@ class Formcancion extends React.Component {
                                 <div className="form-group">
                                     <label htmlFor="idcancion">Numero:</label>
                                     <div className="d-flex">
-                                        <button className="box_form-refreshbtn mr-1" type="button" onClick={this.props.onClick}><img src={icon} alt="i"/></button>
+                                        <button className="box_form-refreshbtn" type="button" onClick={this.props.onClick}><img src={icon} alt="i"/></button>
                                         <input type="number" name="idcancion" id="idcancion" className="form-control" autoComplete="off" required onChange={this.props.onChange} value={this.props.datos.idcancion}/>
                                     </div>
                                     {

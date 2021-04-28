@@ -5,9 +5,9 @@
     width: 100%;
 }
 .box_form-refreshbtn {
-    background-color: #dddddd;
+    background-color: #f0f0f0;
     border: 1px solid #cecece;
-    border-radius: 40px;
+    border-radius: 5px 0px 0px 5px;
     padding: 0 3px;
 }
 .box_form-refreshbtn:hover {
@@ -21,6 +21,9 @@
     text-align: right;
     font-style: italic;
     font-size: 14px;
+}
+.box_form #idcancion {
+    border-radius: 0px 5px 5px 0px;
 }
 
 @media only screen and (min-width:768px) {

@@ -8,6 +8,8 @@
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 40px;
     text-align: center;
+    position: sticky;
+    top: 8px;
 }
 .box_header h5 {
     padding: 0;
@@ -59,16 +61,17 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    padding: 1em;
+    padding: .5em;
+    margin-bottom: 100px;
 }
 .box_contenido-verso {
     padding-bottom: 1em;
-    white-space: pre;
+    white-space: pre-line;
 }
 .box_contenido-coro {
     font-style: italic;
     padding-bottom: 1em;
-    white-space: pre;
+    white-space: pre-line;
     margin-left: 1.2em;
 }
 
@@ -77,10 +80,7 @@
     .menu_buttom {
         position: absolute;
         right: 1em;
-        top: 1em;
-    }
-    .box_header-back {
-        position: static;
+        top: 4em;
     }
     .box_contenido {
         width: 500px;

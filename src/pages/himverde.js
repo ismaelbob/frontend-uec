@@ -53,10 +53,14 @@ function Himverde () {
             <div className="container">
                 <h4 className="text-center mt-3 mt-md-2">Himnario verde</h4>
                 <div className="barra_menu">
-                    <div className="barra_menu-back"><Btnback url="/cancionero"/></div>
+                    <div className="barra_menu-buttom">
+                        <div className="barra_menu-buttom-back"><Btnback url="/cancionero"/></div>
+                        <div className="barra_menu-buttom-add"><Btnadd url="/cancionero/nuevacancion/himnarioverde"/></div>
+                    </div>
                     <div className="barra_menu-search"><Searchbox buscar={handleChange} val={buscar} onClick={handleClick}/></div>
-                    <div className="barra_menu-add"><Btnadd url="/cancionero/nuevacancion/:him_verde"/></div>
+                    <div className="barra_menu-relleno"></div>
                 </div>
+                
                 <div className="text-center mt-2">
                     <h6>No hay resultados</h6>
                 </div>
@@ -67,10 +71,14 @@ function Himverde () {
         <div className="container">
             <h4 className="text-center mt-3 mt-md-2">Himnario verde</h4>
             <div className="barra_menu">
-                <div className="barra_menu-back"><Btnback url="/cancionero"/></div>
+                <div className="barra_menu-buttom">
+                    <div className="barra_menu-buttom-back"><Btnback url="/cancionero"/></div>
+                    <div className="barra_menu-buttom-add"><Btnadd url="/cancionero/nuevacancion/himnarioverde"/></div>
+                </div>
                 <div className="barra_menu-search"><Searchbox buscar={handleChange} val={buscar} onClick={handleClick}/></div>
-                <div className="barra_menu-add"><Btnadd url="/cancionero/nuevacancion/himnarioverde"/></div>
+                <div className="barra_menu-relleno"></div>
             </div>
+
             <div>
                 {datosFiltrados.map(cancion => {
                     return (

@@ -96,7 +96,7 @@ class Editcancion extends React.Component {
         return (
             <div className="container mt-2">
                 <div className="box_headernew">
-                    <div><Btnback url={`/cancionero/${this.props.match.params.himnario}/${this.props.match.params.id}`}/></div>
+                    <div className="box_headernew-back"><Btnback url={`/cancionero/${this.props.match.params.himnario}/${this.props.match.params.id}`}/></div>
                     <div className="box_headernew-title"><h5>EDITAR CANCION</h5></div>
                     <div></div>
                 </div>

@@ -1,0 +1,14 @@
+.box_login {
+    padding: 1em;
+    width: 100%;
+}
+.box_login h5 {
+    color: #0056A6;
+    text-align: center;
+}
+
+@media only screen and (min-width:768px) {
+    .box_login {
+        width: 400px;
+    }
+}

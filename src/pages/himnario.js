@@ -1,5 +1,5 @@
 import {useContext, useEffect, useMemo, useState} from 'react'
-import './styles/himverde.css'
+import './styles/himnario.css'
 import Btnadd from '../components/Btnadd'
 import Btnback from '../components/Btnback'
 import Searchbox from '../components/Searchbox'
@@ -8,7 +8,7 @@ import Loader from '../components/Loader'
 
 import HimnarioContext from '../context'
 
-function Himverde () {
+function Himnario (props) {
     const [buscar, setBuscar] = useState('')
     const [datosFiltrados, setDatosFiltrados] = useState([])
 
@@ -17,7 +17,7 @@ function Himverde () {
 
     useEffect(() => {
         if (!datos?.length) {
-            getDatos()
+            getDatos(props.match.params.himnario)
         }
         // eslint-disable-next-line
     }, [])
@@ -48,14 +48,25 @@ function Himverde () {
         )
     }
 
+    let titulo = props.match.params.himnario
+    if (titulo === 'himverde') {
+        titulo = 'Himnario Verde'
+    } else {
+        if (titulo === 'himpoder') {
+            titulo = 'Himnario Poder'
+        } else {
+            titulo = 'Himnario de Jóvenes'
+        }
+    }
+
     if (datosFiltrados.length === 0) {
         return (
             <div className="container">
-                <h4 className="text-center mt-3 mt-md-2">Himnario verde</h4>
+                <h4 className="text-center mt-3 mt-md-2">{titulo}</h4>
                 <div className="barra_menu">
                     <div className="barra_menu-buttom">
                         <div className="barra_menu-buttom-back"><Btnback url="/cancionero"/></div>
-                        <div className="barra_menu-buttom-add"><Btnadd url="/cancionero/nuevacancion/himnarioverde"/></div>
+                        <div className="barra_menu-buttom-add"><Btnadd url={`/cancionero/nuevacancion/${props.match.params.himnario}`}/></div>
                     </div>
                     <div className="barra_menu-search"><Searchbox buscar={handleChange} val={buscar} onClick={handleClick}/></div>
                     <div className="barra_menu-relleno"></div>
@@ -69,11 +80,11 @@ function Himverde () {
     }
     return (
         <div className="container">
-            <h4 className="text-center mt-3 mt-md-2">Himnario verde</h4>
+            <h4 className="text-center mt-3 mt-md-2">{titulo}</h4>
             <div className="barra_menu">
                 <div className="barra_menu-buttom">
                     <div className="barra_menu-buttom-back"><Btnback url="/cancionero"/></div>
-                    <div className="barra_menu-buttom-add"><Btnadd url="/cancionero/nuevacancion/himnarioverde"/></div>
+                    <div className="barra_menu-buttom-add"><Btnadd url={`/cancionero/nuevacancion/${props.match.params.himnario}`}/></div>
                 </div>
                 <div className="barra_menu-search"><Searchbox buscar={handleChange} val={buscar} onClick={handleClick}/></div>
                 <div className="barra_menu-relleno"></div>
@@ -82,7 +93,7 @@ function Himverde () {
             <div>
                 {datosFiltrados.map(cancion => {
                     return (
-                        <Cancion key={cancion.idcancion} cancion={cancion}/>
+                        <Cancion key={cancion.idcancion} cancion={cancion} himnario={props.match.params.himnario}/>
                     )
                 })}
             </div>
@@ -91,4 +102,4 @@ function Himverde () {
 
 }
 
-export default Himverde
+export default Himnario

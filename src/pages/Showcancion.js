@@ -13,7 +13,7 @@ function Showcancion (props) {
 
     useEffect(() => {
         if (!datos?.length) {
-            getDatos()
+            getDatos(props.match.params.himnario)
         }
         // eslint-disable-next-line
     }, [])
@@ -51,9 +51,9 @@ function Showcancion (props) {
                     {datoCancion.nota}
                 </div>
                 <div className="menu_buttom">
-                    <div className="box_button-back"><Btnback url='/cancionero/himnarioverde'/></div>
+                    <div className="box_button-back"><Btnback url={`/cancionero/${props.match.params.himnario}`}/></div>
                     {datoCancion.enlace !== '' && <div className="box_botton-play"><Btnplay url={datoCancion.enlace}/></div>}
-                    <div className="menu_buttom-edit"><Btnedit url={`/cancionero/editar/himnarioverde/${datoCancion.idcancion}`}/></div>
+                    <div className="menu_buttom-edit"><Btnedit url={`/cancionero/editar/${props.match.params.himnario}/${datoCancion.idcancion}`}/></div>
                 </div>
             </div>
 

@@ -26,7 +26,7 @@ class Editcancion extends React.Component {
     
     componentDidUpdate (prevProps, prevState) {
         if (this.state.datosCancion.idcancion !== prevState.datosCancion.idcancion) {
-            fetch('https://uecapi.herokuapp.com/himverde/verificarExiste.php', {method: 'POST', body: JSON.stringify(this.state.datosCancion.idcancion)})
+            fetch(`https://uecapi.herokuapp.com/${this.props.match.params.himnario}/verificarExiste.php`, {method: 'POST', body: JSON.stringify(this.state.datosCancion.idcancion)})
                 .then(response => response.json())
                 .then(data =>  {
                     if (data.id === this.state.idcancionactual) {
@@ -41,7 +41,7 @@ class Editcancion extends React.Component {
     async traerDatosCancion () {
         this.setState({cargando: true, errorMessage: null})
         try {
-            await fetch(`https://uecapi.herokuapp.com/himverde/getcancion.php?id=${this.props.match.params.id}`)
+            await fetch(`https://uecapi.herokuapp.com/${this.props.match.params.himnario}/getcancion.php?id=${this.props.match.params.id}`)
                 .then(response => response.json())
                 .then(data => this.setState({datosCancion: data, cargando: false}))
             this.setState({idcancionactual: this.state.datosCancion.idcancion})
@@ -62,7 +62,7 @@ class Editcancion extends React.Component {
         event.preventDefault()
         this.setState({cargando: true, errorMessage: null})
         try {
-            await fetch('https://uecapi.herokuapp.com/himverde/editcancion.php', {method: 'POST', body: JSON.stringify(this.state.datosCancion)})
+            await fetch(`https://uecapi.herokuapp.com/${this.props.match.params.himnario}/editcancion.php`, {method: 'POST', body: JSON.stringify(this.state.datosCancion)})
                 .then(response => response.json())
                 .then(res => this.setState({respuesta: res.estado}))
             this.setState({cargando: false})

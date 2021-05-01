@@ -6,10 +6,10 @@ function HimnarioProvider ({children}) {
     const [datos, setDatos] = useState([])
     const [estado, setEstado] = useState(false)
 
-    const getDatos = async () => {
+    const getDatos = async (himnario) => {
         setEstado(false)
         try {
-            await fetch('https://uecapi.herokuapp.com/himverde/getcanciones.php')
+            await fetch(`https://uecapi.herokuapp.com/${himnario}/getcanciones.php`)
                 .then(response => response.json())
                 .then(data => setDatos(data))
             setEstado(true)

@@ -26,7 +26,7 @@ class Addcancion extends React.Component {
 
     componentDidUpdate (prevProps, prevState) {
         if(this.state.datosCancion.idcancion !== prevState.datosCancion.idcancion) {
-            fetch('https://uecapi.herokuapp.com/himverde/verificarExiste.php', {method: 'POST', body: JSON.stringify(this.state.datosCancion.idcancion)})
+            fetch(`https://uecapi.herokuapp.com/${this.props.match.params.himnario}/verificarExiste.php`, {method: 'POST', body: JSON.stringify(this.state.datosCancion.idcancion)})
                 .then(response => response.json())
                 .then(data =>  this.setState({respuestaId: data.estado}))
         }
@@ -35,7 +35,7 @@ class Addcancion extends React.Component {
     async traerUltimoNumero () {
         this.setState({cargando: true, errorMessage: null})
         try {
-            await fetch('https://uecapi.herokuapp.com/himverde/getUltimaCancion.php')
+            await fetch(`https://uecapi.herokuapp.com/${this.props.match.params.himnario}/getUltimaCancion.php`)
                 .then(response => response.json())
                 .then(data => this.setState({datosCancion: {
                     ...this.state.datosCancion,
@@ -65,12 +65,12 @@ class Addcancion extends React.Component {
         } else {
             this.setState({cargando: true, errorMessage: null})
             try {
-                await fetch('https://uecapi.herokuapp.com/himverde/addCancion.php', {method: 'POST', body: JSON.stringify(this.state.datosCancion)})
+                await fetch(`https://uecapi.herokuapp.com/${this.props.match.params.himnario}/addCancion.php`, {method: 'POST', body: JSON.stringify(this.state.datosCancion)})
                     .then(respuesta => respuesta.json())
                     .then(data => this.setState({respuesta: data.estado}))
                 form.classList.remove('was-validated')
                 this.setState({cargando: false, respuestaId: 'No disponible'})
-                //this.props.history.push(`/cancionero/${this.props.match.params.himnario}`)
+                this.props.history.push(`/cancionero/${this.props.match.params.himnario}/${this.state.datosCancion.idcancion}`)
             } catch (error) {
                 this.setState({errorMessage: error, cargando: false})
             }

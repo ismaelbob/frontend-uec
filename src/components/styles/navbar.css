@@ -3,8 +3,8 @@
 .box_navbar {
     color: #2A71B2;
     /*background-color: #d4d4d496;*/
-    background-color: #8EC5FC;
-    background-image: linear-gradient(62deg, #d8dadb 0%, #e4cff7 100%);
+    background-color: #ccd1d4;
+    background-image: linear-gradient(62deg, #ccd1d4 0%, #e4e9fb 100%);
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     display: flex;
     justify-content: space-between;

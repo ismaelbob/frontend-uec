@@ -9,7 +9,7 @@ class Cancion extends React.Component {
                 <div className="box_cancion-id">
                     <h6>{this.props.cancion.idcancion}</h6>
                 </div>
-                <Link to={`/cancionero/himnarioverde/${this.props.cancion.idcancion}`}>
+                <Link to={`/cancionero/${this.props.himnario}/${this.props.cancion.idcancion}`}>
                     <div className="box_cancion-datos">
                         <h6>{this.props.cancion.titulo}</h6>
                         <p>{this.props.cancion.autor}</p>

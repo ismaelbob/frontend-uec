@@ -15,7 +15,7 @@ function HimnarioProvider ({children}) {
             setEstado(true)
         } catch (error) {
             setEstado(false)
-            console.log(`Ocurrio un error: ${error}`)
+            console.log(`Ocurrio un errorr: ${error}`)
         }
     }
 

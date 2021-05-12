@@ -13,10 +13,12 @@
 }
 
 
+
 .box_navbar-logo img {
     width: 55px;
     margin: 0 1em;
 }
+
 
 
 .box_navbar-link {
@@ -91,6 +93,8 @@
     font-size: 28px;
 }
 
+
+
 @keyframes entrada {
     from {
         opacity: 0;
@@ -139,4 +143,5 @@
     .box_navbar-link-right button {
         display: none;
     }
+
 }

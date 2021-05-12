@@ -5,11 +5,13 @@ import Btnplay from '../components/Btnplay'
 import Btnback from '../components/Btnback'
 import Loader from '../components/Loader'
 
-import HimnarioContext from '../context'
+import HimnarioContext from '../context/himnario'
+import SesionContext from '../context/sesion'
 
 function Showcancion (props) {
     const [datoCancion, setDatoCancion] = useState([])
     const {datos, estado, getDatos} = useContext(HimnarioContext)
+    const {nombre} = useContext(SesionContext)
 
     useEffect(() => {
         if (!datos?.length) {
@@ -53,7 +55,7 @@ function Showcancion (props) {
                 <div className="menu_buttom">
                     <div className="box_button-back"><Btnback url={`/cancionero/${props.match.params.himnario}`}/></div>
                     {datoCancion.enlace !== '' && <div className="box_botton-play"><Btnplay url={datoCancion.enlace}/></div>}
-                    <div className="menu_buttom-edit"><Btnedit url={`/cancionero/editar/${props.match.params.himnario}/${datoCancion.idcancion}`}/></div>
+                    {nombre && <div className="menu_buttom-edit"><Btnedit url={`/cancionero/editar/${props.match.params.himnario}/${datoCancion.idcancion}`}/></div>}
                 </div>
             </div>
 

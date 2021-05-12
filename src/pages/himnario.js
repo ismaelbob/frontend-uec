@@ -6,13 +6,15 @@ import Searchbox from '../components/Searchbox'
 import Cancion from '../components/Cancion'
 import Loader from '../components/Loader'
 
-import HimnarioContext from '../context'
+import HimnarioContext from '../context/himnario'
+import SesionContext from '../context/sesion'
 
 function Himnario (props) {
     const [buscar, setBuscar] = useState('')
     const [datosFiltrados, setDatosFiltrados] = useState([])
 
     const {datos, getDatos} = useContext(HimnarioContext)
+    const {nombre} = useContext(SesionContext)
 
 
     useEffect(() => {
@@ -40,6 +42,7 @@ function Himnario (props) {
         setDatosFiltrados(datos)
     }
 
+
     if(datos.length === 0) {
         return (
             <div className="container mt-2 d-flex justify-content-center">
@@ -66,7 +69,9 @@ function Himnario (props) {
                 <div className="barra_menu">
                     <div className="barra_menu-buttom">
                         <div className="barra_menu-buttom-back"><Btnback url="/cancionero"/></div>
-                        <div className="barra_menu-buttom-add"><Btnadd url={`/cancionero/nuevacancion/${props.match.params.himnario}`}/></div>
+                        {
+                            nombre && <div className="barra_menu-buttom-add"><Btnadd url={`/cancionero/nuevacancion/${props.match.params.himnario}`}/></div>
+                        }
                     </div>
                     <div className="barra_menu-search"><Searchbox buscar={handleChange} val={buscar} onClick={handleClick}/></div>
                     <div className="barra_menu-relleno"></div>
@@ -84,7 +89,9 @@ function Himnario (props) {
             <div className="barra_menu">
                 <div className="barra_menu-buttom">
                     <div className="barra_menu-buttom-back"><Btnback url="/cancionero"/></div>
-                    <div className="barra_menu-buttom-add"><Btnadd url={`/cancionero/nuevacancion/${props.match.params.himnario}`}/></div>
+                    {
+                        nombre && <div className="barra_menu-buttom-add"><Btnadd url={`/cancionero/nuevacancion/${props.match.params.himnario}`}/></div>
+                    }
                 </div>
                 <div className="barra_menu-search"><Searchbox buscar={handleChange} val={buscar} onClick={handleClick}/></div>
                 <div className="barra_menu-relleno"></div>

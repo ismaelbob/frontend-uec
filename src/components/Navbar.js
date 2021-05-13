@@ -37,8 +37,7 @@ function Navbar (props) {
                     <h4>Unidos en Cristo</h4>
                     <Link name="0" to="/" onClick={handleClickToggle} className={menuActivo === '0' ? 'activo' : ''}>Inicio</Link>
                     <Link name="1" to="/cancionero" onClick={handleClickToggle} className={menuActivo === '1' ? 'activo' : ''}>Cancionero</Link>
-                    <Link name="2" to="/noticias" onClick={handleClickToggle} className={menuActivo === '2' ? 'activo' : ''}>Noticias</Link>
-                    <Link name="3" to="/cronograma" onClick={handleClickToggle} className={menuActivo === '3' ? 'activo' : ''}>Cronograma</Link>
+                    <Link name="2" to="/actividades" onClick={handleClickToggle} className={menuActivo === '2' ? 'activo' : ''}>Actividades</Link>
                 </div>
                 <div className="box_navbar-link-right">
                     {

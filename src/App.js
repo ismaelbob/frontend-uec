@@ -7,7 +7,7 @@ import Himnario from './pages/himnario'
 import Showcancion from './pages/Showcancion'
 import Addcancion from './pages/Addcancion'
 import Editcancion from './pages/Editcancion'
-import Noticias from './pages/Noticias'
+import Actividades from './pages/Actividades'
 import Ofrendas from './pages/Ofrendas'
 import NotFound from './pages/NotFound'
 import Usuario from './pages/Usuario'
@@ -23,7 +23,7 @@ function App () {
                     <Switch>
                         <Route path="/" exact component={Home}/>
                         <Route path="/cancionero" exact component={Cancionero}/>
-                        <Route path="/noticias" exact component={Noticias}/>
+                        <Route path="/actividades" exact component={Actividades}/>
                         <Route path="/ofrendas" exact component={Ofrendas}/>
                         <Route path="/login" exact component={Usuario}/>
                         <Route path="/cancionero/nuevacancion/:himnario" exact component={Addcancion}/>

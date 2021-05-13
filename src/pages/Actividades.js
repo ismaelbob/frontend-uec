@@ -14,13 +14,13 @@ class Actividades extends React.Component {
                                     <div className="row no-gutters">
                                         <div className="card-body">
                                             <h6 className="card-title text-primary">Bautismo</h6>
-                                            <p className="card-text">Fecha: 1 de mayo <br/> Hora: 8:00 <br/>Lugar: Pairumani</p>
+                                            <p className="card-text">Fecha: Sábado 1 de mayo <br/> Hora: 8:00 <br/>Lugar: Pairumani</p>
                                             <p className="card-text"><small className="text-muted">Se saldrá a acompañar a los que pasarán por aguas de bautismo.</small></p>
                                         
                                             <div className="separador"></div>
 
                                             <h6 class="card-title text-primary">Kermesse</h6>
-                                            <p class="card-text">Fecha: 16 de mayo <br/>Hora: 9:00 <br/>Lugar: Canchas "Gemelas"</p>
+                                            <p class="card-text">Fecha: Domingo 16 de mayo <br/>Hora: 9:00 <br/>Lugar: Canchas "Gemelas"</p>
                                             <p class="card-text"><small class="text-muted">Habrá Pique macho, Pollo al horno, Chicharron y refrescos.</small></p>
                                         </div>
                                     </div>
@@ -32,13 +32,13 @@ class Actividades extends React.Component {
                                 <div class="row no-gutters">
                                     <div class="card-body">
                                         <h6 class="card-title text-primary">Practicas de canto</h6>
-                                        <p class="card-text">Fechas: 5, 12, 19 y 26 de mayo <br/>Hora: 19:00 <br/>Lugar: Ambientes de la Iglesia</p>
+                                        <p class="card-text">Fechas: Miércoles 5, 12, 19 y 26 de mayo <br/>Hora: 19:00 <br/>Lugar: Ambientes de la Iglesia</p>
                                         <p class="card-text"><small class="text-muted">Para cantantes de los ministerios de alabanza.</small></p>
 
                                         <div className="separador"></div>
 
                                         <h6 class="card-title text-primary">Taller de teoria musical</h6>
-                                        <p class="card-text">Fecha: 24 de mayo <br/>Hora: 19:00 <br/>Lugar: Ambientes de la Iglesia</p>
+                                        <p class="card-text">Fecha: Lúnes 24 de mayo <br/>Hora: 19:00 <br/>Lugar: Ambientes de la Iglesia</p>
                                         <p class="card-text"><small class="text-muted">Para integrantes de los ministerios de alabanza.</small></p>
                                     </div>
                                 </div>

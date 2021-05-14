@@ -62,7 +62,7 @@
     display: flex;
     flex-direction: column;
     padding: .5em;
-    margin-bottom: 100px;
+    margin-bottom: 2.5em;
 }
 .box_contenido-verso {
     padding-bottom: 1em;
@@ -75,6 +75,14 @@
     margin-left: 1.2em;
 }
 
+.box_video {
+    width: 100%;
+    margin-bottom: 30px;
+}
+.box_video iframe {
+    width: 100%;
+    height: 200px;
+}
 
 @media only screen and (min-width: 768px) {
     .menu_buttom {
@@ -84,5 +92,11 @@
     }
     .box_contenido {
         width: 500px;
+    }
+    .box_video {
+        width: 50%;
+    }
+    .box_video iframe {
+        height: 300px;
     }
 }

@@ -1,7 +1,6 @@
 import { useState, useEffect, useContext } from 'react'
 import './styles/showcancion.css'
 import Btnedit from '../components/Btnedit'
-import Btnplay from '../components/Btnplay'
 import Btnback from '../components/Btnback'
 import Loader from '../components/Loader'
 
@@ -54,7 +53,6 @@ function Showcancion (props) {
                 </div>
                 <div className="menu_buttom">
                     <div className="box_button-back"><Btnback url={`/cancionero/${props.match.params.himnario}`}/></div>
-                    {datoCancion.enlace !== '' && <div className="box_botton-play"><Btnplay url={datoCancion.enlace}/></div>}
                     {nombre && <div className="menu_buttom-edit"><Btnedit url={`/cancionero/editar/${props.match.params.himnario}/${datoCancion.idcancion}`}/></div>}
                 </div>
             </div>
@@ -74,6 +72,20 @@ function Showcancion (props) {
                     )
                 })}
             </div>
+
+            {
+                datoCancion.enlace !== '' && (
+                <div className="box_video">
+                    <iframe 
+                        src={datoCancion.enlace}
+                        title="YouTube video player" 
+                        frameBorder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowFullScreen>
+                    </iframe>
+                </div>
+                )
+            }
         </div>
     )
 }

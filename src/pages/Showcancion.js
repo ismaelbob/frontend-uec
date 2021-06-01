@@ -19,10 +19,15 @@ function Showcancion (props) {
         // eslint-disable-next-line
     }, [])
     useEffect(() => {
-        setDatoCancion(datos[props.match.params.id - 1])
-        setDatoCancion(datos[props.match.params.id - 1])
+        setDatoCancion(seleccionarCancion())
         // eslint-disable-next-line
     }, [datos])
+
+    const seleccionarCancion = () => {
+        const id = parseInt(props.match.params.id, 10)
+        const result = datos.filter(cancion => cancion.idcancion === id)
+        return result[0]
+    }
 
     if (!estado || datoCancion.length === 0) {
         return (

@@ -94,12 +94,12 @@ class Actividades extends React.Component {
                                 </div>
                             </div>
                             <div className="row border-bottom p-2">
-                                <div className="col-5 col-sm-6">Ministerio Even-Ezer</div>
+                                <div className="col-5 col-sm-6">Ministerio Ismael</div>
                                 <div className="col-7 col-sm-6">
                                     <div className="row">
-                                        <div className="col-12 col-sm-4 rounded-pill bg-g3">Domingo 29</div>
-                                        <div className="col-12 col-sm-4 rounded-pill bg-g3 my-sm-0 my-1">Martes 31</div>
-                                        <div className="col-12 col-sm-4 rounded-pill bg-g3">Jueves 2 Sep</div>
+                                        <div className="col-12 col-sm-4 rounded-pill bg-g2">Domingo 29</div>
+                                        <div className="col-12 col-sm-4 rounded-pill bg-g2 my-sm-0 my-1">Martes 31</div>
+                                        <div className="col-12 col-sm-4 rounded-pill bg-g2">Jueves 2 Sep</div>
                                     </div>
                                 </div>
                             </div>
@@ -124,19 +124,19 @@ class Actividades extends React.Component {
                                 <div className="col-5 col-sm-6">Ministerio Hno. Ismael</div>
                                 <div className="col-7 col-sm-6">
                                     <div className="row">
-                                        <div className="col-12 col-sm-4 rounded-pill bg-g2">Domingo 5</div>
-                                        <div className="col-12 col-sm-4 rounded-pill bg-g2 my-sm-0 my-1">Martes 7</div>
-                                        <div className="col-12 col-sm-4 rounded-pill bg-g2">Jueves 9</div>
+                                        <div className="col-12 col-sm-4 rounded-pill bg-g4">Domingo 5</div>
+                                        <div className="col-12 col-sm-4 rounded-pill bg-g4 my-sm-0 my-1">Martes 7</div>
+                                        <div className="col-12 col-sm-4 rounded-pill bg-g4">Jueves 9</div>
                                     </div>
                                 </div>
                             </div>
                             <div className="row border-bottom p-2">
-                                <div className="col-5 col-sm-6">Ministerio Oriel</div>
+                                <div className="col-5 col-sm-6">Ministerio Even-Ezer</div>
                                 <div className="col-7 col-sm-6">
                                     <div className="row">
-                                        <div className="col-12 col-sm-4 rounded-pill bg-g4">Domingo 12</div>
-                                        <div className="col-12 col-sm-4 rounded-pill bg-g4 my-sm-0 my-1">Martes 14</div>
-                                        <div className="col-12 col-sm-4 rounded-pill bg-g4">Jueves 16</div>
+                                        <div className="col-12 col-sm-4 rounded-pill bg-g3">Domingo 12</div>
+                                        <div className="col-12 col-sm-4 rounded-pill bg-g3 my-sm-0 my-1">Martes 14</div>
+                                        <div className="col-12 col-sm-4 rounded-pill bg-g3">Jueves 16</div>
                                     </div>
                                 </div>
                             </div>

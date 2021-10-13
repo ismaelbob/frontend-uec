@@ -1,0 +1,129 @@
+.cronograma_head {
+    background-color: #B0DAEB;
+    padding: 5px;
+    margin-bottom: 3px;
+    border-radius: 15px 15px 5px 5px;
+}
+.cronograma_row {
+    background: #D5D5D5;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 3px;
+}
+.cronograma_row-day {
+    display: flex;
+    justify-content: center;
+}
+.cronograma_row-day > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 28px;
+    height: 28px;
+    background: #FF595E;
+    border-radius: 50%;
+}
+
+.cronograma_row-day1 {
+    display: flex;
+    justify-content: center;
+}
+.cronograma_row-day1 > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 28px;
+    height: 28px;
+    background: #FFCA3A;
+    border-radius: 50%;
+}
+.cronograma_row-day2 {
+    display: flex;
+    justify-content: center;
+}
+.cronograma_row-day2 > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 28px;
+    height: 28px;
+    background: #8AC926;
+    border-radius: 50%;
+}
+.cronograma_row-day3 {
+    display: flex;
+    justify-content: center;
+}
+.cronograma_row-day3 > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 28px;
+    height: 28px;
+    background: #1982C4;
+    border-radius: 50%;
+}
+
+.cronograma_foot {
+    background: #D5D5D5;
+    padding: 5px;
+    border-radius: 5px 5px 15px 15px;
+}
+
+.cronograma_row-week > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #FFCA3A;
+    width: 100%;
+    height: 28px;
+    border-radius: 14px;
+}
+.cronograma_row-week1> div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #8AC926;
+    width: 100%;
+    height: 28px;
+    border-radius: 14px;
+}
+.cronograma_row-week2 > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #1982C4;
+    width: 100%;
+    height: 28px;
+    border-radius: 14px;
+}
+
+
+
+.cron_week {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-edit {
+    background-color: rgba(255, 255, 255, 0);
+    width: 28px;
+    height: 28px;
+    border-radius: 14px;
+    cursor: pointer;
+}
+.btn-edit:hover {
+    background-color: rgb(192, 192, 192);
+    transition: .5s ease all;
+}
+.btn-edit-month {
+    background-color: rgba(255, 255, 255, 0);
+    width: 28px;
+    height: 28px;
+    border-radius: 14px;
+    cursor: pointer;
+}
+.btn-edit-month:hover {
+    background-color: #96c9dd;
+    transition: .5s ease all;
+}

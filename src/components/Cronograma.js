@@ -5,7 +5,7 @@ import msec from '../img/menu_sec.svg'
 function Cronograma ({turnoMensual, turnoJovenes}) {
     return (
         <div className="mt-2 container">
-            <div className="text-center">OCTUBRE</div>
+            <div className="text-center">Noviembre</div>
             <div className="d-flex row text-center cronograma_head">
                 <div className="col-5">Ministerio</div>
                 <div className="col-7 cron_week">

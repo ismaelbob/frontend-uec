@@ -14,30 +14,32 @@ import Usuario from './pages/Usuario'
 
 import HimnarioProvider from './context/himnario/Provider'
 import SesionProvider from './context/sesion/Provider'
-
+import ActividadesProvider from './context/actividades/Provider'
 function App () {
     return (
         <BrowserRouter>
             <SesionProvider>
-                <Layout>
-                    <Switch>
-                        <Route path="/" exact component={Home}/>
-                        <Route path="/cancionero" exact component={Cancionero}/>
-                        <Route path="/actividades" exact component={Actividades}/>
-                        <Route path="/ofrendas" exact component={Ofrendas}/>
-                        <Route path="/login" exact component={Usuario}/>
-                        <Route path="/cancionero/nuevacancion/:himnario" exact component={Addcancion}/>
-                        <Route path="/cancionero/editar/:himnario/:id" exact component={Editcancion}/>
-                        <HimnarioProvider>
-                            <Switch>
-                                <Route path="/cancionero/:himnario" exact component={Himnario}/>
-                                <Route path="/cancionero/:himnario/:id" exact component={Showcancion}/>
-                                <Route component={NotFound}/>
-                            </Switch>
-                        </HimnarioProvider>
-                        <Route component={NotFound}/>
-                    </Switch>
-                </Layout>
+                <ActividadesProvider>
+                    <Layout>
+                        <Switch>
+                            <Route path="/" exact component={Home}/>
+                            <Route path="/cancionero" exact component={Cancionero}/>
+                            <Route path="/actividades" exact component={Actividades}/>
+                            <Route path="/ofrendas" exact component={Ofrendas}/>
+                            <Route path="/login" exact component={Usuario}/>
+                            <Route path="/cancionero/nuevacancion/:himnario" exact component={Addcancion}/>
+                            <Route path="/cancionero/editar/:himnario/:id" exact component={Editcancion}/>
+                            <HimnarioProvider>
+                                <Switch>
+                                    <Route path="/cancionero/:himnario" exact component={Himnario}/>
+                                    <Route path="/cancionero/:himnario/:id" exact component={Showcancion}/>
+                                    <Route component={NotFound}/>
+                                </Switch>
+                            </HimnarioProvider>
+                            <Route component={NotFound}/>
+                        </Switch>
+                    </Layout>
+                </ActividadesProvider>
             </SesionProvider>
         </BrowserRouter>
     )

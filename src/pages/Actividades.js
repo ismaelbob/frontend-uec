@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './styles/actividades.css'
 import Cronograma from '../components/Cronograma'
 import FormMes from '../components/FormMes'
 import Formsemana from '../components/Formsemana'
-import { useEffect } from 'react/cjs/react.development'
 import Loader from '../components/Loader'
 
 function Actividades () {

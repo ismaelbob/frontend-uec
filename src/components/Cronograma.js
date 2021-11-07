@@ -12,7 +12,7 @@ function Cronograma ({turnoMensual, turnoJovenes}) {
                     <div>Dom</div>
                     <div>Mar</div>
                     <div>Jue</div>
-                    <div className="btn-edit-month" data-toggle="modal" data-target="#modal-edit-month"><img src={msec} alt=":"/></div>
+                    <div></div>
                 </div>
             </div>
             {
@@ -24,7 +24,7 @@ function Cronograma ({turnoMensual, turnoJovenes}) {
                                 <div className="cronograma_row-day"><div style={{background: semana.color_grupo}}>{semana.domingo.substr(8,2)}</div></div>
                                 <div className="cronograma_row-day"><div style={{background: semana.color_grupo}}>{semana.martes.substr(8,2)}</div></div>
                                 <div className="cronograma_row-day"><div style={{background: semana.color_grupo}}>{semana.jueves.substr(8,2)}</div></div>
-                                <div className="btn-edit" data-toggle="modal" data-target="#modal-edit"><img src={msec} alt=":"/></div>
+                                <div></div>
                             </div>
                         </div>
                     )

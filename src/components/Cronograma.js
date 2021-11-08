@@ -1,6 +1,5 @@
 import React from 'react'
 import './styles/cronograma.css'
-import msec from '../img/menu_sec.svg'
 
 function Cronograma ({turnoMensual, turnoJovenes}) {
     return (

@@ -1,8 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import './styles/actividades.css'
 import Cronograma from '../components/Cronograma'
-import FormMes from '../components/FormMes'
-import Formsemana from '../components/Formsemana'
 import Loader from '../components/Loader'
 import ActividadesContext from '../context/actividades'
 

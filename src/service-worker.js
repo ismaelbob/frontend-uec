@@ -26,47 +26,101 @@ precacheAndRoute(self.__WB_MANIFEST);
 // https://developers.google.com/web/fundamentals/architecture/app-shell
 const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$');
 registerRoute(
-  // Return false to exempt requests from being fulfilled by index.html.
+  // Devuelva falso para eximir las solicitudes de ser cumplidas por index.html.
   ({ request, url }) => {
-    // If this isn't a navigation, skip.
+    // Si esto no es una navegación, omita.
     if (request.mode !== 'navigate') {
       return false;
-    } // If this is a URL that starts with /_, skip.
+    } // Si esta es una URL que comienza con / _, omítala.
 
     if (url.pathname.startsWith('/_')) {
       return false;
-    } // If this looks like a URL for a resource, because it contains // a file extension, skip.
+    } // Si parece una URL para un recurso, porque contiene // una extensión de archivo, omita.
 
     if (url.pathname.match(fileExtensionRegexp)) {
       return false;
-    } // Return true to signal that we want to use the handler.
+    } // Devuelve verdadero para indicar que queremos usar el controlador.
 
     return true;
   },
   createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html')
 );
 
-// An example runtime caching route for requests that aren't handled by the
-// precache, in this case same-origin .png requests like those from in public/
+// Un ejemplo de ruta de almacenamiento en caché en tiempo de ejecución para solicitudes que no son manejadas por el 
+// precaché, en este caso solicitudes .png del mismo origen como las de public /
 registerRoute(
-  // Add in any other file extensions or routing criteria as needed.
-  ({ url }) => url.origin === self.location.origin && url.pathname.endsWith('.png'), // Customize this strategy as needed, e.g., by changing to CacheFirst.
+  // Agregue cualquier otra extensión de archivo o criterio de enrutamiento según sea necesario.
+  ({ url }) => url.origin === self.location.origin && url.pathname.endsWith('.png'), // Personalice esta estrategia según sea necesario, por ejemplo, cambiando a CacheFirst.
   new StaleWhileRevalidate({
     cacheName: 'images',
     plugins: [
-      // Ensure that once this runtime cache reaches a maximum size the
-      // least-recently used images are removed.
+      // Asegúrese de que una vez que esta caché en tiempo de ejecución alcance un tamaño máximo, 
+      // se eliminen las imágenes utilizadas menos recientemente.
       new ExpirationPlugin({ maxEntries: 50 }),
     ],
   })
 );
 
-// This allows the web app to trigger skipWaiting via
-// registration.waiting.postMessage({type: 'SKIP_WAITING'})
+// Esto permite que la aplicación web active skipWaiting a través de registration
+// .waiting.postMessage ({tipo: 'SKIP_WAITING'})
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
 });
 
-// Any other custom service worker logic can go here.
+// Cualquier otra lógica de service worker personalizado puede ir aquí.
+const datosCanciones = [
+  'http://app-07b4677d-3b8b-4041-81f4-c7ed616266d4.cleverapps.io/himjovenes/gethimjovenes.php',
+  'http://app-07b4677d-3b8b-4041-81f4-c7ed616266d4.cleverapps.io/himpoder/gethimpoder.php',
+  'http://app-07b4677d-3b8b-4041-81f4-c7ed616266d4.cleverapps.io/himverde/gethimverde.php',
+  'http://app-07b4677d-3b8b-4041-81f4-c7ed616266d4.cleverapps.io/cronograma/getTurnoMensual.php',
+  'http://app-07b4677d-3b8b-4041-81f4-c7ed616266d4.cleverapps.io/cronograma/getTurnoJovenes.php'
+]
+
+self.addEventListener('install', event => {
+  caches.open('memoria-v1')
+    .then(cache => {
+      return cache.addAll(datosCanciones);
+    })
+})
+
+
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        // Encontro en cache - respuesta de retorno
+        if (response) {
+          return response;
+        }
+
+        // IMPORTANTE: Clona la solicitud. Una solicitud es una transmisión 
+        // y solo se puede consumir una vez. Dado que estamos consumiendo esto 
+        // una vez por caché y una vez por el navegador para recuperar, 
+        // necesitamos clonar la respuesta.
+        var fetchRequest = event.request.clone();
+
+        return fetch(fetchRequest)
+        .then(response => {
+            // Comprueba si recibimos una respuesta válida.
+            if(!response || response.status !== 200 || response.type !== 'basic' || response.type !== 'cors') {
+              return response;
+            }
+
+            // IMPORTANTE: Clona la respuesta. Una respuesta es una secuencia y, 
+            // como queremos que el navegador consuma la respuesta, así como la memoria caché 
+            // que consume la respuesta, debemos clonarla para tener dos secuencias.
+            var responseToCache = response.clone();
+
+            caches.open('memoria-v1')
+              .then(cache => {
+                cache.put(event.request, responseToCache);
+              });
+
+            return response;
+          }
+        );
+      })
+    );
+});

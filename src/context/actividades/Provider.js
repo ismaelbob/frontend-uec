@@ -1,5 +1,6 @@
 import ActividadesContext from './index'
 import { useState } from 'react'
+import Config from '../../config'
 
 function ActividadesProvider ({children}) {
     const [turnos, setTurnos] = useState([])
@@ -10,10 +11,10 @@ function ActividadesProvider ({children}) {
     const getDatos = async () => {
         setCargando(true)
         try {
-            await fetch('https://uecapi.herokuapp.com/cronograma/getTurnoMensual.php')
+            await fetch(`${Config.urlapi}/cronograma/getTurnoMensual.php`)
                 .then(response => response.json())
                 .then(data => setTurnos(data))
-            await fetch('https://uecapi.herokuapp.com/cronograma/getTurnoJovenes.php')
+            await fetch(`${Config.urlapi}/cronograma/getTurnoJovenes.php`)
                 .then(response => response.json())
                 .then(data => setTurnoJov(data))
             setCargando(false)

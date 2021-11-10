@@ -1,5 +1,6 @@
 import SesionContext from './index'
 import { useState } from 'react'
+import Config from '../../config'
 
 function SesionProvider ({children}) {
     const [usuario, setUsuario] = useState(null)
@@ -9,7 +10,7 @@ function SesionProvider ({children}) {
 
     const iniciarSesion = async (datos) => {
         try {
-            const acceder = await fetch('https://uecapi.herokuapp.com/usuarios/iniciarsesion.php', {method: 'POST', body: JSON.stringify(datos)})
+            const acceder = await fetch(`${Config.urlapi}/usuarios/iniciarsesion.php`, {method: 'POST', body: JSON.stringify(datos)})
                 .then(response => response.json())
 
             if (acceder.estado === 'correcto') {
@@ -40,7 +41,7 @@ function SesionProvider ({children}) {
 
     const existeSesion = async () => {
         try {
-            const resultado = await fetch('https://uecapi.herokuapp.com/usuarios/existesesion.php', {method: 'POST'})
+            const resultado = await fetch(`${Config.urlapi}/usuarios/existesesion.php`, {method: 'POST'})
                 .then(response => response.json())
             return resultado
         } catch (error) {

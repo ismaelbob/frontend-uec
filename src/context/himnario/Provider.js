@@ -1,5 +1,6 @@
 import HimnarioContext from './index'
 import { useState } from 'react'
+import Config from '../../config'
 
 function HimnarioProvider ({children}) {
 
@@ -9,7 +10,7 @@ function HimnarioProvider ({children}) {
     const getDatos = async (himnario) => {
         setEstado(false)
         try {
-            await fetch(`https://uecapi.herokuapp.com/${himnario}/getcanciones.php`)
+            await fetch(`${Config.urlapi}/${himnario}/get${himnario}.php`)
                 .then(response => response.json())
                 .then(data => setDatos(data))
             setEstado(true)

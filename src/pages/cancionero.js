@@ -1,4 +1,5 @@
 import React from 'react'
+import Footer from '../components/Footer'
 import './styles/cancionero.css'
 
 class Cancionero extends React.Component {
@@ -36,6 +37,8 @@ class Cancionero extends React.Component {
                         </p>
                     </div>
                 </div>
+
+                <Footer/>
             </div>
         )
     }

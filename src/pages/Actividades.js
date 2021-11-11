@@ -3,6 +3,7 @@ import './styles/actividades.css'
 import Cronograma from '../components/Cronograma'
 import Loader from '../components/Loader'
 import ActividadesContext from '../context/actividades'
+import Footer from '../components/Footer'
 
 function Actividades () {
     const {cargando, turnosJov, turnos, getDatos} = useContext(ActividadesContext)
@@ -25,6 +26,7 @@ function Actividades () {
     return (
         <div className="container">
             <Cronograma turnoMensual={turnos} turnoJovenes={turnosJov}/>
+            <Footer/>
         </div>
     )
 }

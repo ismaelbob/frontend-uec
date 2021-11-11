@@ -4,6 +4,7 @@ import img2 from '../img/foto_b.jpg'
 import img3 from '../img/foto_c.jpg'
 import img4 from '../img/foto_d.jpg'
 import img5 from '../img/foto_e.jpg'
+import Footer from '../components/Footer'
 
 class Home extends React.Component {
     render () {
@@ -123,10 +124,7 @@ class Home extends React.Component {
                     </div>
                 </div>
 
-                <div className="container bg-dark text-light text-center p-3 mt-2">
-                    <p>Iglesia Evangelica Bautista - "Unidos en Cristo</p>
-                    <p>Cochabamba - Bolivia<br></br>2021</p>
-                </div>
+                <Footer/>
             </div>
         )
     }

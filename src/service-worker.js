@@ -71,11 +71,11 @@ self.addEventListener('message', (event) => {
 
 // Cualquier otra lógica de service worker personalizado puede ir aquí.
 const datosCanciones = [
-  'http://app-07b4677d-3b8b-4041-81f4-c7ed616266d4.cleverapps.io/himjovenes/gethimjovenes.php',
-  'http://app-07b4677d-3b8b-4041-81f4-c7ed616266d4.cleverapps.io/himpoder/gethimpoder.php',
-  'http://app-07b4677d-3b8b-4041-81f4-c7ed616266d4.cleverapps.io/himverde/gethimverde.php',
-  'http://app-07b4677d-3b8b-4041-81f4-c7ed616266d4.cleverapps.io/cronograma/getTurnoMensual.php',
-  'http://app-07b4677d-3b8b-4041-81f4-c7ed616266d4.cleverapps.io/cronograma/getTurnoJovenes.php'
+  'https://uecapi.herokuapp.com/himjovenes/getcanciones.php',
+  'https://uecapi.herokuapp.com/himpoder/getcanciones.php',
+  'https://uecapi.herokuapp.com/himverde/getcanciones.php',
+  'https://uecapi.herokuapp.com/cronograma/getTurnoMensual.php',
+  'https://uecapi.herokuapp.com/cronograma/getTurnoJovenes.php'
 ]
 
 self.addEventListener('install', event => {

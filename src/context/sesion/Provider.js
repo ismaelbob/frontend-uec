@@ -18,6 +18,9 @@ function SesionProvider ({children}) {
                 setPass(acceder.pass)
                 setNombre(acceder.nombre)
                 setNivel(acceder.nivel)
+
+                localStorage.setItem('user', datos.usuario)
+                localStorage.setItem('pass', datos.pass)
                 return 'Bienvenido!'
             } else {
                 setUsuario(null)
@@ -37,13 +40,30 @@ function SesionProvider ({children}) {
         setPass(null)
         setNombre(null)
         setNivel(null)
+
+        localStorage.removeItem('user')
+        localStorage.removeItem('pass')
     }
 
     const existeSesion = async () => {
         try {
-            const resultado = await fetch(`${Config.urlapi}/usuarios/existesesion.php`, {method: 'POST'})
+            const datoStorage = { usuario: localStorage.getItem('user'), pass: localStorage.getItem('pass')}
+            const resultado = await fetch(`${Config.urlapi}/usuarios/iniciarsesion.php`, {method: 'POST', body: JSON.stringify(datoStorage)})
                 .then(response => response.json())
-            return resultado
+            if (resultado.estado === 'correcto') {
+                setUsuario(resultado.usuario)
+                setPass(resultado.pass)
+                setNombre(resultado.nombre)
+                setNivel(resultado.nivel)
+
+                return 'Bienvenido!'
+            } else {
+                setUsuario(null)
+                setPass(null)
+                setNombre(null)
+                setNivel(null)
+                return 'Datos incorrectos'
+            }
         } catch (error) {
             return 'No se pudo conectar'
         }

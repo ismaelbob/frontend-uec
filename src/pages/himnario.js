@@ -14,12 +14,18 @@ function Himnario (props) {
     const [datosFiltrados, setDatosFiltrados] = useState([])
 
     const {datos, getDatos} = useContext(HimnarioContext)
-    const {nombre} = useContext(SesionContext)
+    const {nombre, existeSesion} = useContext(SesionContext)
 
 
     useEffect(() => {
         if (!datos?.length) {
             getDatos(props.match.params.himnario)
+        }
+        if (localStorage.getItem('user') && localStorage.getItem('pass')) {
+            const verificar = async () => {
+                await existeSesion()
+            }
+            verificar()
         }
         // eslint-disable-next-line
     }, [])

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import './styles/login.css'
 import Loader from '../components/Loader'
 import Formlogin from '../components/Formlogin'
@@ -9,8 +9,24 @@ function Usuario (props) {
     const [datos, setDatos] = useState({usuario: '', pass: ''})
     const [cargando, setCargando] = useState(false)
     const [mensaje, setMensaje] = useState('')
-    const {iniciarSesion, nombre, cerrarSesion} = useContext(SesionContext)
+    const {iniciarSesion, nombre, cerrarSesion, existeSesion} = useContext(SesionContext)
 
+    useEffect(() => {
+        if (localStorage.getItem('user') && localStorage.getItem('pass')) {
+            setCargando(true)
+            const verificar = async () => {
+                const consulta = await existeSesion()
+                if (consulta === 'correcto') {
+                    setMensaje('Bienvenido!')
+                } else {
+                    setMensaje(consulta)
+                }
+                setCargando(false)
+            }
+            verificar()
+        }
+        // eslint-disable-next-line
+    }, [])
 
     const handleChange = (event) => {
         setDatos({
@@ -39,6 +55,7 @@ function Usuario (props) {
 
     const salirDeSesion = () => {
         cerrarSesion()
+        setMensaje('')
     }
 
     if (cargando === true) {

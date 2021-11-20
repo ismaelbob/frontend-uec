@@ -38,10 +38,6 @@ class Addcancion extends React.Component {
         }
     }
 
-    componentWillUnmount () {
-        console.log('Desmontado')
-    }
-
     async traerUltimoNumero () {
         this.setState({cargando: true, errorMessage: null})
         try {

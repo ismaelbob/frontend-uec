@@ -3,6 +3,7 @@ import './styles/addcancion.css'
 import Btnback from '../components/Btnback'
 import Formcancion from '../components/Formcancion'
 import Loader from '../components/Loader'
+import SesionContext from '../context/sesion'
 
 class Addcancion extends React.Component {
     state = {
@@ -20,8 +21,13 @@ class Addcancion extends React.Component {
         respuestaId: '',
         idcancionactual: '',
     }
+    static contextType = SesionContext
+
     componentDidMount () {
-        this.traerUltimoNumero()
+        if (localStorage.getItem('user') && localStorage.getItem('pass')) {
+            this.traerUltimoNumero()
+            this.context.existeSesion()
+        }
     }
 
     componentDidUpdate (prevProps, prevState) {
@@ -30,6 +36,10 @@ class Addcancion extends React.Component {
                 .then(response => response.json())
                 .then(data =>  this.setState({respuestaId: data.estado}))
         }
+    }
+
+    componentWillUnmount () {
+        console.log('Desmontado')
     }
 
     async traerUltimoNumero () {
@@ -85,6 +95,9 @@ class Addcancion extends React.Component {
 
 
     render () {
+        if (!localStorage.getItem('user')) {
+            this.props.history.push('/cancionero')
+        }
         if (this.state.cargando) {
             return (
                 <div className="container mt-2 d-flex justify-content-center">

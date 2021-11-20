@@ -3,6 +3,8 @@ import Btnback from '../components/Btnback'
 import Formcancion from '../components/Formcancion'
 import Loader from '../components/Loader'
 
+import SesionContext from '../context/sesion'
+
 class Editcancion extends React.Component {
     state = {
         datosCancion: {
@@ -20,8 +22,13 @@ class Editcancion extends React.Component {
         idcancionactual: '',
     }
 
+    static contextType = SesionContext
+
     componentDidMount () {
-        this.traerDatosCancion()
+        if (localStorage.getItem('user') && localStorage.getItem('pass')) {
+            this.traerDatosCancion()
+            this.context.existeSesion()
+        }
     }
     
     componentDidUpdate (prevProps, prevState) {
@@ -79,6 +86,10 @@ class Editcancion extends React.Component {
     }
 
     render () {
+        if (!localStorage.getItem('user')) {
+            this.props.history.push('/cancionero')
+        }
+        
         if (this.state.cargando) {
             return (
                 <div className="container mt-2 d-flex justify-content-center">

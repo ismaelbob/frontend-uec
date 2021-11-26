@@ -13,7 +13,7 @@ function Cronograma ({turnoMensual, turnoJovenes}) {
 
     return (
         <div className="mt-2 container">
-            <div className="head_titulo my-3"><h5>Rol de direccion de culto "Ministerios"</h5></div>
+            <div className="head_titulo my-3">Rol de direccion de culto "Ministerios"</div>
             <TurnoMes datosSemana={mes1} datosJovenes={jov1} nomMes={mes1[0].nom_mes}/>
             <TurnoMes datosSemana={mes2} datosJovenes={jov2} nomMes={mes2[0].nom_mes}/>
             <TurnoMes datosSemana={mes3} datosJovenes={jov3} nomMes={mes3[0].nom_mes}/>

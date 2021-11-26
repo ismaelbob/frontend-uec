@@ -3,6 +3,8 @@ import './styles/addcancion.css'
 import Btnback from '../components/Btnback'
 import Formcancion from '../components/Formcancion'
 import Loader from '../components/Loader'
+import Config from '../config'
+
 import SesionContext from '../context/sesion'
 
 class Addcancion extends React.Component {
@@ -32,7 +34,7 @@ class Addcancion extends React.Component {
 
     componentDidUpdate (prevProps, prevState) {
         if(this.state.datosCancion.idcancion !== prevState.datosCancion.idcancion) {
-            fetch(`https://uecapi.herokuapp.com/${this.props.match.params.himnario}/verificarExiste.php`, {method: 'POST', body: JSON.stringify(this.state.datosCancion.idcancion)})
+            fetch(`${Config.urlapi}/${this.props.match.params.himnario}/verificarExiste.php`, {method: 'POST', body: JSON.stringify(this.state.datosCancion.idcancion)})
                 .then(response => response.json())
                 .then(data =>  this.setState({respuestaId: data.estado}))
         }
@@ -41,7 +43,7 @@ class Addcancion extends React.Component {
     async traerUltimoNumero () {
         this.setState({cargando: true, errorMessage: null})
         try {
-            await fetch(`https://uecapi.herokuapp.com/${this.props.match.params.himnario}/getUltimaCancion.php`)
+            await fetch(`${Config.urlapi}/${this.props.match.params.himnario}/getUltimaCancion.php`)
                 .then(response => response.json())
                 .then(data => this.setState({datosCancion: {
                     ...this.state.datosCancion,
@@ -71,12 +73,26 @@ class Addcancion extends React.Component {
         } else {
             this.setState({cargando: true, errorMessage: null})
             try {
-                await fetch(`https://uecapi.herokuapp.com/${this.props.match.params.himnario}/addCancion.php`, {method: 'POST', body: JSON.stringify(this.state.datosCancion)})
+                await fetch(`${Config.urlapi}/${this.props.match.params.himnario}/addCancion.php`, {method: 'POST', body: JSON.stringify(this.state.datosCancion)})
                     .then(respuesta => respuesta.json())
                     .then(data => this.setState({respuesta: data.estado}))
-                form.classList.remove('was-validated')
-                this.setState({cargando: false, respuestaId: 'No disponible'})
-                this.props.history.push(`/cancionero/${this.props.match.params.himnario}/${this.state.datosCancion.idcancion}`)
+                
+                await caches.open('memoria-v1')
+                .then(cache => {
+                    cache.delete(`https://uecapi.herokuapp.com/${this.props.match.params.himnario}/getcanciones.php`)
+                        .then(async response => {
+                            if(response) {
+                                await caches.open('memoria-v1')
+                                .then(cache => {
+                                    return cache.add(`https://uecapi.herokuapp.com/${this.props.match.params.himnario}/getcanciones.php`)
+                                })
+                                form.classList.remove('was-validated')
+                                this.setState({cargando: false, respuestaId: 'No disponible'})
+                                this.props.history.push(`/cancionero/${this.props.match.params.himnario}/${this.state.datosCancion.idcancion}`)
+                                window.location.reload()
+                            }
+                        })
+                    })
             } catch (error) {
                 this.setState({errorMessage: error, cargando: false})
             }

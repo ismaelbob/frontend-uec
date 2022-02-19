@@ -22,10 +22,22 @@ function ActividadesProvider ({children}) {
             console.log('Ocurrio un error al traer los datos')
         }
     }
+
+    const getSemana = async (idsemana) => {
+        setCargando(true)
+        try {
+            await fetch(`${Config.urlapi}/cronograma/getTurnoSemana.php`, {method: 'POST', body: JSON.stringify(idsemana)})
+            .then(response => response.json())
+
+            setCargando(false)
+        } catch (error) {
+            console.log('Ocurrio un error al traer datos de semana')
+        }
+    }
     
 
     return (
-        <ActividadesContext.Provider value={{turnosJov, turnos, cargando, getDatos}}>
+        <ActividadesContext.Provider value={{turnosJov, turnos, cargando, getDatos, getSemana}}>
             {children}
         </ActividadesContext.Provider>
     )

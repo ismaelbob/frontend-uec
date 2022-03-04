@@ -15,6 +15,8 @@ import Usuario from './pages/Usuario'
 import HimnarioProvider from './context/himnario/Provider'
 import SesionProvider from './context/sesion/Provider'
 import ActividadesProvider from './context/actividades/Provider'
+import EditTurnoSemana from './pages/EditTurnoSemana'
+import EditTurnoSemanaJov from './pages/EditTurnoSemanaJov'
 function App () {
     return (
         <BrowserRouter>
@@ -26,6 +28,8 @@ function App () {
                                 <Route path="/" exact component={Home}/>
                                 <Route path="/cancionero" exact component={Cancionero}/>
                                 <Route path="/actividades" exact component={Actividades}/>
+                                <Route path="/actividades/editarsemana/:id" exact component={EditTurnoSemana}/>
+                                <Route path="/actividades/editarsemanajov/:id" exact component={EditTurnoSemanaJov}/>
                                 <Route path="/ofrendas" exact component={Ofrendas}/>
                                 <Route path="/login" exact component={Usuario}/>
                                 <Route path="/cancionero/nuevacancion/:himnario" exact component={Addcancion}/>

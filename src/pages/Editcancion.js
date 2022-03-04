@@ -76,12 +76,12 @@ class Editcancion extends React.Component {
 
             await caches.open('memoria-v1')
                 .then(cache => {
-                    cache.delete(`https://uecapi.herokuapp.com/${this.props.match.params.himnario}/getcanciones.php`)
+                    cache.delete(`${Config.urlapi}/${this.props.match.params.himnario}/getcanciones.php`)
                         .then(async response => {
                             if(response) {
                                 await caches.open('memoria-v1')
                                 .then(cache => {
-                                    return cache.add(`https://uecapi.herokuapp.com/${this.props.match.params.himnario}/getcanciones.php`)
+                                    return cache.add(`${Config.urlapi}/${this.props.match.params.himnario}/getcanciones.php`)
                                 })
                                 this.setState({cargando: false})
                                 this.props.history.push(`/cancionero/${this.props.match.params.himnario}/${this.props.match.params.id}`)

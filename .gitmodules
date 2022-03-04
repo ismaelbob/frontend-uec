@@ -1,0 +1,3 @@
+[submodule "frontend-uec"] 
+  path = frontend-uec
+  url = https://github.com/ismaelbob/frontend-uec

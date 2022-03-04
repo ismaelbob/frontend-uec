@@ -65,7 +65,7 @@ function Editcronograma (props) {
                                 return cache.add(`${Config.urlapi}/cronograma/getTurnoMensual.php`)
                             })
                             this.setState({cargando: false})
-                            this.props.history.push(`/cronograma`)
+                            this.props.history.push(`/actividades`)
                             window.location.reload()
                         }
                     })

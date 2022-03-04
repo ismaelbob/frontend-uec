@@ -59,7 +59,7 @@ function EditTurnoSemanaJov (props) {
                                 return cache.add(`${Config.urlapi}/cronograma/getTurnoJovenes.php`)
                             })
                             this.setState({cargando: false})
-                            this.props.history.push(`/cronograma`)
+                            this.props.history.push(`/actividades`)
                             window.location.reload()
                         }
                     })

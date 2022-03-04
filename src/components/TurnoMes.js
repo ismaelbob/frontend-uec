@@ -2,7 +2,7 @@ import React from "react"
 import { Link } from "react-router-dom"
 import IconEdit from '../img/menu_sec.svg'
 
-function TurnoMes ({datosSemana, datosJovenes, nomMes, user, level}) {
+function TurnoMes ({datosSemana, datosJovenes, nomMes, user, level, idMes}) {
     return (
         <>
             <div className="text-center">{nomMes}</div>
@@ -14,7 +14,7 @@ function TurnoMes ({datosSemana, datosJovenes, nomMes, user, level}) {
                     <div>Jue</div>
                     <div>
                         {
-                            user !== '' && level === 'A' ? <div className="btn-edit-month"><img src={IconEdit} alt="Edit" width="16px"/></div> : <div></div>
+                            user !== '' && level === 'A' ? <Link to={`/actividades/editarmes/${idMes}`}><div className="btn-edit-month"><img src={IconEdit} alt="Edit" width="16px"/></div></Link> : <div></div>
                         }
                     </div>
                 </div>

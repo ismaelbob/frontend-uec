@@ -46,7 +46,9 @@ function TurnoMes ({datosSemana, datosJovenes, nomMes, user, level, idMes}) {
                         <div key={semana.idsemana_jov} className="col-6 col-md-3 mb-1 mb-md-0 cronograma_row-week">
                             <div style={{background: semana.color_grupo}}>
                                 {semana.fecha.substr(8,2)}{' ' + semana.nom_grupo}
-                                <Link to={`actividades/editarsemanajov/${semana.idsemana_jov}`}><div className="submenu"><img src={IconEdit} alt="Edit" width="16px"/></div></Link> 
+                                {
+                                    user !== '' && level === 'A' ? <Link to={`actividades/editarsemanajov/${semana.idsemana_jov}`}><div className="submenu"><img src={IconEdit} alt="Edit" width="16px"/></div></Link> : <div></div>
+                                } 
                             </div>
                         </div>
                     )

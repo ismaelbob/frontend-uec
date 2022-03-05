@@ -20,7 +20,6 @@ function Editcronograma (props) {
     })
 
     useEffect(() => {
-        console.log(localStorage.getItem('user'))
         if (localStorage.getItem('user') && localStorage.getItem('pass')) {
             existeSesion()
             traerDatos()

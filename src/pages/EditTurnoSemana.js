@@ -53,7 +53,7 @@ function Editcronograma (props) {
         try {
             await fetch(`${Config.urlapi}/cronograma/setTurnoSemana.php`, {method: 'POST', body: JSON.stringify(datosSemana)})
                 .then(response => response.json())
-                .then(res => setEstado({...estado, estado: true, mensaje: res.estado}))
+                .then(res => setEstado({mensaje: res.estado}))
             
             await caches.open('memoria-v1')
             .then(cache => {

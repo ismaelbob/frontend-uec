@@ -78,12 +78,12 @@ function EditNombreMes (props) {
 
     return (
         <div className='container'>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="needs-validation" noValidate id='form-nom_mes'>
                 <h4 className='text-center text-secondary mt-3'>Editar nombre de mes</h4>
                 <label className="label-control text-secondary">ID de mes: {props.match.params.id}</label>
                <div className='form-group'>
                     <label htmlFor="nom_mes" className="label-control text-secondary mt-3">Mes:</label>
-                    <input type="text" className="form-control" name="nom_mes" id="nom_mes" value={datos.nom_mes} onChange={handleChange}/>
+                    <input type="text" className="form-control" name="nom_mes" id="nom_mes" value={datos.nom_mes} onChange={handleChange} required/>
                </div>
                <input value="Guardar cambios" type="submit" className="btn btn-primary w-100"/>
             </form>

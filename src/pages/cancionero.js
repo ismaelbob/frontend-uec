@@ -5,7 +5,7 @@ import SesionContext from '../context/sesion'
 
 function Cancionero () {
     const {existeSesion} = useContext(SesionContext)
-    //const btnActualizarLista = document.getElementById('btn-actualizar-lista')
+    const btnActualizarLista = document.getElementById('btn-actualizar-lista')
 
     useEffect(() => {
         if (localStorage.getItem('user') && localStorage.getItem('pass')) {
@@ -15,16 +15,22 @@ function Cancionero () {
             verificar()
         }
         
+        if(navigator.onLine) {
+            enLinea()
+        } else {
+            fueraDeLinea()
+        }
+
         window.addEventListener('online', enLinea)
         window.addEventListener('offline', fueraDeLinea)
         // eslint-disable-next-line
     }, [])
 
     const enLinea = () => {
-        console.log('En linea')
+        btnActualizarLista.classList.add('d-none')
     }
     const fueraDeLinea = () => {
-        console.log('Fuera de linea')
+        btnActualizarLista.classList.remove('d-none')
     }
 
     return (

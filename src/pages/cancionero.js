@@ -5,6 +5,7 @@ import SesionContext from '../context/sesion'
 
 function Cancionero () {
     const {existeSesion} = useContext(SesionContext)
+    //const btnActualizarLista = document.getElementById('btn-actualizar-lista')
 
     useEffect(() => {
         if (localStorage.getItem('user') && localStorage.getItem('pass')) {
@@ -13,11 +14,22 @@ function Cancionero () {
             }
             verificar()
         }
+        
+        window.addEventListener('online', enLinea)
+        window.addEventListener('offline', fueraDeLinea)
         // eslint-disable-next-line
     }, [])
 
+    const enLinea = () => {
+        console.log('En linea')
+    }
+    const fueraDeLinea = () => {
+        console.log('Fuera de linea')
+    }
+
     return (
         <div className="container screen_principal">
+            <div className='mt-3 d-flex justify-content-center'><button className="btn btn-primary" id="btn-actualizar-lista">Actualizar lista de canciones</button></div>
             <h4 className="text-center mt-3">HIMNARIOS</h4>
             <div className="row d-flex justify-content-center mb-4">
                 <a href="cancionero/himverde">

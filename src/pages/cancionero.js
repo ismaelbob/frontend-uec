@@ -30,7 +30,7 @@ function Cancionero () {
     }, [])
 
     const actualizarCache = async () => {
-        const datosCanciones = [
+        /*const datosCanciones = [
             'https://uecapi.herokuapp.com/himjovenes/getcanciones.php',
             'https://uecapi.herokuapp.com/himpoder/getcanciones.php',
             'https://uecapi.herokuapp.com/himverde/getcanciones.php',
@@ -50,7 +50,8 @@ function Cancionero () {
                                 window.location.reload()
                             }
                         })
-                    })
+                    })*/
+        alert('Actualizado')
     }
 
 

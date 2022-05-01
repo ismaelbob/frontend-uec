@@ -2,9 +2,11 @@ import React, {useEffect, useContext} from 'react'
 import Footer from '../components/Footer'
 import './styles/cancionero.css'
 import SesionContext from '../context/sesion'
+import Loading from '../components/Loader'
 
 function Cancionero () {
     const {existeSesion} = useContext(SesionContext)
+    const [cargando, setCargando] = useContext(false)
 
     useEffect(() => {
         if (localStorage.getItem('user') && localStorage.getItem('pass')) {
@@ -30,7 +32,8 @@ function Cancionero () {
     }, [])
 
     const actualizarCache = async () => {
-        /*const datosCanciones = [
+        setCargando(true)
+        const datosCanciones = [
             'https://uecapi.herokuapp.com/himjovenes/getcanciones.php',
             'https://uecapi.herokuapp.com/himpoder/getcanciones.php',
             'https://uecapi.herokuapp.com/himverde/getcanciones.php',
@@ -47,14 +50,19 @@ function Cancionero () {
                                 .then(cache => {
                                     return cache.addAll(datosCanciones)
                                 })
-                                window.location.reload()
+                                //window.location.reload()
+                                setCargando(false)
                             }
                         })
-                    })*/
-        alert('Actualizado')
+                    })
     }
 
 
+    if (cargando) {
+        return (
+            <div className='container mt-3 d-flex justify-content-center'><Loading/></div>
+        )
+    }
     return (
         <div className="container screen_principal">
             <div className='mt-3 d-flex justify-content-center'><button onClick={actualizarCache} className="btn btn-primary" id="btn-actualizar-lista">Actualizar lista de canciones</button></div>

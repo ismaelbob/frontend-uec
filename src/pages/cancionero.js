@@ -47,7 +47,7 @@ function Cancionero () {
                                 .then(cache => {
                                     return cache.addAll(datosCanciones)
                                 })
-                                //window.location.reload()
+                                window.location.reload()
                             }
                         })
                     })

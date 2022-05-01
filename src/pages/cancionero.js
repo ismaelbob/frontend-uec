@@ -5,7 +5,6 @@ import SesionContext from '../context/sesion'
 
 function Cancionero () {
     const {existeSesion} = useContext(SesionContext)
-    const btnActualizarLista = document.getElementById('btn-actualizar-lista')
 
     useEffect(() => {
         if (localStorage.getItem('user') && localStorage.getItem('pass')) {
@@ -16,26 +15,48 @@ function Cancionero () {
         }
         
         if(navigator.onLine) {
-            enLinea()
+            document.getElementById('btn-actualizar-lista').classList.remove('d-none')
         } else {
-            fueraDeLinea()
+            document.getElementById('btn-actualizar-lista').classList.add('d-none')
         }
-
-        window.addEventListener('online', enLinea)
-        window.addEventListener('offline', fueraDeLinea)
+        window.addEventListener('online', () => {
+            document.getElementById('btn-actualizar-lista').classList.remove('d-none')
+        })
+        window.addEventListener('offline', () => {
+            document.getElementById('btn-actualizar-lista').classList.add('d-none')
+        })
+        
         // eslint-disable-next-line
     }, [])
 
-    const enLinea = () => {
-        btnActualizarLista.classList.add('d-none')
+    const actualizarCache = async () => {
+        const datosCanciones = [
+            'https://uecapi.herokuapp.com/himjovenes/getcanciones.php',
+            'https://uecapi.herokuapp.com/himpoder/getcanciones.php',
+            'https://uecapi.herokuapp.com/himverde/getcanciones.php',
+            'https://uecapi.herokuapp.com/cronograma/getTurnoMensual.php',
+            'https://uecapi.herokuapp.com/cronograma/getTurnoJovenes.php'
+        ]
+
+        await caches.open('memoria-v1')
+                .then(cache => {
+                    cache.delete(datosCanciones)
+                        .then(async response => {
+                            if(response) {
+                                await caches.open('memoria-v1')
+                                .then(cache => {
+                                    return cache.addAll(datosCanciones)
+                                })
+                                //window.location.reload()
+                            }
+                        })
+                    })
     }
-    const fueraDeLinea = () => {
-        btnActualizarLista.classList.remove('d-none')
-    }
+
 
     return (
         <div className="container screen_principal">
-            <div className='mt-3 d-flex justify-content-center'><button className="btn btn-primary" id="btn-actualizar-lista">Actualizar lista de canciones</button></div>
+            <div className='mt-3 d-flex justify-content-center'><button onClick={actualizarCache} className="btn btn-primary" id="btn-actualizar-lista">Actualizar lista de canciones</button></div>
             <h4 className="text-center mt-3">HIMNARIOS</h4>
             <div className="row d-flex justify-content-center mb-4">
                 <a href="cancionero/himverde">

@@ -1,4 +1,4 @@
-import React, {useEffect, useContext} from 'react'
+import React, {useEffect, useContext, useState} from 'react'
 import Footer from '../components/Footer'
 import './styles/cancionero.css'
 import SesionContext from '../context/sesion'
@@ -6,7 +6,7 @@ import Loading from '../components/Loader'
 
 function Cancionero () {
     const {existeSesion} = useContext(SesionContext)
-    const [cargando, setCargando] = useContext(false)
+    const [cargando, setCargando] = useState(false)
 
     useEffect(() => {
         if (localStorage.getItem('user') && localStorage.getItem('pass')) {

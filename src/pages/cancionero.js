@@ -3,6 +3,7 @@ import Footer from '../components/Footer'
 import './styles/cancionero.css'
 import SesionContext from '../context/sesion'
 import Loading from '../components/Loader'
+import Config from '../config'
 
 function Cancionero () {
     const {existeSesion} = useContext(SesionContext)
@@ -36,17 +37,35 @@ function Cancionero () {
 
         await caches.open('memoria-v1')
                 .then(cache => {
-                    cache.delete('https://uecapi.herokuapp.com/himjovenes/getcanciones.php')
+                    cache.delete(`${Config.urlapi}/himjovenes/getcanciones.php`)
                         .then(async response => {
                             if(response) {
                                 await caches.open('memoria-v1')
                                 .then(cache => {
-                                    return cache.add('https://uecapi.herokuapp.com/himjovenes/getcanciones.php')
+                                    return cache.add(`${Config.urlapi}/himjovenes/getcanciones.php`)
                                 })
-                                //window.location.reload()
-                                setCargando(false)
                             }
                         })
+                    cache.delete(`${Config.urlapi}/himpoder/getcanciones.php`)
+                    .then(async response => {
+                        if(response) {
+                            await caches.open('memoria-v1')
+                            .then(cache => {
+                                return cache.add(`${Config.urlapi}/himpoder/getcanciones.php`)
+                            })
+                        }
+                    })
+                    cache.delete(`${Config.urlapi}/himverde/getcanciones.php`)
+                        .then(async response => {
+                            if(response) {
+                                await caches.open('memoria-v1')
+                                .then(cache => {
+                                    return cache.add(`${Config.urlapi}/himverde/getcanciones.php`)
+                                })
+                                //window.location.reload()
+                            }
+                        })
+                    setCargando(false)
                     })
     }
 

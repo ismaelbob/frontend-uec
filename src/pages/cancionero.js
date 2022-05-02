@@ -33,22 +33,15 @@ function Cancionero () {
 
     const actualizarCache = async () => {
         setCargando(true)
-        const datosCanciones = [
-            'https://uecapi.herokuapp.com/himjovenes/getcanciones.php',
-            'https://uecapi.herokuapp.com/himpoder/getcanciones.php',
-            'https://uecapi.herokuapp.com/himverde/getcanciones.php',
-            'https://uecapi.herokuapp.com/cronograma/getTurnoMensual.php',
-            'https://uecapi.herokuapp.com/cronograma/getTurnoJovenes.php'
-        ]
 
         await caches.open('memoria-v1')
                 .then(cache => {
-                    cache.delete(datosCanciones)
+                    cache.delete('https://uecapi.herokuapp.com/himjovenes/getcanciones.php')
                         .then(async response => {
                             if(response) {
                                 await caches.open('memoria-v1')
                                 .then(cache => {
-                                    return cache.addAll(datosCanciones)
+                                    return cache.add('https://uecapi.herokuapp.com/himjovenes/getcanciones.php')
                                 })
                                 //window.location.reload()
                                 setCargando(false)

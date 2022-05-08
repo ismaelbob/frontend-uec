@@ -22,15 +22,15 @@ function Actividades () {
         }
 
         if(navigator.onLine) {
-            document.getElementById('btn-actualizar-lista').classList.remove('d-none')
+            //document.getElementById('btn-actualizar-cronograma').classList.remove('d-none')
         } else {
-            document.getElementById('btn-actualizar-lista').classList.add('d-none')
+            document.getElementById('btn-actualizar-cronograma').classList.add('d-none')
         }
         window.addEventListener('online', () => {
-            document.getElementById('btn-actualizar-lista').classList.remove('d-none')
+            document.getElementById('btn-actualizar-cronograma').classList.remove('d-none')
         })
         window.addEventListener('offline', () => {
-            document.getElementById('btn-actualizar-lista').classList.add('d-none')
+            document.getElementById('btn-actualizar-cronograma').classList.add('d-none')
         })
         // eslint-disable-next-line
     }, [])
@@ -38,7 +38,7 @@ function Actividades () {
         //
     }, [turnos])
 
-    const actualizarCache = async () => {
+    const actualizarCacheActividades = async () => {
         setActualizando(true)
 
         await caches.open('memoria-v1')
@@ -81,7 +81,7 @@ function Actividades () {
     return (
         <div className="container">
             <Cronograma turnoMensual={turnos} turnoJovenes={turnosJov} usuario={usuario} nivel={nivel}/>
-            <div className='mt-3 d-flex justify-content-center'><button onClick={actualizarCache} className="btn btn-primary" id="btn-actualizar-lista">Actualizar lista de turno</button></div>
+            <div className='mt-3 d-flex justify-content-center'><button onClick={actualizarCacheActividades} className="btn btn-primary" id="btn-actualizar-cronograma">Actualizar lista de turno</button></div>
             <Footer/>
         </div>
     )

@@ -1,17 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Navbar from './components/Navbar'
+import NavBarDown from './components/NavBarDown'
 
 function Layout (props) {
-    const [menuActivo, setMenuActivo] = useState('Inicio')
-
-    const handleMenuActivo = (event) => {
-        setMenuActivo(event.target.text)
-    }
-
     return (
         <React.Fragment>
-            <Navbar activo={menuActivo} onChangeMenu={handleMenuActivo}/>
+            <Navbar/>
             {props.children}
+            <NavBarDown/>
         </React.Fragment>
     )
 }

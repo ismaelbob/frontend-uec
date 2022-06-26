@@ -1,55 +1,35 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import './styles/navbar.css'
 import {Link} from 'react-router-dom'
 import logo from '../img/UEC.png'
+import IconUser from '../img/user.svg'
 
 import SesionContext from '../context/sesion'
+import MenuActivoContext from '../context/menuactivo'
 
 function Navbar (props) {
-    const [menuActivo, setMenuActivo] = useState('0')
-    const [toggle, setToggle] = useState(false)
 
     const {nombre} = useContext(SesionContext)
-
-    const handleClickToggle = (event) => {
-        const menuSandwich = document.querySelector('#links')
-        if(event.target.tagName === 'A') {
-            setToggle(false)
-            setMenuActivo(event.target.name)
-            menuSandwich.classList.remove('active')
-        } else {
-            if (toggle) {
-                menuSandwich.classList.remove('active')
-                setToggle(false)
-            } else {
-                menuSandwich.classList.add('active')
-                setToggle(true)
-            }
-        }
-    }
-
+    const {page, handleClick} = useContext(MenuActivoContext)
 
     return (
-        <div className="box_navbar">
+        <div className="box_navbar container-fluid">
             <div className="box_navbar-logo"><img src={logo} alt="Logo"/></div>
             <div className="box_navbar-link" id="links">
                 <div className="box_navbar-link-left">
-                    <h4>Unidos en Cristo</h4>
-                    <Link name="0" to="/" onClick={handleClickToggle} className={menuActivo === '0' ? 'activo' : ''}>Inicio</Link>
-                    <Link name="1" to="/cancionero" onClick={handleClickToggle} className={menuActivo === '1' ? 'activo' : ''}>Cancionero</Link>
-                    <Link name="2" to="/actividades" onClick={handleClickToggle} className={menuActivo === '2' ? 'activo' : ''}>Actividades</Link>
+                    <Link id='1' onClick={handleClick} className={page === '1' ? 'activo' : ''} to="/">Inicio</Link>
+                    <Link id='2' onClick={handleClick} className={page === '2' ? 'activo' : ''} to="/cancionero">Cancionero</Link>
+                    <Link id='3' onClick={handleClick} className={page === '3' ? 'activo' : ''} to="/actividades">Cronograma</Link>
                 </div>
                 <div className="box_navbar-link-right">
                     {
                         nombre !== null ?
-                            <Link name="4" to="/login" onClick={handleClickToggle} className={menuActivo === '4' ? 'activo' : ''}>{nombre}</Link>
+                            <Link id='4' onClick={handleClick} className={page === '4' ? 'activo' : ''} to="/login">{nombre}</Link>
                             :
-                            <Link name="4" to="/login" onClick={handleClickToggle} className={menuActivo === '4' ? 'activo' : ''}>Iniciar sesion</Link>
+                            <Link id='4' onClick={handleClick} className={page === '4' ? 'activo' : ''} to="/login"><img src={IconUser} alt="user"/>Usuario</Link>
                     }
-                    <button onClick={handleClickToggle}>&times;</button>
                 </div>
             </div>
-            <div className="box_navbar-toggle"><button onClick={handleClickToggle}>&#9776;</button></div>
         </div>
     )
 

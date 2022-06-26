@@ -6,11 +6,15 @@ import img4 from '../img/foto_d.jpg'
 import img5 from '../img/foto_e.jpg'
 import Footer from '../components/Footer'
 import SesionContext from '../context/sesion'
+import MenuActivoContext from '../context/menuactivo'
 
 function Home () {
     const {existeSesion} = useContext(SesionContext)
+    const {setPage} = useContext(MenuActivoContext)
 
     useEffect(() => {
+        localStorage.setItem('pagina', '1')
+        setPage('1')
         if (localStorage.getItem('user') && localStorage.getItem('pass')) {
             const verificar = async () => {
                 await existeSesion()
@@ -131,7 +135,7 @@ function Home () {
             <div className="container">
                 <div className="bg-light">
                     <div>
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d944.720444256612!2d-66.10751173010414!3d-17.447048262684724!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2sbo!4v1611193718733!5m2!1ses!2sbo" style={{'border': 'none'}} width="100%" height="400" allowFullScreen="" aria-hidden="false" tabIndex="0" title="ubicacion"></iframe>
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4526.425397801151!2d-66.10797133935124!3d-17.447510198296374!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xc757ed3d4438bb54!2sIglesia%20Evang%C3%A9lica%20Bautista%20%22Unidos%20en%20Cristo%22!5e0!3m2!1sen!2sbo!4v1655604486637!5m2!1sen!2sbo" width="100%" height="400" style={{'border': 'none'}} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="ubicacion"></iframe>
                     </div>
                 </div>
             </div>

@@ -11,99 +11,24 @@
     height: 50px;
     align-items: center;
 }
-
+.box_navbar-link-left {
+    display: none;
+}
 
 
 .box_navbar-logo img {
     width: 55px;
-    margin: 0 1em;
 }
 
-
-
-.box_navbar-link {
-    position: fixed;
-    top: 0px;
-    background-color: rgba(228, 228, 228, 0.95);
-    backdrop-filter: blur(2px);
-    flex-direction: column;
-    width: 100vw;
-    height: 100vh;
-    z-index: 2;
-    display: none;
-}
-.box_navbar-link-left {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.box_navbar-link-right {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-right: 0;
-}
-.box_navbar-link-right button {
-    background-color: rgba(255, 255, 255, 0.3);
-    border: none;
-    border-radius: 40px;
-    width: 40px;
-    height: 40px;
-    padding: 0 0px;
-    color: #2A71B2;
-    font-size: 28px;
-    display: inline-block;
-    margin-top: .5em;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-}
-.box_navbar-link h4 {
-    margin: 0;
-    padding: 0;
-    font-family: 'Lobster', cursive;
-}
 .box_navbar-link a {
     margin: 12px 0px;
     text-decoration: none;
 }
 .box_navbar-link a:hover {
-    color: #2165a5;
-    border-bottom: 1px solid #2165a5;
+    color: #1f619e;
 }
 .activo {
-    color: #2165a5;
-    border-bottom: 1px solid #2165a5;
-}
-.box_navbar-link.active {
-    display: inline-block;
-    transition: 1s ease all;
-    animation: entrada .1s ease forwards;
-}
-
-
-
-
-
-.box_navbar-toggle {
-    margin: 0 1em;
-}
-.box_navbar-toggle button {
-    background-color: rgba(255, 255, 255, 0);
-    border: none;
-    color: cornflowerblue;
-    font-size: 28px;
-}
-
-
-
-@keyframes entrada {
-    from {
-        opacity: 0;
-        transform: translateX(-100vw);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+    color: #1f619e;
 }
 
 @media only screen and (min-width: 768px) {
@@ -123,25 +48,19 @@
         margin: 0px 8px;
         text-decoration: none;
     }
-    .box_navbar-link-left {
-        display: flex;
-        flex-direction: row;
-    }
-    .box_navbar-link-right {
-        flex-direction: row;
-        justify-content: center;
-        margin-right: .5em;
-    }
-    .box_navbar-toggle {
-        display: none;
-    }
     .box_navbar-link.active {
         animation: none;
         position: static;
         display: flex;
     }
-    .box_navbar-link-right button {
-        display: none;
+
+    .box_navbar-link-left {
+        display: flex;
+        align-items: center;
+    }
+    .box_navbar-link-right {
+        display: flex;
+        align-items: center;
     }
 
 }

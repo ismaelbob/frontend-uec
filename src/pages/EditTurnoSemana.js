@@ -20,7 +20,6 @@ function Editcronograma (props) {
     })
 
     useEffect(() => {
-        console.log(localStorage.getItem('user'))
         if (localStorage.getItem('user') && localStorage.getItem('pass')) {
             existeSesion()
             traerDatos()
@@ -53,7 +52,7 @@ function Editcronograma (props) {
         try {
             await fetch(`${Config.urlapi}/cronograma/setTurnoSemana.php`, {method: 'POST', body: JSON.stringify(datosSemana)})
                 .then(response => response.json())
-                .then(res => setEstado({...estado, estado: true, mensaje: res.estado}))
+                .then(res => setEstado({mensaje: res.estado}))
             
             await caches.open('memoria-v1')
             .then(cache => {
@@ -64,8 +63,8 @@ function Editcronograma (props) {
                             .then(cache => {
                                 return cache.add(`${Config.urlapi}/cronograma/getTurnoMensual.php`)
                             })
-                            this.setState({cargando: false})
-                            this.props.history.push(`/cronograma`)
+                            setEstado({estado: false})
+                            props.history.push(`/actividades`)
                             window.location.reload()
                         }
                     })

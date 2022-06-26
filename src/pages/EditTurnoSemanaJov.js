@@ -47,7 +47,7 @@ function EditTurnoSemanaJov (props) {
         try {
             await fetch(`${Config.urlapi}/cronograma/setTurnoJovenes.php`, {method: 'POST', body: JSON.stringify(datosTurno)})
             .then((response) => response.json())
-            .then((data) => setEstado({estado: true, mensaje: data.estado}))
+            .then((data) => setEstado({mensaje: data.estado}))
         
             await caches.open('memoria-v1')
             .then(cache => {
@@ -58,8 +58,8 @@ function EditTurnoSemanaJov (props) {
                             .then(cache => {
                                 return cache.add(`${Config.urlapi}/cronograma/getTurnoJovenes.php`)
                             })
-                            this.setState({cargando: false})
-                            this.props.history.push(`/cronograma`)
+                            setEstado({estado: false})
+                            props.history.push(`/actividades`)
                             window.location.reload()
                         }
                     })

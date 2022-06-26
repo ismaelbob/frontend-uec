@@ -2,7 +2,7 @@ import React from "react"
 import { Link } from "react-router-dom"
 import IconEdit from '../img/menu_sec.svg'
 
-function TurnoMes ({datosSemana, datosJovenes, nomMes, user, level}) {
+function TurnoMes ({datosSemana, datosJovenes, nomMes, user, level, idMes}) {
     return (
         <>
             <div className="text-center">{nomMes}</div>
@@ -14,7 +14,7 @@ function TurnoMes ({datosSemana, datosJovenes, nomMes, user, level}) {
                     <div>Jue</div>
                     <div>
                         {
-                            user !== '' && level === 'A' ? <div className="btn-edit-month"><img src={IconEdit} alt="Edit" width="16px"/></div> : <div></div>
+                            user !== '' && level === 'A' ? <Link to={`/actividades/editarmes/${idMes}`}><div className="btn-edit-month"><img src={IconEdit} alt="Edit" width="16px"/></div></Link> : <div></div>
                         }
                     </div>
                 </div>
@@ -45,8 +45,12 @@ function TurnoMes ({datosSemana, datosJovenes, nomMes, user, level}) {
                     return (
                         <div key={semana.idsemana_jov} className="col-6 col-md-3 mb-1 mb-md-0 cronograma_row-week">
                             <div style={{background: semana.color_grupo}}>
+                                <div className="contenido">
                                 {semana.fecha.substr(8,2)}{' ' + semana.nom_grupo}
-                                <Link to={`actividades/editarsemanajov/${semana.idsemana_jov}`}><div className="submenu"><img src={IconEdit} alt="Edit" width="16px"/></div></Link> 
+                                </div>
+                                {
+                                    user !== '' && level === 'A' ? <Link className="boton" to={`actividades/editarsemanajov/${semana.idsemana_jov}`}><div className="submenu"><img src={IconEdit} alt="Edit" width="16px"/></div></Link> : <div></div>
+                                } 
                             </div>
                         </div>
                     )

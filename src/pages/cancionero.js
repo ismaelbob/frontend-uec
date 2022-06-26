@@ -2,17 +2,22 @@ import React, {useEffect, useContext} from 'react'
 import Footer from '../components/Footer'
 import './styles/cancionero.css'
 import SesionContext from '../context/sesion'
+import MenuActivoContext from '../context/menuactivo'
 
 function Cancionero () {
     const {existeSesion} = useContext(SesionContext)
+    const {setPage} = useContext(MenuActivoContext)
 
     useEffect(() => {
+        localStorage.setItem('pagina', '2')
+        setPage('2')
         if (localStorage.getItem('user') && localStorage.getItem('pass')) {
             const verificar = async () => {
                 await existeSesion()
             }
             verificar()
         }
+        
         // eslint-disable-next-line
     }, [])
 

@@ -20,7 +20,7 @@
 .box_headernew-back {
     position: fixed;
     right: 10px;
-    bottom: 20px;
+    bottom: 70px;
     z-index: 1;
 }
 @media only screen and (min-width: 768px) {

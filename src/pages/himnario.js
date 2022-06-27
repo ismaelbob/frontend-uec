@@ -109,6 +109,7 @@ function Himnario (props) {
                         <Cancion key={cancion.idcancion} cancion={cancion} himnario={props.match.params.himnario}/>
                     )
                 })}
+                <div className="mb-5 p-1"></div>
             </div>
         </div>
     )

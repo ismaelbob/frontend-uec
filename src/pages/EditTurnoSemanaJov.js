@@ -15,13 +15,14 @@ function EditTurnoSemanaJov (props) {
     })
     const [estado, setEstado] = useState({estado: true, mensaje: ''})
 
-    useEffect(() => {
-        setEstado({estado: false})
+    const [meses, setMeses] = useState([])
+    const [ministerios, setMinisterios] = useState([])
+
+    useEffect(() => {   
         if (localStorage.getItem('user') && localStorage.getItem('pass')) {
             existeSesion()
             traerDatos()
 
-            setEstado({estado: true})
         } else {
             props.history.push('/actividades')
         }
@@ -29,9 +30,17 @@ function EditTurnoSemanaJov (props) {
     }, [])
 
     const traerDatos = async () => {
+        setEstado({...estado, estado:false})
         await fetch(`${Config.urlapi}/cronograma/getTurnoSemanaJov.php?id=${props.match.params.id}`)
             .then((response) => response.json())
             .then((data) => setDatosTurno(data))
+        await fetch(`${Config.urlapi}/cronograma/getMeses.php`)
+            .then(response => response.json())
+            .then(data => setMeses(data))
+        await fetch(`${Config.urlapi}/cronograma/getMinisterios.php`)
+            .then(response => response.json())
+            .then(data => setMinisterios(data))
+        setEstado({...estado, estado:true})
     }
 
     const handleChange = (event) => {
@@ -43,7 +52,7 @@ function EditTurnoSemanaJov (props) {
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-        setEstado({estado: false})
+        setEstado({...estado, estado:false})
         try {
             await fetch(`${Config.urlapi}/cronograma/setTurnoJovenes.php`, {method: 'POST', body: JSON.stringify(datosTurno)})
             .then((response) => response.json())
@@ -77,7 +86,7 @@ function EditTurnoSemanaJov (props) {
 
     return (
         <div className='container mt-3'>
-            <EditarSemana datos={datosTurno} onChange={handleChange} onSubmit={handleSubmit} respuesta={estado.mensaje}/>
+            <EditarSemana datos={datosTurno} onChange={handleChange} onSubmit={handleSubmit} respuesta={estado.mensaje} meses={meses} ministerios={ministerios}/>
         </div>
     )
 }

@@ -1,23 +1,24 @@
 import React from 'react'
 
-function Formsemana({datos, onChange, onSubmit, respuesta}) {
+function Formsemana({datos, onChange, onSubmit, respuesta, meses, ministerios}) {
     return (
         <form onSubmit={onSubmit} className="needs-validation" noValidate>
             <label className='form-label text-secondary'>ID de Semana: {datos.idsemana}</label><br/>
             <label className='form-label text-secondary' htmlFor='idmes'>Mes:</label>
             <select name="idmes" id="idmes" className="form-control mb-3" value={datos.idmes} onChange={onChange}>
-                <option value="1">Enero</option>
-                <option value="2">Febrero</option>
-                <option value="3">Marzo</option>
+                {
+                    meses.map(mes => {
+                        return <option key={mes.idmes} value={mes.idmes}>{mes.nom_mes}</option>
+                    })
+                }
             </select>
             <label htmlFor="idgrupo" className="form-label text-secondary">Ministerio</label>
              <select className="form-control mb-3" id="idgrupo" name="idgrupo" required onChange={onChange} value={datos.idgrupo}>
-                <option value="1">Cuerdas</option>
-                <option value="2">Pregoneros</option>
-                <option value="3">SNT</option>
-                <option value="4">Even-Ezer</option>
-                <option value="5">Oriel</option>
-                <option value="6">Abdon</option>
+                {
+                    ministerios.map(ministerio => {
+                        return <option key={ministerio.idministerio} value={ministerio.idministerio}>{ministerio.nom_grupo}</option>
+                    })
+                }
             </select>
             <label htmlFor="domingo" className="form-label text-secondary">Domingo</label>
             <input type="date" id="domingo" name="domingo" className="form-control mb-3" required onChange={onChange} value={datos.domingo}/>

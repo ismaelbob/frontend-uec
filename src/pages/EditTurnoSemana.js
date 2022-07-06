@@ -18,6 +18,8 @@ function Editcronograma (props) {
         estado: true,
         mensaje: ''
     })
+    const [meses, setMeses] = useState([])
+    const [ministerios, setMinisterios] = useState([])
 
     useEffect(() => {
         if (localStorage.getItem('user') && localStorage.getItem('pass')) {
@@ -34,6 +36,12 @@ function Editcronograma (props) {
         await fetch(`${Config.urlapi}/cronograma/getTurnoSemana.php?id=${props.match.params.id}`)
             .then(response => response.json())
             .then(data => setDatosSemana(data))
+        await fetch(`${Config.urlapi}/cronograma/getMeses.php`)
+            .then(response => response.json())
+            .then(data => setMeses(data))
+        await fetch(`${Config.urlapi}/cronograma/getMinisterios.php`)
+            .then(response => response.json())
+            .then(data => setMinisterios(data))
         setEstado({...estado, estado:true})
     }
 
@@ -85,7 +93,7 @@ function Editcronograma (props) {
     return (
         <div className="container mt-3">
             <div className="head_titulo mb-3">Editar semana</div>
-            <Formsemana datos={datosSemana} onChange={handleChange} onSubmit={handleSubmit} respuesta={estado.mensaje}/>
+            <Formsemana datos={datosSemana} onChange={handleChange} onSubmit={handleSubmit} respuesta={estado.mensaje} meses={meses} ministerios={ministerios}/>
         </div>
     )
 }

@@ -2,10 +2,12 @@ import React, { useContext, useEffect, useState } from 'react'
 import EditarSemana from '../components/FormSemanaJov'
 import Config from '../config'
 import SesionContext from '../context/sesion'
+import MenuActivoContext from '../context/menuactivo'
 import Loader from '../components/Loader'
 
 function EditTurnoSemanaJov (props) {
     const {existeSesion} = useContext(SesionContext)
+    const {setPage} = useContext(MenuActivoContext)
 
     const [datosTurno, setDatosTurno] = useState({
         idsemana_jov: '1',
@@ -18,7 +20,9 @@ function EditTurnoSemanaJov (props) {
     const [meses, setMeses] = useState([])
     const [ministerios, setMinisterios] = useState([])
 
-    useEffect(() => {   
+    useEffect(() => {
+        localStorage.setItem('pagina', '3')
+        setPage('3')
         if (localStorage.getItem('user') && localStorage.getItem('pass')) {
             existeSesion()
             traerDatos()

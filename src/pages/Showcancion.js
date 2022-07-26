@@ -6,13 +6,17 @@ import Loader from '../components/Loader'
 
 import HimnarioContext from '../context/himnario'
 import SesionContext from '../context/sesion'
+import MenuActivoContext from '../context/menuactivo'
 
 function Showcancion (props) {
     const [datoCancion, setDatoCancion] = useState([])
     const {datos, estado, getDatos} = useContext(HimnarioContext)
     const {nombre, existeSesion} = useContext(SesionContext)
+    const {setPage} = useContext(MenuActivoContext)
 
     useEffect(() => {
+        localStorage.setItem('pagina', '2')
+        setPage('2')
         if (!datos?.length) {
             getDatos(props.match.params.himnario)
         }

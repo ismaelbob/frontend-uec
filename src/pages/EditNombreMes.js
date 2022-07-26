@@ -1,10 +1,13 @@
 import { useState, useEffect, useContext } from 'react'
 import Config from '../config'
 import SesionContext from '../context/sesion'
+import MenuActivoContext from '../context/menuactivo'
 import Loader from '../components/Loader'
 
 function EditNombreMes (props) {
     const {existeSesion} = useContext(SesionContext)
+    const {setPage} = useContext(MenuActivoContext)
+
     const [datos, setDatos] = useState({
         idmes: 1,
         nom_mes: ''
@@ -15,6 +18,8 @@ function EditNombreMes (props) {
     })
 
     useEffect(() => {
+        localStorage.setItem('pagina', '3')
+        setPage('3')
         if (localStorage.getItem('user') && localStorage.getItem('pass')) {
             existeSesion()
             traerDatos()

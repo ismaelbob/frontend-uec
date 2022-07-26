@@ -1,12 +1,14 @@
 import { useEffect, useState, useContext } from "react"
 import Formsemana from "../components/Formsemana"
 import SesionContext from '../context/sesion'
+import MenuActivoContext from '../context/menuactivo'
 import Config from '../config'
 import Loading from '../components/Loader'
 
 function Editcronograma (props) {
 
     const {existeSesion} = useContext(SesionContext)
+    const {setPage} = useContext(MenuActivoContext)
 
     const [datosSemana, setDatosSemana] = useState({
         nom_grupo: '',
@@ -22,6 +24,8 @@ function Editcronograma (props) {
     const [ministerios, setMinisterios] = useState([])
 
     useEffect(() => {
+        localStorage.setItem('pagina', '3')
+        setPage('3')
         if (localStorage.getItem('user') && localStorage.getItem('pass')) {
             existeSesion()
             traerDatos()

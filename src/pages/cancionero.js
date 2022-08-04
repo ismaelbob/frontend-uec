@@ -19,10 +19,7 @@ function Cancionero () {
             }
             verificar()
         }
-        
-        return () => {
-            setCargando(false)
-        }
+        setCargando(false)
         // eslint-disable-next-line
     }, [])
 

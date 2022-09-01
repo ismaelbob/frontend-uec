@@ -1,17 +1,14 @@
-import React, {useEffect, useContext, useState} from 'react'
+import React, {useEffect, useContext} from 'react'
 import Footer from '../components/Footer'
 import './styles/cancionero.css'
 import SesionContext from '../context/sesion'
 import MenuActivoContext from '../context/menuactivo'
-import Loader from '../components/Loader'
 
 function Cancionero () {
     const {existeSesion} = useContext(SesionContext)
     const {setPage} = useContext(MenuActivoContext)
-    const [cargando, setCargando] = useState(false)
 
     useEffect(() => {
-        setCargando(false)
         localStorage.setItem('pagina', '2')
         setPage('2')
         if (localStorage.getItem('user') && localStorage.getItem('pass')) {
@@ -23,36 +20,26 @@ function Cancionero () {
         // eslint-disable-next-line
     }, [])
 
-    const handleClick = (event) => {
-        setCargando(true)
-    }
-
-    if (cargando) {
-        return (
-            <div className="container mt-2 d-flex justify-content-center"><Loader/></div>
-        )
-    }
-
     return (
         <div className="container screen_principal">
             <h4 className="text-center mt-3">HIMNARIOS</h4>
             <div className="row d-flex justify-content-center mb-4">
-                <a href="cancionero/himverde" onClick={handleClick}>
-                    <div className="box_himnarioverde">
+                <a href="cancionero/himverde">
+                    <div className="himnario box_himnarioverde">
                         <div className="box_himnario-title">
                             Verde
                         </div>
                     </div>
                 </a>
-                <a href="cancionero/himpoder" onClick={handleClick} className="mx-md-4 mx-0 my-4 my-md-0">
-                    <div className="box_himnariopoder">
+                <a href="cancionero/himpoder" className="mx-md-4 mx-0 my-4 my-md-0">
+                    <div className="himnario box_himnariopoder">
                         <div className="box_himnario-title">
                             Poder
                         </div>
                     </div>
                 </a>
-                <a href="cancionero/himjovenes" onClick={handleClick}>
-                    <div className="box_himnariojovenes">
+                <a href="cancionero/himjovenes">
+                    <div className="himnario box_himnariojovenes">
                         <div className="box_himnario-title">
                             Jóvenes
                         </div>

@@ -1,6 +1,10 @@
 .screen_principal {
     position: relative;
 }
+.himnario:hover {
+    transform: scale(1);
+    transition: .5s ease all;
+}
 .box_himnarioverde {
     width: 231px;
     height: 134px;
@@ -65,11 +69,26 @@
     color: #2A71B3;
 }
 
+@keyframes seleccionar {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.8);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
 @media only screen and (max-width: 768px) {
     .screen_principal {
         height: 90vh;
     }
     .banner {
         height: 150px;
+    }
+    .himnario:hover{
+        animation: seleccionar ease .3s;
     }
 }

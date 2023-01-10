@@ -12,9 +12,9 @@ function NavBarDown () {
     const {page, handleClick} = useContext(MenuActivoContext)
     return (
         <div className="contenedor">
-            <Link id='2' onClick={handleClick} className={page === '2' ? 'btn-activo' : ''} to="/cancionero"><img src={IconHim} alt="himnario"/></Link>
-            <Link id='1' onClick={handleClick} className={page === '1' ? 'btn-activo' : ''} to="/"><img src={IconHome} alt="home"/></Link>
-            <Link id='3' onClick={handleClick} className={page === '3' ? 'btn-activo' : ''} to="/actividades"><img src={IconCron} alt="cronograma"/></Link>
+            <Link id='2' onClick={handleClick} className={page === '2' ? 'btn-activo' : ''} to="/cancionero"><img src={IconHim} alt="himnario"/>Himnarios</Link>
+            <Link id='1' onClick={handleClick} className={page === '1' ? 'btn-activo' : ''} to="/"><img src={IconHome} alt="home"/>Inicio</Link>
+            <Link id='3' onClick={handleClick} className={page === '3' ? 'btn-activo' : ''} to="/actividades"><img src={IconCron} alt="cronograma"/>Actividades</Link>
         </div>
     )
 }

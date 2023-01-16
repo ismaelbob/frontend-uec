@@ -10,7 +10,7 @@ function Footer() {
             </div>
             <div className="flex text-center mt-3">
                 <div>Cochabamba - Bolivia</div>
-                <div>2022</div>
+                <div>2023</div>
             </div>
             <div className="flex text-center pt-5">
                 <div className="titulo-dev">developed by IsmaelBob</div>

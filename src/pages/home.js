@@ -4,6 +4,8 @@ import img2 from '../img/foto_b.jpg'
 import img3 from '../img/foto_c.jpg'
 import img4 from '../img/foto_d.jpg'
 import img5 from '../img/foto_e.jpg'
+import avatar from '../img/avatar.svg'
+import tesorera from '../img/tesorera.jpeg'
 import Footer from '../components/Footer'
 import SesionContext from '../context/sesion'
 import MenuActivoContext from '../context/menuactivo'
@@ -122,6 +124,8 @@ function Home () {
                             <div className="card text-white bg-info h-100">
                                 <div className="card-header text-center">SABADO</div>
                                 <div className="card-body">
+                                    <h5 className="card-title">16:00</h5>
+                                    <p className="card-text">Culto Pre Juvenil</p>
                                     <h5 className="card-title">19:00</h5>
                                     <p className="card-text">Culto de Union de Jóvenes "Heroes de la Fe"</p>
                                 </div>
@@ -131,6 +135,129 @@ function Home () {
                 </div>
             </div>
 
+            <div className="container my-2">
+                <div className="bg-light p-3">
+                    <div className="text-primary fs-3 text-center mb-3">LIDERAZGO 2023</div>
+                    <div className='row mb-md-5'>
+                        <div className="bg-light col-6 col-md-4">
+                            <div class="row g-0">
+                                <div className="col-md-4">
+                                <img src={avatar} className="h-100 p-2" alt="..."/>
+                                </div>
+                                <div className="col-md-8">
+                                <div className="card-body">
+                                    <h5 className="card-title">Primer diácono</h5>
+                                    <p className="card-text">Hno. Samuel Morales<br/>
+                                    <small className="text-muted">Cel.: 74370446</small></p>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-light col-6 col-md-4">
+                            <div class="row g-0">
+                                <div className="col-md-4">
+                                <img src={avatar} className="h-100 p-2" alt="..."/>
+                                </div>
+                                <div className="col-md-8">
+                                <div className="card-body">
+                                    <h5 className="card-title">Educacion Cristiana</h5>
+                                    <p className="card-text">Hna. Rosmeri R. Jancko<br/>
+                                    <small className="text-muted">Cel.: 67561290</small></p>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-light col-6 col-md-4">
+                            <div class="row g-0">
+                                <div className="col-md-4">
+                                <img src={tesorera} className="p-2" alt="..."style={{'height': '140px', 'borderRadius': '50%'}}/>
+                                </div>
+                                <div className="col-md-8">
+                                <div className="card-body">
+                                    <h5 className="card-title">Diácono Tesorero</h5>
+                                    <p className="card-text">Hna. Gabriela Cordero<br/>
+                                    <small className="text-muted">Cel.: 74329770</small></p>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='row mb-md-5 d-flex justify-content-center'>
+                        <div className="bg-light col-6 col-md-4">
+                            <div class="row g-0">
+                                <div className="col-md-4">
+                                <img src={avatar} className="h-100 p-2" alt="..."/>
+                                </div>
+                                <div className="col-md-8">
+                                <div className="card-body">
+                                    <h5 className="card-title">Diácono Secretario</h5>
+                                    <p className="card-text">Hna. Jhovana Cáceres<br/>
+                                    <small className="text-muted">Cel.: 72267426</small></p>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-light col-6 col-md-4">
+                            <div class="row g-0">
+                                <div className="col-md-4">
+                                <img src={avatar} className="h-100 p-2" alt="..."/>
+                                </div>
+                                <div className="col-md-8">
+                                <div className="card-body">
+                                    <h5 className="card-title">D. Evangelismo</h5>
+                                    <p className="card-text">Hna. Basilia Gutierres<br/>
+                                    <small className="text-muted">Cel.: 74353197</small></p>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='row'>
+                        <div className="bg-light col-6 col-md-4">
+                            <div class="row g-0">
+                                <div className="col-md-4">
+                                <img src={avatar} className="h-100 p-2" alt="..."/>
+                                </div>
+                                <div className="col-md-8">
+                                <div className="card-body">
+                                    <h5 className="card-title">D. Accion Social</h5>
+                                    <p className="card-text">Hna. Betty Paulo<br/>
+                                    <small className="text-muted">Cel.: 75949508</small></p>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-light col-6 col-md-4">
+                            <div class="row g-0">
+                                <div className="col-md-4">
+                                <img src={avatar} className="h-100 p-2" alt="..."/>
+                                </div>
+                                <div className="col-md-8">
+                                <div className="card-body">
+                                    <h5 className="card-title">Diácono de Música</h5>
+                                    <p className="card-text">Hno. Daniel Quispe<br/>
+                                    <small className="text-muted">Cel.: 64909351</small></p>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-light col-6 col-md-4">
+                            <div class="row g-0">
+                                <div className="col-md-4">
+                                <img src={avatar} className="h-100 p-2" alt="..."/>
+                                </div>
+                                <div className="col-md-8">
+                                <div className="card-body">
+                                    <h5 className="card-title">Diáconisa</h5>
+                                    <p className="card-text">Hna. Patricia Mamani<br/>
+                                    <small className="text-muted">Cel.: 77975708</small></p>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div className="container">
                 <div className="bg-light">

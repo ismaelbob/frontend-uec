@@ -124,6 +124,8 @@ function Home () {
                             <div className="card text-white bg-info h-100">
                                 <div className="card-header text-center">SABADO</div>
                                 <div className="card-body">
+                                    <h5 className="card-title">16:00</h5>
+                                    <p className="card-text">Culto Pre Juvenil</p>
                                     <h5 className="card-title">19:00</h5>
                                     <p className="card-text">Culto de Union de Jóvenes "Heroes de la Fe"</p>
                                 </div>
@@ -145,8 +147,8 @@ function Home () {
                                 <div className="col-md-8">
                                 <div className="card-body">
                                     <h5 className="card-title">Primer diácono</h5>
-                                    <p className="card-text">Hno. Samuel Morales</p>
-                                    <p className="card-text"><small className="text-muted">74370446</small></p>
+                                    <p className="card-text">Hno. Samuel Morales<br/>
+                                    <small className="text-muted">Cel.: 74370446</small></p>
                                 </div>
                                 </div>
                             </div>
@@ -159,8 +161,8 @@ function Home () {
                                 <div className="col-md-8">
                                 <div className="card-body">
                                     <h5 className="card-title">Educacion Cristiana</h5>
-                                    <p className="card-text">Hna. Rosmeri R. Jancko</p>
-                                    <p className="card-text"><small className="text-muted">67561290</small></p>
+                                    <p className="card-text">Hna. Rosmeri R. Jancko<br/>
+                                    <small className="text-muted">Cel.: 67561290</small></p>
                                 </div>
                                 </div>
                             </div>
@@ -173,8 +175,8 @@ function Home () {
                                 <div className="col-md-8">
                                 <div className="card-body">
                                     <h5 className="card-title">Diácono Tesorero</h5>
-                                    <p className="card-text">Hna. Gabriela Cordero</p>
-                                    <p className="card-text"><small className="text-muted">74329770</small></p>
+                                    <p className="card-text">Hna. Gabriela Cordero<br/>
+                                    <small className="text-muted">Cel.: 74329770</small></p>
                                 </div>
                                 </div>
                             </div>
@@ -189,8 +191,8 @@ function Home () {
                                 <div className="col-md-8">
                                 <div className="card-body">
                                     <h5 className="card-title">Diácono Secretario</h5>
-                                    <p className="card-text">Hna. Jhovana Cáceres</p>
-                                    <p className="card-text"><small className="text-muted">72267426</small></p>
+                                    <p className="card-text">Hna. Jhovana Cáceres<br/>
+                                    <small className="text-muted">Cel.: 72267426</small></p>
                                 </div>
                                 </div>
                             </div>
@@ -203,8 +205,8 @@ function Home () {
                                 <div className="col-md-8">
                                 <div className="card-body">
                                     <h5 className="card-title">D. Evangelismo</h5>
-                                    <p className="card-text">Hna. Basilia Gutierres</p>
-                                    <p className="card-text"><small className="text-muted">74353197</small></p>
+                                    <p className="card-text">Hna. Basilia Gutierres<br/>
+                                    <small className="text-muted">Cel.: 74353197</small></p>
                                 </div>
                                 </div>
                             </div>
@@ -219,8 +221,8 @@ function Home () {
                                 <div className="col-md-8">
                                 <div className="card-body">
                                     <h5 className="card-title">D. Accion Social</h5>
-                                    <p className="card-text">Hna. Betty Paulo</p>
-                                    <p className="card-text"><small className="text-muted">75949508</small></p>
+                                    <p className="card-text">Hna. Betty Paulo<br/>
+                                    <small className="text-muted">Cel.: 75949508</small></p>
                                 </div>
                                 </div>
                             </div>
@@ -233,8 +235,8 @@ function Home () {
                                 <div className="col-md-8">
                                 <div className="card-body">
                                     <h5 className="card-title">Diácono de Música</h5>
-                                    <p className="card-text">Hno. Daniel Quispe</p>
-                                    <p className="card-text"><small className="text-muted">64909351</small></p>
+                                    <p className="card-text">Hno. Daniel Quispe<br/>
+                                    <small className="text-muted">Cel.: 64909351</small></p>
                                 </div>
                                 </div>
                             </div>
@@ -247,8 +249,8 @@ function Home () {
                                 <div className="col-md-8">
                                 <div className="card-body">
                                     <h5 className="card-title">Diáconisa</h5>
-                                    <p className="card-text">Hna. Patricia Mamani</p>
-                                    <p className="card-text"><small className="text-muted">77975708</small></p>
+                                    <p className="card-text">Hna. Patricia Mamani<br/>
+                                    <small className="text-muted">Cel.: 77975708</small></p>
                                 </div>
                                 </div>
                             </div>

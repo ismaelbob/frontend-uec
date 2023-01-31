@@ -59,6 +59,9 @@ function EditNombreMes (props) {
                         }
                     })
                 })
+        setEstado({estado: false})
+        props.history.push(`/actividades`)
+        window.location.reload()
         } catch (error) {
             console.log('Hubo un error al guardar')
         }

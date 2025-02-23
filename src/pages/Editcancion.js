@@ -38,7 +38,7 @@ class Editcancion extends React.Component {
                 .then(response => response.json())
                 .then(data =>  {
                     if (data.id === this.state.idcancionactual) {
-                        this.setState({respuestaId: ''})
+                        this.setState({respuestaId: 'Disponible'})
                     } else {
                         this.setState({respuestaId: data.estado})
                     }

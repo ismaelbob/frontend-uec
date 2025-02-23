@@ -1,14 +1,14 @@
-import React, { useContext, useEffect} from 'react'
+//import React, { useContext, useEffect} from 'react'
 import './styles/actividades.css'
-import Cronograma from '../components/Cronograma'
+/*import Cronograma from '../components/Cronograma'
 import Loader from '../components/Loader'
 import ActividadesContext from '../context/actividades'
 import SesionContext from '../context/sesion'
-import MenuActivoContext from '../context/menuactivo'
+import MenuActivoContext from '../context/menuactivo'*/
 import Footer from '../components/Footer'
 
 function Actividades () {
-    const {cargando, turnosJov, turnos, getDatos} = useContext(ActividadesContext)
+    /*const {cargando, turnosJov, turnos, getDatos} = useContext(ActividadesContext)
     const {existeSesion, usuario, nivel} = useContext(SesionContext)
     const {setPage} = useContext(MenuActivoContext)
 
@@ -39,6 +39,12 @@ function Actividades () {
     return (
         <div className="container">
             <Cronograma turnoMensual={turnos} turnoJovenes={turnosJov} usuario={usuario} nivel={nivel}/>
+            <Footer/>
+        </div>
+    )
+        */
+    return (
+        <div>   
             <Footer/>
         </div>
     )

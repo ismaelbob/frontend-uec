@@ -118,7 +118,7 @@ class Addcancion extends React.Component {
             )
         }
         return (
-            <div className="container mt-2">
+            <div className="container mt-2 mb-5">
                 <div className="box_headernew">
                     <div className="box_headernew-back"><Btnback url={`/cancionero/${this.props.match.params.himnario}`}/></div>
                     <div className="box_headernew-title"><h5>NUEVA CANCION</h5></div>

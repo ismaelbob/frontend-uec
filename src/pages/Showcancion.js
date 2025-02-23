@@ -8,7 +8,7 @@ import HimnarioContext from '../context/himnario'
 import SesionContext from '../context/sesion'
 import MenuActivoContext from '../context/menuactivo'
 
-function Showcancion (props) {
+/*function Showcancion (props) {
     const [datoCancion, setDatoCancion] = useState([])
     const {datos, estado, getDatos} = useContext(HimnarioContext)
     const {nombre, existeSesion} = useContext(SesionContext)
@@ -29,14 +29,12 @@ function Showcancion (props) {
         // eslint-disable-next-line
     }, [])
     useEffect(() => {
-        setDatoCancion(seleccionarCancion())
+        setDatoCancion(getCancionById(props.match.params.id))
         // eslint-disable-next-line
     }, [datos])
 
-    const seleccionarCancion = () => {
-        const id = parseInt(props.match.params.id, 10)
-        const result = datos.filter(cancion => cancion.idcancion === id)
-        return result[0]
+    const getCancionById = (id) => {
+        return datos.filter(cancion => cancion.idcancion === id);
     }
 
     if (!estado || datoCancion.length === 0) {
@@ -102,6 +100,108 @@ function Showcancion (props) {
                 )
             }
         </div>
+    )
+}
+export default Showcancion
+*/
+
+function Showcancion (props) {
+    const [cancionSeleccionada, setCancionSelecionada ] = useState([])
+    const {datos, estado, getDatos} = useContext(HimnarioContext)
+    const {nombre, existeSesion} = useContext(SesionContext)
+    const {setPage} = useContext(MenuActivoContext)
+
+    useEffect(() => {
+        localStorage.setItem('pagina', '2')
+        setPage('2')
+        if (!datos?.length) {
+            getDatos(props.match.params.himnario)
+        }
+        if (localStorage.getItem('user') && localStorage.getItem('pass')) {
+            const verificar = async () => {
+                await existeSesion()
+            }
+            verificar()
+        }
+
+        setCancionSelecionada(seleccionarCancion(props.match.params.id))
+        
+        // eslint-disable-next-line
+    }, [])
+    useEffect(() => {
+        setCancionSelecionada(seleccionarCancion(props.match.params.id))
+        // eslint-disable-next-line
+    }, [datos])
+    const seleccionarCancion = (id) => {
+        return datos.filter(cancion => cancion.idcancion === id);
+    }
+
+    if (!estado || cancionSeleccionada.length === 0) {
+        return (
+            <div className="container d-flex justify-content-center mt-2">
+                <Loader/>
+            </div>
+        )
+    }
+
+    let versos = []
+    if (cancionSeleccionada[0].letra.includes('\r\n\r\n')) {
+        versos = cancionSeleccionada[0].letra.split('\r\n\r\n')
+    } else {
+        if (cancionSeleccionada[0].letra.includes('\n\n')) {
+            versos = cancionSeleccionada[0].letra.split('\n\n')
+        }
+    }
+
+    return (
+        <>
+            <div className="container mt-2 d-flex flex-column align-items-center">
+                <div className="box_header">
+                    <div><h5>{cancionSeleccionada[0].idcancion}</h5></div>
+                        <div className="box_header-title">
+                            <h5>{cancionSeleccionada[0].titulo}</h5>
+                            <h6>{cancionSeleccionada[0].autor}</h6>
+                        </div>
+                    <div>
+                        {cancionSeleccionada[0].nota}
+                    </div>
+                    <div className="menu_buttom">
+                        <div className="box_button-back"><Btnback url={`/cancionero/${props.match.params.himnario}`}/></div>
+                        {nombre && <div className="menu_buttom-edit"><Btnedit url={`/cancionero/editar/${props.match.params.himnario}/${cancionSeleccionada[0].idcancion}`}/></div>}
+                    </div>
+                </div>
+                <div className="position-relative w-100">
+
+                </div>
+                <div className="box_contenido">
+                    {
+                        versos.map((verso, id) => {
+                            return (
+                                <div
+                                    className={verso.charAt(0) === '%'? 'box_contenido-coro': 'box_contenido-verso'} 
+                                    key={id}
+                                >
+                                    {verso.charAt(0) === '%' ? verso.slice(1, verso.length - 1) : verso}
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+                {
+                    cancionSeleccionada[0].enlace !== '' && (
+                    <div className="box_video">
+                        <iframe 
+                            src={cancionSeleccionada[0].enlace}
+                            title="YouTube video player" 
+                            frameBorder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowFullScreen>
+                        </iframe>
+                    </div>
+                    )
+                }
+            </div>
+        </>
     )
 }
 export default Showcancion

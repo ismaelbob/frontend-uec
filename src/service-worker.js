@@ -76,51 +76,45 @@ const datosCanciones = [
   'https://uecapi.elementfx.com/himverde/getcanciones.php',
   'https://uecapi.elementfx.com/cronograma/getTurnoMensual.php',
   'https://uecapi.elementfx.com/cronograma/getTurnoJovenes.php'
-]
+];
 
 self.addEventListener('install', event => {
-  caches.open('memoria-v1')
-    .then(cache => {
+  event.waitUntil(
+    caches.open('memoria-v1').then(cache => {
       return cache.addAll(datosCanciones);
     })
-})
-
+  );
+});
 
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Encontro en cache - respuesta de retorno
-        if (response) {
-          return response;
-        }
+    fetch(event.request).then(networkResponse => {
+      // Verificar si la respuesta de la red es válida
+      if (!networkResponse || networkResponse.status !== 200 || (networkResponse.type !== 'basic' && networkResponse.type !== 'cors')) {
+        return caches.match(event.request);
+      }
 
-        // IMPORTANTE: Clona la solicitud. Una solicitud es una transmisión 
-        // y solo se puede consumir una vez. Dado que estamos consumiendo esto 
-        // una vez por caché y una vez por el navegador para recuperar, 
-        // necesitamos clonar la respuesta.
-        var fetchRequest = event.request.clone();
+      // Clonar la respuesta de la red
+      const networkResponseClone = networkResponse.clone();
 
-        return fetch(fetchRequest).then(response => {
-          // Comprueba si recibimos una respuesta válida.
-          if (!response || response.status !== 200 || (response.type !== 'basic' && response.type !== 'cors')) {
-            return response;
+      // Comparar los datos de la red con los datos en caché
+      return caches.open('memoria-v1').then(cache => {
+        return cache.match(event.request).then(cachedResponse => {
+          if (!cachedResponse || !responsesAreEqual(cachedResponse, networkResponseClone)) {
+            cache.put(event.request, networkResponseClone);
           }
-
-          // IMPORTANTE: Clona la respuesta. Una respuesta es una secuencia y, 
-          // como queremos que el navegador consuma la respuesta, así como la memoria caché 
-          // que consume la respuesta, debemos clonarla para tener dos secuencias.
-          var responseToCache = response.clone();
-
-          caches.open('memoria-v1').then(cache => {
-            cache.put(event.request, responseToCache);
-          });
-
-          return response;
-        }).catch(error => {
-          console.error('Fetch failed; returning offline page instead.', error);
-          // Aquí puedes devolver una página de fallback si lo deseas
+          return networkResponse;
         });
-      })
+      });
+    }).catch(() => {
+      // Si la red falla, devolver la respuesta en caché
+      return caches.match(event.request);
+    })
   );
 });
+
+// Función para comparar dos respuestas
+function responsesAreEqual(response1, response2) {
+  return response1.headers.get('content-length') === response2.headers.get('content-length') &&
+         response1.headers.get('etag') === response2.headers.get('etag');
+}

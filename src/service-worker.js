@@ -71,11 +71,11 @@ self.addEventListener('message', (event) => {
 
 // Cualquier otra lógica de service worker personalizado puede ir aquí.
 const datosCanciones = [
-  'https://uecapi.000webhostapp.com/himjovenes/getcanciones.php',
-  'https://uecapi.000webhostapp.com/himpoder/getcanciones.php',
-  'https://uecapi.000webhostapp.com/himverde/getcanciones.php',
-  'https://uecapi.000webhostapp.com/cronograma/getTurnoMensual.php',
-  'https://uecapi.000webhostapp.com/cronograma/getTurnoJovenes.php'
+  'https://uecapi.elementfx.com/himjovenes/getcanciones.php',
+  'https://uecapi.elementfx.com/himpoder/getcanciones.php',
+  'https://uecapi.elementfx.com/himverde/getcanciones.php',
+  'https://uecapi.elementfx.com/cronograma/getTurnoMensual.php',
+  'https://uecapi.elementfx.com/cronograma/getTurnoJovenes.php'
 ]
 
 self.addEventListener('install', event => {

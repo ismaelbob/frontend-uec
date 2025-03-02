@@ -83,16 +83,16 @@ class Editcancion extends React.Component {
                                 .then(cache => {
                                     return cache.add(`${Config.urlapi}/${this.props.match.params.himnario}/getcanciones.php`)
                                 })
-                                this.setState({cargando: false})
-                                this.props.history.push(`/cancionero/${this.props.match.params.himnario}/${this.props.match.params.id}`)
-                                window.location.reload()
+                                //this.setState({cargando: false})
+                                //this.props.history.push(`/cancionero/${this.props.match.params.himnario}/${this.props.match.params.id}`)
+                                //window.location.reload()
                             }
                         })
                     })
                     
-            //this.setState({cargando: false})
-            //this.props.history.push(`/cancionero/${this.props.match.params.himnario}/${this.props.match.params.id}`)
-            //window.location.reload()
+            this.setState({cargando: false})
+            this.props.history.push(`/cancionero/${this.props.match.params.himnario}/${this.props.match.params.id}`)
+            window.location.reload()
         } catch (error) {
             this.setState({errorMessage: error, cargando: false})
         }

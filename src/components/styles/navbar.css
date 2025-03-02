@@ -14,6 +14,11 @@
 .box_navbar-link-left {
     display: none;
 }
+.box_navbar-link-right {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+}
 
 
 .box_navbar-logo img {
@@ -61,6 +66,7 @@
     .box_navbar-link-right {
         display: flex;
         align-items: center;
+        font-size: 16px;
     }
 
 }

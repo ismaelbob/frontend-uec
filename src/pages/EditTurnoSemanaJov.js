@@ -77,6 +77,9 @@ function EditTurnoSemanaJov (props) {
                         }
                     })
                 })
+        setEstado({estado: false})
+        props.history.push(`/actividades`)
+        window.location.reload()
         } catch (error) {
             console.log('Ocurrio un error al traer datos')
         }

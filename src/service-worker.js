@@ -101,26 +101,26 @@ self.addEventListener('fetch', event => {
         // necesitamos clonar la respuesta.
         var fetchRequest = event.request.clone();
 
-        return fetch(fetchRequest)
-        .then(response => {
-            // Comprueba si recibimos una respuesta válida.
-            if(!response || response.status !== 200 || response.type !== 'basic' || response.type !== 'cors') {
-              return response;
-            }
-
-            // IMPORTANTE: Clona la respuesta. Una respuesta es una secuencia y, 
-            // como queremos que el navegador consuma la respuesta, así como la memoria caché 
-            // que consume la respuesta, debemos clonarla para tener dos secuencias.
-            var responseToCache = response.clone();
-
-            caches.open('memoria-v1')
-              .then(cache => {
-                cache.put(event.request, responseToCache);
-              });
-
+        return fetch(fetchRequest).then(response => {
+          // Comprueba si recibimos una respuesta válida.
+          if (!response || response.status !== 200 || (response.type !== 'basic' && response.type !== 'cors')) {
             return response;
           }
-        );
+
+          // IMPORTANTE: Clona la respuesta. Una respuesta es una secuencia y, 
+          // como queremos que el navegador consuma la respuesta, así como la memoria caché 
+          // que consume la respuesta, debemos clonarla para tener dos secuencias.
+          var responseToCache = response.clone();
+
+          caches.open('memoria-v1').then(cache => {
+            cache.put(event.request, responseToCache);
+          });
+
+          return response;
+        }).catch(error => {
+          console.error('Fetch failed; returning offline page instead.', error);
+          // Aquí puedes devolver una página de fallback si lo deseas
+        });
       })
-    );
+  );
 });

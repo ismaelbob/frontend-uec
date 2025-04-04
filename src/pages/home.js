@@ -140,7 +140,7 @@ function Home () {
             <div className='container'>
                 <div className="text-primary fs-3 text-center mb-5 mb-md-3 mt-3">LIDERAZGO 2025</div>
                 <div className='tarjetero'>
-                    <Tarjeta icono={avatar} nombre="Hno. Zenobio" telefono="67579204" cargo="PASTOR" link={true}/>
+                    <Tarjeta icono={avatar} nombre="Hno. Zenobio Choque" telefono="67460347" cargo="PASTOR" link={true}/>
                     <Tarjeta icono={avatar} nombre="Hno. Wilson Huallpa" telefono="74534942" cargo="PRIMER DIACONO" link={true}/>
                     <Tarjeta icono={avatar} nombre="Hna. Betty Paulo" telefono="75949508" cargo="DIACONO E. CRISTIANA" link={true}/>
                     <Tarjeta icono={avatar} nombre="Hna. Roxana Ramos" telefono="63919939" cargo="DIACONO TESORERO" link={true}/>

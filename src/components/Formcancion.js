@@ -9,7 +9,7 @@ class Formcancion extends React.Component {
                 <div className="box_form mt-4">
                         <div className="row">
                             <div className="col-12 col-md-5">
-                                <h5>Himnario {this.props.himnario.slice(8)}</h5>
+                                <h5>Himnario {this.props.himnario.slice(3)}</h5>
                                 <div className="form-group">
                                     <label htmlFor="idcancion">Numero:</label>
                                     <div className="d-flex">

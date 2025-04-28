@@ -87,12 +87,15 @@ class Addcancion extends React.Component {
                                     return cache.add(`https://uecapi.herokuapp.com/${this.props.match.params.himnario}/getcanciones.php`)
                                 })
                                 form.classList.remove('was-validated')
-                                this.setState({cargando: false, respuestaId: 'No disponible'})
-                                this.props.history.push(`/cancionero/${this.props.match.params.himnario}/${this.state.datosCancion.idcancion}`)
-                                window.location.reload()
+                                //this.setState({cargando: false, respuestaId: 'No disponible'})
+                                //this.props.history.push(`/cancionero/${this.props.match.params.himnario}/${this.state.datosCancion.idcancion}`)
+                                //window.location.reload()
                             }
                         })
                     })
+                this.setState({cargando: false, respuestaId: 'No disponible'})
+                this.props.history.push(`/cancionero/${this.props.match.params.himnario}/${this.state.datosCancion.idcancion}`)
+                window.location.reload()
             } catch (error) {
                 this.setState({errorMessage: error, cargando: false})
             }

@@ -37,7 +37,9 @@ class Editcancion extends React.Component {
             fetch(`${Config.urlapi}/${this.props.match.params.himnario}/verificarExiste.php`, {method: 'POST', body: JSON.stringify(this.state.datosCancion.idcancion)})
                 .then(response => response.json())
                 .then(data =>  {
-                    if (data.id === this.state.idcancionactual) {
+                    const idDataEntero = parseInt(data.id)
+                    const idCancionActualEntero = parseInt(this.state.idcancionactual)
+                    if (idDataEntero === idCancionActualEntero) {
                         this.setState({respuestaId: 'Disponible'})
                     } else {
                         this.setState({respuestaId: data.estado})
@@ -83,16 +85,13 @@ class Editcancion extends React.Component {
                                 .then(cache => {
                                     return cache.add(`${Config.urlapi}/${this.props.match.params.himnario}/getcanciones.php`)
                                 })
-                                this.setState({cargando: false})
-                                this.props.history.push(`/cancionero/${this.props.match.params.himnario}/${this.props.match.params.id}`)
-                                window.location.reload()
                             }
                         })
                     })
                     
-            //this.setState({cargando: false})
-            //this.props.history.push(`/cancionero/${this.props.match.params.himnario}/${this.props.match.params.id}`)
-            //window.location.reload()
+            this.setState({cargando: false})
+            this.props.history.push(`/cancionero/${this.props.match.params.himnario}/${this.props.match.params.id}`)
+            window.location.reload()
         } catch (error) {
             this.setState({errorMessage: error, cargando: false})
         }

@@ -76,59 +76,41 @@ function Usuario (props) {
     }
 
     const actualizarCache = async () => {
-        setCargando(true)
-
-        await caches.open('memoria-v1')
-                .then(cache => {
-                    cache.delete(`${Config.urlapi}/himjovenes/getcanciones.php`)
-                        .then(async response => {
-                            if(response) {
-                                await caches.open('memoria-v1')
-                                .then(cache => {
-                                    return cache.add(`${Config.urlapi}/himjovenes/getcanciones.php`)
-                                })
-                            }
-                        })
-                    cache.delete(`${Config.urlapi}/himpoder/getcanciones.php`)
-                        .then(async response => {
-                            if(response) {
-                                await caches.open('memoria-v1')
-                                .then(cache => {
-                                    return cache.add(`${Config.urlapi}/himpoder/getcanciones.php`)
-                                })
-                            }
-                        })
-                    cache.delete(`${Config.urlapi}/himverde/getcanciones.php`)
-                        .then(async response => {
-                            if(response) {
-                                await caches.open('memoria-v1')
-                                .then(cache => {
-                                    return cache.add(`${Config.urlapi}/himverde/getcanciones.php`)
-                                })
-                                //window.location.reload()
-                            }
-                        })
-                    cache.delete(`${Config.urlapi}/cronograma/getTurnoMensual.php`)
-                        .then(async response => {
-                            if(response) {
-                                await caches.open('memoria-v1')
-                                .then(cache => {
-                                    return cache.add(`${Config.urlapi}/cronograma/getTurnoMensual.php`)
-                                })
-                            }
-                        })
-                    cache.delete(`${Config.urlapi}/cronograma/getTurnoJovenes.php`)
-                    .then(async response => {
-                        if(response) {
-                            await caches.open('memoria-v1')
-                            .then(cache => {
-                                return cache.add(`${Config.urlapi}/cronograma/getTurnoJovenes.php`)
-                            })
-                        }
-                    })
-                    setCargando(false)
-                    })
-    }
+        setCargando(true);
+    
+        try {
+            // Abre la caché 'memoria-v1'
+            const cache = await caches.open('memoria-v1');
+    
+            // Obtén todas las claves almacenadas en la caché
+            const keys = await cache.keys();
+    
+            // Borra cada recurso de la caché
+            for (const request of keys) {
+                await cache.delete(request);
+            }
+    
+            // Agrega nuevamente los datos actualizados desde la base de datos
+            const urlsToCache = [
+                `${Config.urlapi}/himjovenes/getcanciones.php`,
+                `${Config.urlapi}/himpoder/getcanciones.php`,
+                `${Config.urlapi}/himverde/getcanciones.php`,
+                `${Config.urlapi}/cronograma/getTurnoMensual.php`,
+                `${Config.urlapi}/cronograma/getTurnoJovenes.php`
+            ];
+    
+            for (const url of urlsToCache) {
+                await cache.add(url);
+            }
+    
+            // Recarga la página para reflejar los datos actualizados
+            window.location.reload();
+        } catch (error) {
+            console.error('Error al actualizar la caché:', error);
+        } finally {
+            setCargando(false);
+        }
+    };
 
     if (cargando === true) {
         return (
@@ -164,7 +146,7 @@ function Usuario (props) {
                 mensaje={mensaje}
             />
             <div className='border-bottom w-100'></div>
-            <div className='mt-4 d-flex justify-content-center'><button onClick={actualizarCache} className="btn btn-secondary" id="btn-actualizar-lista">Actualizar datos de la App</button></div>
+            <div className='mt-4 d-flex justify-content-center'><button onClick={actualizarCache} className="btn btn-secondary" id="btn-actualizar-lista">Actualizar App</button></div>
         </div>
     )
 }

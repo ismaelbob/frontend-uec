@@ -77,7 +77,7 @@ class Addcancion extends React.Component {
                     .then(respuesta => respuesta.json())
                     .then(data => this.setState({respuesta: data.estado}))
                 
-                await caches.open('memoria-v1')
+                /*await caches.open('memoria-v1')
                 .then(cache => {
                     cache.delete(`https://uecapi.herokuapp.com/${this.props.match.params.himnario}/getcanciones.php`)
                         .then(async response => {
@@ -92,7 +92,19 @@ class Addcancion extends React.Component {
                                 //window.location.reload()
                             }
                         })
-                    })
+                    })*/
+
+                try {
+                    const cache = await caches.open('memoria-v1');
+                    const response = await cache.delete(`${Config.urlapi}/${this.props.match.params.himnario}/getcanciones.php`);
+                    if (!response) {
+                        console.warn('El recurso no estaba en la caché, pero se procederá a agregarlo.');
+                    }
+                    await cache.add(`${Config.urlapi}/${this.props.match.params.himnario}/getcanciones.php`);
+                } catch (error) {
+                    console.error('Error al actualizar la caché:', error);
+                }
+
                 this.setState({cargando: false, respuestaId: 'No disponible'})
                 this.props.history.push(`/cancionero/${this.props.match.params.himnario}/${this.state.datosCancion.idcancion}`)
                 window.location.reload()

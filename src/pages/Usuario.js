@@ -8,7 +8,7 @@ import SesionContext from '../context/sesion'
 import MenuActivoContext from '../context/menuactivo'
 
 function Usuario (props) {
-    const [datos, setDatos] = useState({usuario: '', pass: ''})
+    const [datos, setDatos] = useState({usuario: '', password: ''})
     const [cargando, setCargando] = useState(false)
     const [mensaje, setMensaje] = useState('')
     const {iniciarSesion, nombre, cerrarSesion, existeSesion} = useContext(SesionContext)
@@ -17,7 +17,7 @@ function Usuario (props) {
     useEffect(() => {
         localStorage.setItem('pagina', '4')
         setPage('4')
-        if (localStorage.getItem('user') && localStorage.getItem('pass')) {
+        if (localStorage.getItem('user') && localStorage.getItem('password')) {
             setCargando(true)
             const verificar = async () => {
                 const consulta = await existeSesion()
@@ -94,9 +94,7 @@ function Usuario (props) {
             const urlsToCache = [
                 `${Config.urlapi}/himjovenes/getcanciones.php`,
                 `${Config.urlapi}/himpoder/getcanciones.php`,
-                `${Config.urlapi}/himverde/getcanciones.php`,
-                `${Config.urlapi}/cronograma/getTurnoMensual.php`,
-                `${Config.urlapi}/cronograma/getTurnoJovenes.php`
+                `${Config.urlapi}/himverde/getcanciones.php`
             ];
     
             for (const url of urlsToCache) {

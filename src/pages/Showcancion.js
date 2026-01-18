@@ -15,12 +15,21 @@ function Showcancion (props) {
     const {nombre, existeSesion} = useContext(SesionContext)
     const {setPage} = useContext(MenuActivoContext)
 
+    // ✅ Función helper para obtener canciones (igual que en himnario.js)
+    const obtenerCanciones = () => {
+        return datos?.songs || (Array.isArray(datos) ? datos : [])
+    }
+
     useEffect(() => {
         localStorage.setItem('pagina', '2')
         setPage('2')
-        if (!datos?.length) {
+        
+        // ✅ Validación corregida usando la función helper
+        const canciones = obtenerCanciones()
+        if (!canciones.length) {
             getDatos(props.match.params.himnario)
         }
+        
         if (localStorage.getItem('user') && localStorage.getItem('pass')) {
             const verificar = async () => {
                 await existeSesion()
@@ -28,19 +37,43 @@ function Showcancion (props) {
             verificar()
         }
 
-        setCancionSelecionada(seleccionarCancion(props.match.params.id))
+        // ✅ Solo llamar seleccionarCancion si hay datos disponibles
+        const cancionesDisponibles = obtenerCanciones()
+        if (cancionesDisponibles.length) {
+            setCancionSelecionada(seleccionarCancion(props.match.params.id))
+        }
         
         // eslint-disable-next-line
     }, [])
+    
     useEffect(() => {
-        setCancionSelecionada(seleccionarCancion(props.match.params.id))
+        // ✅ Solo ejecutar si hay datos disponibles
+        const canciones = obtenerCanciones()
+        if (canciones.length) {
+            setCancionSelecionada(seleccionarCancion(props.match.params.id))
+        }
         // eslint-disable-next-line
     }, [datos])
+    
+    // ✅ Función corregida: usa obtenerCanciones() en lugar de datos directamente
     const seleccionarCancion = (id) => {
-        return datos.filter(cancion => cancion.idcancion === id);
+        const canciones = obtenerCanciones()
+        // ✅ Validación adicional de seguridad
+        if (!canciones.length) return []
+        
+        // ✅ Convertir id a string para comparación consistente
+        const idBuscado = String(id)
+        
+        return canciones.filter(cancion => {
+            // ✅ Convertir idcancion a string y comparar, o comparar ambos como números
+            const idCancion = String(cancion.idcancion)
+            return idCancion === idBuscado
+        })
     }
 
-    if (!estado || cancionSeleccionada.length === 0) {
+    // ✅ Validación mejorada
+    const canciones = obtenerCanciones()
+    if (!estado || !canciones.length || cancionSeleccionada.length === 0) {
         return (
             <div className="container d-flex justify-content-center mt-2">
                 <Loader/>
@@ -48,11 +81,12 @@ function Showcancion (props) {
         )
     }
 
+    // ✅ Validación de seguridad antes de acceder a propiedades
     let versos = []
-    if (cancionSeleccionada[0].letra.includes('\r\n\r\n')) {
-        versos = cancionSeleccionada[0].letra.split('\r\n\r\n')
-    } else {
-        if (cancionSeleccionada[0].letra.includes('\n\n')) {
+    if (cancionSeleccionada[0]?.letra) {
+        if (cancionSeleccionada[0].letra.includes('\r\n\r\n')) {
+            versos = cancionSeleccionada[0].letra.split('\r\n\r\n')
+        } else if (cancionSeleccionada[0].letra.includes('\n\n')) {
             versos = cancionSeleccionada[0].letra.split('\n\n')
         }
     }

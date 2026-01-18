@@ -10,7 +10,7 @@ function HimnarioProvider ({children}) {
     const getDatos = async (himnario) => {
         setEstado(false)
         try {
-            await fetch(`${Config.urlapi}/${himnario}/getcanciones.php`)
+            await fetch(`${Config.urlapi}api/songs/${himnario}`)
                 .then(response => response.json())
                 .then(data => setDatos(data))
             setEstado(true)

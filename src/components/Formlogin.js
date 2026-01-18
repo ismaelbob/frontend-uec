@@ -9,7 +9,7 @@ class Formlogin extends React.Component {
                     <label htmlFor="usuario">Usuario:</label>
                     <input className="form-control" type="text" name="usuario" id="usuario" required autoComplete='off' value={this.props.datos.usuario} onChange={this.props.onChange}/>
                     <label htmlFor="pass">Contraseña:</label>
-                    <input className="form-control" type="password" name="pass" id="pass" required value={this.props.datos.pass} onChange={this.props.onChange}/>
+                    <input className="form-control" type="password" name="password" id="password" required value={this.props.datos.password} onChange={this.props.onChange}/>
                     <input className="btn btn-primary mt-5 w-100" type="submit" value="Acceder"/>               
                 </form>
                 {

@@ -12,8 +12,6 @@ import MenuActivoContext from '../context/menuactivo'
 
 function Himnario (props) {
     const [buscar, setBuscar] = useState('')
-    const [datosFiltrados, setDatosFiltrados] = useState([])
-    
     const {datos, getDatos} = useContext(HimnarioContext)
     const {nombre, existeSesion} = useContext(SesionContext)
     const {setPage} = useContext(MenuActivoContext)
@@ -22,7 +20,8 @@ function Himnario (props) {
     useEffect(() => {
         localStorage.setItem('pagina', '2')
         setPage('2')
-        if (!datos?.length) {
+        const canciones = datos?.songs || (Array.isArray(datos) ? datos : [])
+        if (!canciones.length) {
             getDatos(props.match.params.himnario)
         }
         if (localStorage.getItem('user') && localStorage.getItem('pass')) {
@@ -34,13 +33,16 @@ function Himnario (props) {
         // eslint-disable-next-line
     }, [])
 
-    useMemo(() => {
-        const resultado = datos.filter(cancion => {
+    const datosFiltrados = useMemo(() => {
+        const canciones = datos?.songs || (Array.isArray(datos) ? datos : [])
+        
+        if (!canciones.length) return []
+        
+        return canciones.filter(cancion => {
             return `${cancion.idcancion} ${cancion.titulo} ${cancion.letra}`
                 .toLowerCase()
                 .includes(buscar.toLowerCase())
         })
-        setDatosFiltrados(resultado)
     }, [datos, buscar])
 
     const handleChange = ({target: {value}}) => {
@@ -49,17 +51,17 @@ function Himnario (props) {
 
     const handleClick = (event) => {
         setBuscar('')
-        setDatosFiltrados(datos)
     }
 
-
-    if(datos.length === 0) {
+    const canciones = datos?.songs || (Array.isArray(datos) ? datos : [])
+    if(!canciones.length) {
         return (
             <div className="container mt-2 d-flex justify-content-center">
                 <Loader/>
             </div>
         )
     }
+
 
     let titulo = props.match.params.himnario
     if (titulo === 'himverde') {

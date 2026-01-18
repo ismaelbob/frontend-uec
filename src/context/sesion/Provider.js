@@ -10,7 +10,7 @@ function SesionProvider ({children}) {
 
     const iniciarSesion = async (datos) => {
         try {
-            const acceder = await fetch(`${Config.urlapi}/usuarios/iniciarsesion.php`, {method: 'POST', body: JSON.stringify(datos)})
+            const acceder = await fetch(`${Config.urlapi}api/auth/login`, {method: 'POST', body: JSON.stringify(datos)})
                 .then(response => response.json())
 
             if (acceder.estado === 'correcto') {
@@ -48,7 +48,7 @@ function SesionProvider ({children}) {
     const existeSesion = async () => {
         try {
             const datoStorage = { usuario: localStorage.getItem('user'), pass: localStorage.getItem('pass')}
-            const resultado = await fetch(`${Config.urlapi}/usuarios/iniciarsesion.php`, {method: 'POST', body: JSON.stringify(datoStorage)})
+            const resultado = await fetch(`${Config.urlapi}api/auth/login`, {method: 'POST', body: JSON.stringify(datoStorage)})
                 .then(response => response.json())
             if (resultado.estado === 'correcto') {
                 setUsuario(resultado.usuario)

@@ -11,7 +11,7 @@ import { clientsClaim } from 'workbox-core';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate, NetworkFirst } from 'workbox-strategies';
+import { StaleWhileRevalidate } from 'workbox-strategies';
 
 clientsClaim();
 
@@ -90,13 +90,13 @@ registerRoute(
   })
 );
 
-// Estrategia NetworkFirst para otros endpoints de la API
-// Prioriza la red, pero usa caché si la red falla
+// Estrategia StaleWhileRevalidate para otros endpoints de la API
+// Sirve caché inmediatamente y actualiza en segundo plano
 registerRoute(
   ({ url }) => {
     return url.origin === API_BASE_URL;
   },
-  new NetworkFirst({
+  new StaleWhileRevalidate({
     cacheName: 'api-other-v1',
     plugins: [
       new ExpirationPlugin({
@@ -105,8 +105,6 @@ registerRoute(
         purgeOnQuotaError: true,
       }),
     ],
-    // Timeout de red: si la petición tarda más de 3 segundos, usa caché
-    networkTimeoutSeconds: 3,
   })
 );
 

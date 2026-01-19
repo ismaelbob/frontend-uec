@@ -122,6 +122,7 @@ self.addEventListener('message', (event) => {
       caches.open('api-songs-v1').then(async (cache) => {
         // Obtener todas las URLs cacheadas
         const cachedRequests = await cache.keys();
+// eslint-disable-line no-unused-vars
         
         // Construir las URLs completas de los endpoints
         const urlsToDelete = API_ENDPOINTS.map(endpoint => 

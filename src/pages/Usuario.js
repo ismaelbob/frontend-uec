@@ -32,15 +32,15 @@ function Usuario (props) {
         }
 
         if(navigator.onLine) {
-            document.getElementById('btn-actualizar-lista').classList.remove('d-none')
+            document.getElementById('btn-actualizar-lista')?.classList.remove('d-none')
         } else {
-            document.getElementById('btn-actualizar-lista').classList.add('d-none')
+            document.getElementById('btn-actualizar-lista')?.classList.add('d-none')
         }
         window.addEventListener('online', () => {
-            document.getElementById('btn-actualizar-lista').classList.remove('d-none')
+            document.getElementById('btn-actualizar-lista')?.classList.remove('d-none')
         })
         window.addEventListener('offline', () => {
-            document.getElementById('btn-actualizar-lista').classList.add('d-none')
+            document.getElementById('btn-actualizar-lista')?.classList.add('d-none')
         })
         // eslint-disable-next-line
     }, [])
@@ -75,37 +75,72 @@ function Usuario (props) {
         setMensaje('')
     }
 
+    /**
+     * Actualiza manualmente el caché de canciones
+     * 1. Limpia el caché existente de canciones
+     * 2. Fuerza una nueva petición a la API para obtener datos actualizados
+     * 3. Recarga la página para reflejar los cambios
+     */
     const actualizarCache = async () => {
         setCargando(true);
     
         try {
-            // Abre la caché 'memoria-v1'
-            const cache = await caches.open('memoria-v1');
-    
-            // Obtén todas las claves almacenadas en la caché
-            const keys = await cache.keys();
-    
-            // Borra cada recurso de la caché
-            for (const request of keys) {
-                await cache.delete(request);
+            // Verificar que el service worker esté registrado
+            if (!('serviceWorker' in navigator)) {
+                throw new Error('Service Worker no está disponible en este navegador');
             }
-    
-            // Agrega nuevamente los datos actualizados desde la base de datos
-            const urlsToCache = [
-                `${Config.urlapi}/himjovenes/getcanciones.php`,
-                `${Config.urlapi}/himpoder/getcanciones.php`,
-                `${Config.urlapi}/himverde/getcanciones.php`
-            ];
-    
-            for (const url of urlsToCache) {
-                await cache.add(url);
-            }
-    
-            // Recarga la página para reflejar los datos actualizados
-            window.location.reload();
+
+            const registration = await navigator.serviceWorker.ready;
+            
+            // Crear un canal de mensajes para comunicación con el service worker
+            const messageChannel = new MessageChannel();
+            
+            // Escuchar la respuesta del service worker
+            messageChannel.port1.onmessage = (event) => {
+                if (event.data.success) {
+                    console.log('✅ Caché limpiado exitosamente');
+                    
+                    // Ahora forzar la actualización de los datos desde la API
+                    // Haciendo peticiones fetch que actualizarán el caché automáticamente
+                    const urlsToUpdate = [
+                        `${Config.urlapi}api/songs/jovenes`,
+                        `${Config.urlapi}api/songs/poder`,
+                        `${Config.urlapi}api/songs/verde`
+                    ];
+                    
+                    // Hacer peticiones con cache: 'no-store' para forzar actualización
+                    Promise.all(
+                        urlsToUpdate.map(url => 
+                            fetch(url, { 
+                                cache: 'no-store',
+                                headers: {
+                                    'Cache-Control': 'no-cache'
+                                }
+                            })
+                        )
+                    ).then(() => {
+                        console.log('✅ Datos actualizados desde la API');
+                        // Recargar la página para reflejar los cambios
+                        window.location.reload();
+                    }).catch((error) => {
+                        console.error('Error al actualizar datos:', error);
+                        setMensaje('Error al actualizar datos. Intenta recargar la página.');
+                        setCargando(false);
+                    });
+                } else {
+                    throw new Error(event.data.message || 'Error al limpiar caché');
+                }
+            };
+            
+            // Enviar mensaje al service worker para limpiar el caché
+            registration.active?.postMessage(
+                { type: 'CLEAR_SONGS_CACHE' },
+                [messageChannel.port2]
+            );
+            
         } catch (error) {
             console.error('Error al actualizar la caché:', error);
-        } finally {
+            setMensaje('Error al actualizar caché. Intenta recargar la página manualmente.');
             setCargando(false);
         }
     };
@@ -130,7 +165,16 @@ function Usuario (props) {
                     </div>
                 </div>
                 <div className='border-bottom'></div>
-                <div className='mt-3 d-flex justify-content-center'><button onClick={actualizarCache} className="btn btn-primary" id="btn-actualizar-lista">Actualizar datos de la App</button></div>
+                <div className='mt-3 d-flex justify-content-center'>
+                    <button 
+                        onClick={actualizarCache} 
+                        className="btn btn-primary" 
+                        id="btn-actualizar-lista"
+                        disabled={!navigator.onLine}
+                    >
+                        Actualizar datos de la App
+                    </button>
+                </div>
             </div>
         )
     }
@@ -144,7 +188,16 @@ function Usuario (props) {
                 mensaje={mensaje}
             />
             <div className='border-bottom w-100'></div>
-            <div className='mt-4 d-flex justify-content-center'><button onClick={actualizarCache} className="btn btn-secondary" id="btn-actualizar-lista">Actualizar App</button></div>
+            <div className='mt-4 d-flex justify-content-center'>
+                <button 
+                    onClick={actualizarCache} 
+                    className="btn btn-secondary" 
+                    id="btn-actualizar-lista"
+                    disabled={!navigator.onLine}
+                >
+                    Actualizar App
+                </button>
+            </div>
         </div>
     )
 }

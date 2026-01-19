@@ -15,7 +15,6 @@ function Showcancion (props) {
     const {nombre, existeSesion} = useContext(SesionContext)
     const {setPage} = useContext(MenuActivoContext)
 
-    // ✅ Función helper para obtener canciones (igual que en himnario.js)
     const obtenerCanciones = () => {
         return datos?.songs || (Array.isArray(datos) ? datos : [])
     }
@@ -24,7 +23,6 @@ function Showcancion (props) {
         localStorage.setItem('pagina', '2')
         setPage('2')
         
-        // ✅ Validación corregida usando la función helper
         const canciones = obtenerCanciones()
         if (!canciones.length) {
             getDatos(props.match.params.himnario)
@@ -37,7 +35,6 @@ function Showcancion (props) {
             verificar()
         }
 
-        // ✅ Solo llamar seleccionarCancion si hay datos disponibles
         const cancionesDisponibles = obtenerCanciones()
         if (cancionesDisponibles.length) {
             setCancionSelecionada(seleccionarCancion(props.match.params.id))
@@ -47,7 +44,6 @@ function Showcancion (props) {
     }, [])
     
     useEffect(() => {
-        // ✅ Solo ejecutar si hay datos disponibles
         const canciones = obtenerCanciones()
         if (canciones.length) {
             setCancionSelecionada(seleccionarCancion(props.match.params.id))
@@ -55,23 +51,17 @@ function Showcancion (props) {
         // eslint-disable-next-line
     }, [datos])
     
-    // ✅ Función corregida: usa obtenerCanciones() en lugar de datos directamente
     const seleccionarCancion = (id) => {
         const canciones = obtenerCanciones()
-        // ✅ Validación adicional de seguridad
         if (!canciones.length) return []
         
-        // ✅ Convertir id a string para comparación consistente
         const idBuscado = String(id)
-        
         return canciones.filter(cancion => {
-            // ✅ Convertir idcancion a string y comparar, o comparar ambos como números
             const idCancion = String(cancion.idcancion)
             return idCancion === idBuscado
         })
     }
 
-    // ✅ Validación mejorada
     const canciones = obtenerCanciones()
     if (!estado || !canciones.length || cancionSeleccionada.length === 0) {
         return (
@@ -81,7 +71,6 @@ function Showcancion (props) {
         )
     }
 
-    // ✅ Validación de seguridad antes de acceder a propiedades
     let versos = []
     if (cancionSeleccionada[0]?.letra) {
         if (cancionSeleccionada[0].letra.includes('\r\n\r\n')) {

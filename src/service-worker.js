@@ -11,7 +11,7 @@ import { clientsClaim } from 'workbox-core';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate } from 'workbox-strategies';
+import { StaleWhileRevalidate, NetworkFirst } from 'workbox-strategies';
 
 clientsClaim();
 
@@ -61,69 +61,92 @@ registerRoute(
   })
 );
 
-// This allows the web app to trigger skipWaiting via
-// registration.waiting.postMessage({type: 'SKIP_WAITING'})
+// Configuración de endpoints de la API
+const API_BASE_URL = 'https://api-uec.onrender.com';
+const API_ENDPOINTS = [
+  '/api/songs/jovenes',
+  '/api/songs/poder',
+  '/api/songs/verde',
+];
+
+// Estrategia de caché para endpoints de la API de canciones
+// Usa StaleWhileRevalidate: sirve caché inmediatamente y actualiza en segundo plano
+registerRoute(
+  ({ url }) => {
+    return url.origin === API_BASE_URL && 
+           API_ENDPOINTS.some(endpoint => url.pathname === endpoint);
+  },
+  new StaleWhileRevalidate({
+    cacheName: 'api-songs-v1',
+    plugins: [
+      // Expira las entradas después de 7 días
+      new ExpirationPlugin({
+        maxEntries: 10,
+        maxAgeSeconds: 7 * 24 * 60 * 60, // 7 días
+        // Limpia automáticamente entradas expiradas
+        purgeOnQuotaError: true,
+      }),
+    ],
+  })
+);
+
+// Estrategia NetworkFirst para otros endpoints de la API
+// Prioriza la red, pero usa caché si la red falla
+registerRoute(
+  ({ url }) => {
+    return url.origin === API_BASE_URL;
+  },
+  new NetworkFirst({
+    cacheName: 'api-other-v1',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 50,
+        maxAgeSeconds: 24 * 60 * 60, // 1 día
+        purgeOnQuotaError: true,
+      }),
+    ],
+    // Timeout de red: si la petición tarda más de 3 segundos, usa caché
+    networkTimeoutSeconds: 3,
+  })
+);
+
+// Handler de mensajes del service worker
+// Permite comunicación bidireccional con la aplicación
 self.addEventListener('message', (event) => {
+  // Manejo de SKIP_WAITING para actualizaciones del service worker
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
-});
 
-// Any other custom service worker logic can go here.
-
-const datosCanciones = [
-  'https://uecapi.elementfx.com/himjovenes/getcanciones.php',
-  'https://uecapi.elementfx.com/himpoder/getcanciones.php',
-  'https://uecapi.elementfx.com/himverde/getcanciones.php',
-  'https://uecapi.elementfx.com/cronograma/getTurnoMensual.php',
-  'https://uecapi.elementfx.com/cronograma/getTurnoJovenes.php'
-];
-
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open('memoria-v1').then(cache => {
-      return cache.addAll(datosCanciones);
-    })
-  );
-});
-
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      // Si hay una respuesta en caché, devolverla
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-
-      // Si no hay respuesta en caché, intentar obtener los datos de la red
-      return fetch(event.request).then(networkResponse => {
-        // Verificar si la respuesta de la red es válida
-        if (!networkResponse || networkResponse.status !== 200 || (networkResponse.type !== 'basic' && networkResponse.type !== 'cors')) {
-          return caches.match(event.request);
-        }
-
-        // Clonar la respuesta de la red
-        const networkResponseClone = networkResponse.clone();
-
-        // Comparar los datos de la red con los datos en caché
-        return caches.open('memoria-v1').then(cache => {
-          return cache.match(event.request).then(cachedResponse => {
-            if (!cachedResponse || !responsesAreEqual(cachedResponse, networkResponseClone)) {
-              cache.put(event.request, networkResponseClone);
-            }
-            return networkResponse;
-          });
+  // Manejo de invalidación manual del caché de canciones
+  if (event.data && event.data.type === 'CLEAR_SONGS_CACHE') {
+    event.waitUntil(
+      caches.open('api-songs-v1').then(async (cache) => {
+        // Obtener todas las URLs cacheadas
+        const cachedRequests = await cache.keys();
+        
+        // Construir las URLs completas de los endpoints
+        const urlsToDelete = API_ENDPOINTS.map(endpoint => 
+          new Request(`${API_BASE_URL}${endpoint}`)
+        );
+        
+        // Eliminar cada entrada del caché
+        await Promise.all(
+          urlsToDelete.map(url => cache.delete(url))
+        );
+        
+        // Responder al cliente que la limpieza fue exitosa
+        event.ports[0]?.postMessage({ 
+          success: true, 
+          message: 'Caché de canciones limpiado exitosamente' 
         });
-      }).catch(() => {
-        // Si la red falla, devolver la respuesta en caché
-        return caches.match(event.request);
-      });
-    })
-  );
+      }).catch((error) => {
+        // Responder con error si algo falla
+        event.ports[0]?.postMessage({ 
+          success: false, 
+          message: `Error al limpiar caché: ${error.message}` 
+        });
+      })
+    );
+  }
 });
-
-// Función para comparar dos respuestas
-function responsesAreEqual(response1, response2) {
-  return response1.headers.get('content-length') === response2.headers.get('content-length') &&
-         response1.headers.get('etag') === response2.headers.get('etag');
-}

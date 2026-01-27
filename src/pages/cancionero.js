@@ -11,7 +11,10 @@ function Cancionero () {
     useEffect(() => {
         localStorage.setItem('pagina', '2')
         setPage('2')
-        if (localStorage.getItem('user') && localStorage.getItem('pass')) {
+
+        const accessToken = localStorage.getItem('accessToken')
+        const refreshToken = localStorage.getItem('refreshToken')
+        if (accessToken && refreshToken) {
             const verificar = async () => {
                 await existeSesion()
             }

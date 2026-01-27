@@ -18,7 +18,9 @@ function Home () {
     useEffect(() => {
         localStorage.setItem('pagina', '1')
         setPage('1')
-        if (localStorage.getItem('user') && localStorage.getItem('pass')) {
+        const accessToken = localStorage.getItem('accessToken')
+        const refreshToken = localStorage.getItem('refreshToken')
+        if (accessToken && refreshToken) {
             const verificar = async () => {
                 await existeSesion()
             }

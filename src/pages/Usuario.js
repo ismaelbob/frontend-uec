@@ -19,18 +19,30 @@ function Usuario (props) {
     useEffect(() => {
         localStorage.setItem('pagina', '4')
         setPage('4')
-        if (localStorage.getItem('user') && localStorage.getItem('password')) {
+        
+        // Verificar si hay tokens antes de verificar sesión
+        const accessToken = localStorage.getItem('accessToken')
+        const refreshToken = localStorage.getItem('refreshToken')
+
+        
+        if (accessToken && refreshToken) {
             setCargando(true)
             const verificar = async () => {
                 const consulta = await existeSesion()
                 if (consulta === 'correcto') {
-                    setMensaje('Bienvenido!')
+                    // No mostrar mensaje si la sesión es válida (ya se muestra el nombre)
+                    setMensaje('')
                 } else {
+                    // Solo mostrar mensaje si hay un error
                     setMensaje(consulta)
                 }
                 setCargando(false)
             }
             verificar()
+        } else {
+            // Si no hay tokens, asegurarse de que no hay sesión activa
+            setCargando(false)
+            setMensaje('')
         }
 
         if(navigator.onLine) {
@@ -57,7 +69,7 @@ function Usuario (props) {
     const handleSubmitSesion = async (event) => {
         event.preventDefault()
         const form = event.target
-        if (datos.usuario === '' || datos.pass === '') {
+        if (datos.usuario === '' || datos.password === '') {
             form.classList.add('was-validated')
         } else {
             setCargando(true)

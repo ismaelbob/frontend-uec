@@ -19,9 +19,12 @@ function HimnarioProvider ({children}) {
             console.log(`Ocurrio un error: ${error}`)
         }
     }
+    const refreshHimnario = (himnario) => {
+        getDatos(himnario)
+    }
 
     return (
-        <HimnarioContext.Provider value={{datos, estado, getDatos}}>
+        <HimnarioContext.Provider value={{datos, estado, getDatos, refreshHimnario}}>
             {children}
         </HimnarioContext.Provider>
     )

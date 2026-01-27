@@ -1,6 +1,33 @@
 @import url('https://fonts.googleapis.com/css?family=Lato:300,400,700');
 @import url('https://fonts.googleapis.com/css?family=Anton');
 
+/* Variables CSS para modo claro */
+:root {
+  --bg-color: #F4F4F7;
+  --text-color: #000000;
+  --card-bg: #D5D5D5;
+  --card-hover: #B0DAEB;
+  --border-color: #E0E0E0;
+  --input-bg: #FFFFFF;
+  --input-border: #CED4DA;
+  --text-secondary: #5E5E5E;
+  --shadow: rgba(128, 128, 128, 0.678);
+  --primary-text: #336699;
+}
+
+/* Variables CSS para modo oscuro */
+body.dark-theme {
+  --bg-color: #1a1a1a;
+  --text-color: #E0E0E0;
+  --card-bg: #2d2d2d;
+  --card-hover: #3d3d3d;
+  --border-color: #404040;
+  --input-bg: #2d2d2d;
+  --input-border: #555555;
+  --text-secondary: #B0B0B0;
+  --shadow: rgba(0, 0, 0, 0.5);
+  --primary-text: #FFFFFF;
+}
 
 * {
   -webkit-font-smoothing: antialiased;
@@ -11,7 +38,9 @@
 
 body {
   font-family: 'Lato', 'Helvetica Neue', sans-serif;
-  background-color: #F4F4F7;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h1 {
@@ -94,4 +123,55 @@ a.link-unstyled:hover {
 
 .bg-transparente-primario {
   background-color: #33669980;
+}
+
+/* Fondo de superficie que respeta el tema (claro/oscuro) */
+.bg-surface {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+/* Estilos para modo oscuro - Formularios */
+body.dark-theme .form-control {
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-color);
+}
+
+body.dark-theme .form-control:focus {
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-color);
+}
+
+body.dark-theme .form-control::placeholder {
+  color: var(--text-secondary);
+}
+
+/* Estilos para modo oscuro - Alertas */
+body.dark-theme .alert {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+body.dark-theme .alert-danger {
+  background-color: #4a1f1f;
+  border-color: #6b2a2a;
+  color: #ff6b6b;
+}
+
+/* Estilos para modo oscuro - Contenedores */
+body.dark-theme .container {
+  color: var(--text-color);
+}
+
+/* Forzar que text-primary respete el tema */
+.text-primary {
+  color: var(--primary-text) !important;
+}
+
+/* Transiciones suaves para todos los elementos */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }

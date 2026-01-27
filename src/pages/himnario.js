@@ -64,10 +64,10 @@ function Himnario (props) {
 
 
     let titulo = props.match.params.himnario
-    if (titulo === 'himverde') {
+    if (titulo === 'verde') {
         titulo = 'Himnario Verde'
     } else {
-        if (titulo === 'himpoder') {
+        if (titulo === 'poder') {
             titulo = 'Himnario Poder'
         } else {
             titulo = 'Himnario de Jóvenes'

@@ -16,17 +16,19 @@ import HimnarioProvider from './context/himnario/Provider'
 import SesionProvider from './context/sesion/Provider'
 import MenuActivoProvider from './context/menuactivo/Provider'
 import ActividadesProvider from './context/actividades/Provider'
+import TemaProvider from './context/tema/Provider'
 import EditTurnoSemana from './pages/EditTurnoSemana'
 import EditTurnoSemanaJov from './pages/EditTurnoSemanaJov'
 import EditMes from './pages/EditNombreMes'
 function App () {
     return (
         <BrowserRouter>
-            <MenuActivoProvider>
-                <SesionProvider>
-                    <ActividadesProvider>
-                        <HimnarioProvider>
-                            <Layout>
+            <TemaProvider>
+                <MenuActivoProvider>
+                    <SesionProvider>
+                        <ActividadesProvider>
+                            <HimnarioProvider>
+                                <Layout>
                                 <Switch>
                                     <Route path="/" exact component={Home}/>
                                     <Route path="/cancionero" exact component={Cancionero}/>
@@ -47,6 +49,7 @@ function App () {
                     </ActividadesProvider>
                 </SesionProvider>
             </MenuActivoProvider>
+            </TemaProvider>
         </BrowserRouter>
     )
 }

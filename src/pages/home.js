@@ -81,13 +81,13 @@ function Home () {
             </div>
 
             <div className="container mt-2">
-                <div className="bg-light shadow">
+                <div className="bg-surface shadow">
                     <div className="text-primary fs-2 text-center">Bienvenido!</div>
                 </div>
             </div>
 
             <div className="container my-2">
-                <div className="bg-light p-3">
+                <div className="bg-surface p-3">
                     <div className="text-primary fs-3 text-center mb-3">NUESTRAS REUNIONES</div>
                     <div className="row">
                         <div className="col-12 col-md-3 mb-md-0 mb-2">
@@ -158,7 +158,7 @@ function Home () {
             </div>
 
             <div className="container">
-                <div className="bg-light">
+                <div className="bg-surface">
                     <div>
                         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4526.425397801151!2d-66.10797133935124!3d-17.447510198296374!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xc757ed3d4438bb54!2sIglesia%20Evang%C3%A9lica%20Bautista%20%22Unidos%20en%20Cristo%22!5e0!3m2!1sen!2sbo!4v1655604486637!5m2!1sen!2sbo" width="100%" height="400" style={{'border': 'none'}} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="ubicacion"></iframe>
                     </div>

@@ -48,7 +48,7 @@ function Cancionero () {
             </div>
             <div className="row d-flex justify-content-center">
                 <div className="banner col-11 col-md-8 d-flex justify-content-center align-items-center">
-                    <p>
+                    <p className="text-primary">
                         Cantad alegres a Dios, habitantes de toda la tierra. Salmos 100:1
                     </p>
                 </div>

@@ -6,6 +6,7 @@ import Config from '../config'
 
 import SesionContext from '../context/sesion'
 import MenuActivoContext from '../context/menuactivo'
+import TemaContext from '../context/tema'
 
 function Usuario (props) {
     const [datos, setDatos] = useState({usuario: '', password: ''})
@@ -13,6 +14,7 @@ function Usuario (props) {
     const [mensaje, setMensaje] = useState('')
     const {iniciarSesion, nombre, cerrarSesion, existeSesion} = useContext(SesionContext)
     const {setPage} = useContext(MenuActivoContext)
+    const {temaPreferido, cambiarTema} = useContext(TemaContext)
 
     useEffect(() => {
         localStorage.setItem('pagina', '4')
@@ -153,6 +155,10 @@ function Usuario (props) {
         )
     }
 
+    const handleTemaChange = (event) => {
+        cambiarTema(event.target.value)
+    }
+
     if (nombre) {
         return (
             <div className="container mt-3 d-flex justify-content-between flex-column">
@@ -165,7 +171,20 @@ function Usuario (props) {
                     </div>
                 </div>
                 <div className='border-bottom'></div>
-                <div className='mt-3 d-flex justify-content-center'>
+                <div className='mt-3 d-flex flex-column align-items-center'>
+                    <div className="mb-3 w-100" style={{maxWidth: '300px'}}>
+                        <label htmlFor="select-tema" className="form-label">Tema de la aplicación:</label>
+                        <select 
+                            id="select-tema"
+                            className="form-control" 
+                            value={temaPreferido} 
+                            onChange={handleTemaChange}
+                        >
+                            <option value="light">Claro</option>
+                            <option value="dark">Oscuro</option>
+                            <option value="system">Sistema</option>
+                        </select>
+                    </div>
                     <button 
                         onClick={actualizarCache} 
                         className="btn btn-primary" 
@@ -188,7 +207,20 @@ function Usuario (props) {
                 mensaje={mensaje}
             />
             <div className='border-bottom w-100'></div>
-            <div className='mt-4 d-flex justify-content-center'>
+            <div className='mt-4 d-flex flex-column align-items-center'>
+                <div className="mb-3 w-100" style={{maxWidth: '300px'}}>
+                    <label htmlFor="select-tema-login" className="form-label">Tema de la aplicación:</label>
+                    <select 
+                        id="select-tema-login"
+                        className="form-control" 
+                        value={temaPreferido} 
+                        onChange={handleTemaChange}
+                    >
+                        <option value="light">Claro</option>
+                        <option value="dark">Oscuro</option>
+                        <option value="system">Sistema</option>
+                    </select>
+                </div>
                 <button 
                     onClick={actualizarCache} 
                     className="btn btn-secondary" 

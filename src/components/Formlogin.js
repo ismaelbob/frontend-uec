@@ -5,7 +5,7 @@ class Formlogin extends React.Component {
         return (
             <div className="box_login">
                 <form className="needs-validation" noValidate name="form-login" onSubmit={this.props.onSubmit}>
-                    <h5>INICIAR SESION</h5>
+                    <h5 className="text-primary">INICIAR SESION</h5>
                     <label htmlFor="usuario">Usuario:</label>
                     <input className="form-control" type="text" name="usuario" id="usuario" required autoComplete='off' value={this.props.datos.usuario} onChange={this.props.onChange}/>
                     <label htmlFor="pass">Contraseña:</label>

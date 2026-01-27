@@ -1,24 +1,25 @@
 .box_cancion {
     display: flex;
     align-items: center;
-    background: #D5D5D5;
+    background: var(--card-bg, #D5D5D5);
     border-radius: 10px;
     padding: .5em;
     margin: .5em 0;
     cursor: pointer;
 }
 .box_cancion:hover {
-    background-color: #B0DAEB;
+    background-color: var(--card-hover, #B0DAEB);
     transition: .5s ease all;
 }
 .box_cancion h6 {
     padding: 0;
     margin: 0;
     font-size: 18px;
+    color: var(--text-color, black);
 }
 .box_cancion a {
     text-decoration: none;
-    color: black;
+    color: var(--text-color, black);
     width: 100%;
 }
 .box_cancion-id {
@@ -30,5 +31,5 @@
 .box_cancion-datos p {
     padding: 0;
     margin: 0;
-    color: #5E5E5E;
+    color: var(--text-secondary, #5E5E5E);
 }

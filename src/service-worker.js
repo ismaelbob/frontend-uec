@@ -121,6 +121,7 @@ self.addEventListener('message', (event) => {
     event.waitUntil(
       caches.open('api-songs-v1').then(async (cache) => {
         // Obtener todas las URLs cacheadas
+// eslint-disable-next-line no-unused-vars
         const cachedRequests = await cache.keys();
         
         // Construir las URLs completas de los endpoints

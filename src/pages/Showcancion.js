@@ -96,7 +96,7 @@ function Showcancion (props) {
                     </div>
                     <div className="menu_buttom">
                         <div className="box_button-back"><Btnback url={`/cancionero/${props.match.params.himnario}`}/></div>
-                        {nombre && <div className="menu_buttom-edit"><Btnedit url={`/cancionero/editar/${props.match.params.himnario}/${cancionSeleccionada[0].idcancion}`}/></div>}
+                        {nombre && <div className="menu_buttom-edit"><Btnedit url={`/cancionero/${props.match.params.himnario}/${cancionSeleccionada[0].idcancion}/editar`}/></div>}
                     </div>
                 </div>
                 <div className="position-relative w-100">

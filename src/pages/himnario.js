@@ -84,7 +84,7 @@ function Himnario (props) {
                     <div className="barra_menu-buttom">
                         <div className="barra_menu-buttom-back"><Btnback url="/cancionero"/></div>
                         {
-                            nombre && <div className="barra_menu-buttom-add"><Btnadd url={`/cancionero/nuevacancion/${props.match.params.himnario}`}/></div>
+                            nombre && <div className="barra_menu-buttom-add"><Btnadd url={`/cancionero/${props.match.params.himnario}/nuevacancion`}/></div>
                         }
                     </div>
                     <div className="barra_menu-search"><Searchbox buscar={handleChange} val={buscar} onClick={handleClick}/></div>
@@ -104,7 +104,7 @@ function Himnario (props) {
                 <div className="barra_menu-buttom">
                     <div className="barra_menu-buttom-back"><Btnback url="/cancionero"/></div>
                     {
-                        nombre && <div className="barra_menu-buttom-add"><Btnadd url={`/cancionero/nuevacancion/${props.match.params.himnario}`}/></div>
+                        nombre && <div className="barra_menu-buttom-add"><Btnadd url={`/cancionero/${props.match.params.himnario}/nuevacancion`}/></div>
                     }
                 </div>
                 <div className="barra_menu-search"><Searchbox buscar={handleChange} val={buscar} onClick={handleClick}/></div>

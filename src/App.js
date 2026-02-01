@@ -38,8 +38,8 @@ function App () {
                                     <Route path="/actividades/editarmes/:id" exact component={EditMes}/>
                                     <Route path="/ofrendas" exact component={Ofrendas}/>
                                     <Route path="/login" exact component={Usuario}/>
-                                    <Route path="/cancionero/nuevacancion/:himnario" exact component={Addcancion}/>
-                                    <Route path="/cancionero/editar/:himnario/:id" exact component={Editcancion}/>
+                                    <Route path="/cancionero/:himnario/nuevacancion" exact component={Addcancion}/>
+                                    <Route path="/cancionero/:himnario/:id/editar" exact component={Editcancion}/>
                                     <Route path="/cancionero/:himnario" exact component={Himnario}/>
                                     <Route path="/cancionero/:himnario/:id" exact component={Showcancion}/>
                                     <Route component={NotFound}/>

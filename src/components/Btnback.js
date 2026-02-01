@@ -7,7 +7,7 @@ class Btnback extends React.Component {
     render () {
         return (
             <div className="box_btnback">
-                <Link to={this.props.url} className="d-flex">
+                <Link to={this.props.url} replace className="d-flex">
                     <img src={backicon} alt="<"/>
                     <div>Atras</div>
                 </Link>

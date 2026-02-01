@@ -44,7 +44,7 @@ function Addcancion() {
 
     useEffect(() => {
         if (!localStorage.getItem('accessToken')) {
-            history.push('/cancionero')
+            history.replace('/cancionero')
             return
         }
     
@@ -162,7 +162,7 @@ function Addcancion() {
             refreshHimnario(himnario)
             // Redirigir sin recargar la página
             setTimeout(() => {
-                history.push(`/cancionero/${himnario}`)
+                history.replace(`/cancionero/${himnario}`)
             }, 1000) // Pequeño delay para mostrar mensaje de éxito
 
         } catch (error) {

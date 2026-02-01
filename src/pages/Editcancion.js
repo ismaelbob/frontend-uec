@@ -31,7 +31,7 @@ function Editcancion() {
 
     useEffect(() => {
         if (!localStorage.getItem('accessToken')) {
-            history.push('/cancionero')
+            history.replace('/cancionero')
             return
         }
 
@@ -46,7 +46,7 @@ function Editcancion() {
         const cancion = seleccionarCancion(id)
         cancion.length === 1
             ? setDatosCancion(cancion[0])
-            : history.push(`/cancionero/${himnario}/${id}`)
+            : history.replace(`/cancionero/${himnario}/${id}`)
         setCargando(false)
         setRespuestaId('')
         setIdActual(cancion[0].idcancion)
@@ -158,7 +158,7 @@ function Editcancion() {
 
             // Redirigir sin recargar la página
             setTimeout(() => {
-                history.push(`/cancionero/${himnario}/${id}`)
+                history.replace(`/cancionero/${himnario}/${id}`)
             }, 1000) // Pequeño delay para mostrar mensaje de éxito
 
         } catch (error) {

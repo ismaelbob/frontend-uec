@@ -19,7 +19,7 @@ function Navbar (props) {
                 <div className="box_navbar-link-left">
                     <Link id='1' onClick={handleClick} className={page === '1' ? 'activo' : ''} to="/">Inicio</Link>
                     <Link id='2' onClick={handleClick} className={page === '2' ? 'activo' : ''} to="/cancionero">Cancionero</Link>
-                    <Link id='3' onClick={handleClick} className={page === '3' ? 'activo' : ''} to="/actividades">Cronograma</Link>
+                    <Link id='3' onClick={handleClick} className={page === '3' ? 'activo' : ''} to="/actividades">Actividades</Link>
                 </div>
                 <div className="box_navbar-link-right">
                     {

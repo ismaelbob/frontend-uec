@@ -4,18 +4,19 @@ import Config from '../../config'
 
 function HimnarioProvider ({children}) {
 
-    const [datos, setDatos] = useState([])
-    const [estado, setEstado] = useState(false)
+    const [datos, setDatos] = useState(null)
+    const [loading, setLoading] = useState(false)
 
     const getDatos = async (himnario) => {
-        setEstado(false)
+        setLoading(true)
+        setDatos(null)
         try {
             await fetch(`${Config.urlapi}api/songs/${himnario}`)
                 .then(response => response.json())
                 .then(data => setDatos(data))
-            setEstado(true)
+            setLoading(false)
         } catch (error) {
-            setEstado(false)
+            setLoading(false)
             console.log(`Ocurrio un error: ${error}`)
         }
     }
@@ -24,7 +25,7 @@ function HimnarioProvider ({children}) {
     }
 
     return (
-        <HimnarioContext.Provider value={{datos, estado, getDatos, refreshHimnario}}>
+        <HimnarioContext.Provider value={{datos, loading, getDatos, refreshHimnario}}>
             {children}
         </HimnarioContext.Provider>
     )

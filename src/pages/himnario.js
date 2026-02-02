@@ -1,4 +1,5 @@
 import {useContext, useEffect, useMemo, useState} from 'react'
+import { useParams } from 'react-router-dom'
 import './styles/himnario.css'
 import Btnadd from '../components/Btnadd'
 import Btnback from '../components/Btnback'
@@ -11,8 +12,9 @@ import SesionContext from '../context/sesion'
 import MenuActivoContext from '../context/menuactivo'
 
 function Himnario (props) {
+    const { himnario } = useParams()
     const [buscar, setBuscar] = useState('')
-    const {datos, getDatos} = useContext(HimnarioContext)
+    const {datos, getDatos, loading} = useContext(HimnarioContext)
     const {nombre, existeSesion} = useContext(SesionContext)
     const {setPage} = useContext(MenuActivoContext)
 
@@ -20,10 +22,8 @@ function Himnario (props) {
     useEffect(() => {
         localStorage.setItem('pagina', '2')
         setPage('2')
-        const canciones = datos?.songs || (Array.isArray(datos) ? datos : [])
-        if (!canciones.length) {
-            getDatos(props.match.params.himnario)
-        }
+        getDatos(himnario)
+
         const accessToken = localStorage.getItem('accessToken')
         const refreshToken = localStorage.getItem('refreshToken')
         if (accessToken && refreshToken) {
@@ -33,7 +33,7 @@ function Himnario (props) {
             verificar()
         }
         // eslint-disable-next-line
-    }, [])
+    }, [himnario])
 
     const datosFiltrados = useMemo(() => {
         const canciones = datos?.songs || (Array.isArray(datos) ? datos : [])
@@ -56,7 +56,8 @@ function Himnario (props) {
     }
 
     const canciones = datos?.songs || (Array.isArray(datos) ? datos : [])
-    if(!canciones.length) {
+    console.log(loading)
+    if(!canciones.length || loading || !datos) {
         return (
             <div className="container mt-2 d-flex justify-content-center">
                 <Loader/>

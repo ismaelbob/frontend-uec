@@ -140,21 +140,20 @@ function Home () {
 
 
             <div className='container'>
-                <div className="text-primary fs-3 text-center mb-5 mb-md-3 mt-3">LIDERAZGO 2025</div>
+                <div className="text-primary fs-3 text-center mb-5 mb-md-3 mt-3">LIDERAZGO 2026</div>
                 <div className='tarjetero'>
-                    <Tarjeta icono={avatar} nombre="Hno. Zenobio Choque" telefono="67460347" cargo="PASTOR" link={true}/>
-                    <Tarjeta icono={avatar} nombre="Hno. Wilson Huallpa" telefono="74534942" cargo="PRIMER DIACONO" link={true}/>
-                    <Tarjeta icono={avatar} nombre="Hna. Betty Paulo" telefono="75949508" cargo="DIACONO E. CRISTIANA" link={true}/>
-                    <Tarjeta icono={avatar} nombre="Hna. Roxana Ramos" telefono="63919939" cargo="DIACONO TESORERO" link={true}/>
-                    <Tarjeta icono={avatar} nombre="Hno. Ismael Jancko" telefono="74376438" cargo="DIACONO SECRETARIO" link={true}/>
-                    <Tarjeta icono={avatar} nombre="Hna. Bacilia Gutierres" telefono="74353197" cargo="DIACONO EVANGELISMO" link={true}/>
-                    <Tarjeta icono={avatar} nombre="Hno. Natalia Guarachi" telefono="77419809" cargo="DIACONO ACCION SOCIAL" link={true}/>
-                    <Tarjeta icono={avatar} nombre="Hna. Nemesia Serrano" telefono="77480383" cargo="DIACONO DE MUSICA" link={true}/>
-                    <Tarjeta icono={avatar} nombre="Hna. Elena Toroya" telefono="72231015" cargo="DIACONISA" link={false}/>
+                    <Tarjeta icono={avatar} nombre="Hno. Teofilo Condori" telefono="" cargo="PASTOR" link={true}/>
+                    <Tarjeta icono={avatar} nombre="Hno. Jhony Mamani" telefono="71098525" cargo="PRIMER DIACONO" link={true}/>
+                    <Tarjeta icono={avatar} nombre="Hna. Jhovana Caceres" telefono="72267426" cargo="DIACONO E. CRISTIANA" link={true}/>
+                    <Tarjeta icono={avatar} nombre="Hno. Elias Carreño" telefono="69543969" cargo="DIACONO TESORERO" link={true}/>
+                    <Tarjeta icono={avatar} nombre="Hna. Vania Jancko" telefono="74827001" cargo="DIACONO SECRETARIO" link={true}/>
+                    <Tarjeta icono={avatar} nombre="Hna. Eloteria Reyes" telefono="74339428" cargo="DIACONO ACCION SOCIAL" link={true}/>
+                    <Tarjeta icono={avatar} nombre="Hno. Ismael Jancko" telefono="74376438" cargo="DIACONO DE MUSICA" link={true}/>
+                    <Tarjeta icono={avatar} nombre="Hna. Maria" telefono="" cargo="DIACONISA" link={false}/>
                     <Tarjeta icono={avatar} nombre="Hna. Eulalia Serrano" telefono="72231015" cargo="DIACONISA" link={true}/>
                     <Tarjeta icono={avatar} nombre="Hno. Tomas Quispe" telefono="71492803" cargo="D. DE CONSTRUCCION" link={false}/>
                     <Tarjeta icono={avatar} nombre="Hna. Senovia Choque" telefono="72750107" cargo="PRESIDENTA U. FEMENIL" link={true}/>
-                    <Tarjeta icono={avatar} nombre="Hno. Ronald Lopez" telefono="63900325" cargo="PRESIDENTE U. JUVENIL" link={true}/>
+                    <Tarjeta icono={avatar} nombre="Hno. David Jancko" telefono="63901553" cargo="PRESIDENTE U. JUVENIL" link={true}/>
                     <Tarjeta icono={avatar} nombre="Hna. Jhovana Caceres" telefono="72267426" cargo="DIRECTORA FUNDACION ORIEL" link={true}/>
                 </div>
             </div>

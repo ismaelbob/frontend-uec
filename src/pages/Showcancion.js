@@ -11,7 +11,7 @@ import MenuActivoContext from '../context/menuactivo'
 
 function Showcancion (props) {
     const [cancionSeleccionada, setCancionSelecionada ] = useState([])
-    const {datos, estado, getDatos} = useContext(HimnarioContext)
+    const {datos, loading, getDatos} = useContext(HimnarioContext)
     const {nombre, existeSesion} = useContext(SesionContext)
     const {setPage} = useContext(MenuActivoContext)
 
@@ -65,7 +65,7 @@ function Showcancion (props) {
     }
 
     const canciones = obtenerCanciones()
-    if (!estado || !canciones.length || cancionSeleccionada.length === 0) {
+    if (loading || !canciones.length || cancionSeleccionada.length === 0) {
         return (
             <div className="container d-flex justify-content-center mt-2">
                 <Loader/>

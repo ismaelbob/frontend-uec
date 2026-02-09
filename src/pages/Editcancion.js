@@ -138,18 +138,6 @@ function Editcancion() {
             const res = await response.json()
             setRespuesta(res.estado || 'correcto')
 
-            // Actualizar caché
-            try {
-                const cache = await caches.open('memoria-v1')
-                const cacheResponse = await cache.delete(`${Config.urlapi}api/songs/${himnario}`)
-                if (!cacheResponse) {
-                    console.warn('El recurso no estaba en la caché, pero se procederá a agregarlo.')
-                }
-                await cache.add(`${Config.urlapi}api/songs/${himnario}`)
-            } catch (error) {
-                console.error('Error al actualizar la caché:', error)
-                // No bloquear el flujo si falla la caché
-            }
 
             setCargando(false)
             setIsSubmitting(false)

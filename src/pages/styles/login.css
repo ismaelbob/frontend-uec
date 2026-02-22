@@ -11,4 +11,26 @@
     .box_login {
         width: 400px;
     }
+    .w-md-150 {
+        width: 150px !important;
+        height: 150px !important;
+    }
+    .w-md-150 img {
+        width: 80px !important;
+        height: 80px !important;
+    }
+}
+
+.usuario-separador-movil {
+    border-top: 1px solid #ccc;
+    margin-top: 15px;
+    padding-top: 15px;
+}
+
+@media only screen and (min-width:768px) {
+    .usuario-separador-movil {
+        border-top: none;
+        margin-top: 0;
+        padding-top: 0;
+    }
 }

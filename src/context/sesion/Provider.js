@@ -36,6 +36,7 @@ function SesionProvider({ children }) {
         localStorage.setItem('user', data.usuario)
         localStorage.setItem('nombre', data.nombre)
         localStorage.setItem('nivel', String(data.nivel))
+        localStorage.setItem('_id', data._id)
 
         // Para compatibilidad con tu `Usuario.js` actual
         return 'correcto'
@@ -61,6 +62,44 @@ function SesionProvider({ children }) {
     localStorage.removeItem('user')
     localStorage.removeItem('nombre')
     localStorage.removeItem('nivel')
+    localStorage.removeItem('_id')
+  }
+
+  const cambiarPassword = async (datos) => {
+    try {
+      const accessToken = localStorage.getItem('accessToken')
+      const userId = localStorage.getItem('_id')
+
+      if (!accessToken || !userId) {
+        return { ok: false, message: 'No hay sesión activa' }
+      }
+
+      const response = await fetch(`${Config.urlapi}api/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({
+          password: datos.passwordNuevo
+        })
+      })
+
+      const data = await response.json().catch(() => null)
+
+      if (!response.ok || !data) {
+        return { ok: false, message: 'Error de conexión' }
+      }
+
+      if (data.ok === true) {
+        return { ok: true, message: data.message || 'Contraseña actualizada correctamente' }
+      }
+
+      return { ok: false, message: data.message || 'Datos incorrectos' }
+    } catch (error) {
+      console.error('Error al cambiar contraseña:', error)
+      return { ok: false, message: 'No se pudo conectar' }
+    }
   }
 
   // Función auxiliar para refrescar el access token usando el refresh token
@@ -148,6 +187,7 @@ function SesionProvider({ children }) {
             localStorage.setItem('user', userData.user.usuario)
             localStorage.setItem('nombre', userData.user.nombre)
             localStorage.setItem('nivel', String(userData.user.nivel))
+            localStorage.setItem('_id', userData.user._id)
             return 'correcto'
           }
         }
@@ -160,11 +200,12 @@ function SesionProvider({ children }) {
             const user = localStorage.getItem('user')
             const nombreLS = localStorage.getItem('nombre')
             const nivelLS = localStorage.getItem('nivel')
-            
+            const idLS = localStorage.getItem('_id')
             if (user && nombreLS && nivelLS) {
               setUsuario(user)
               setNombre(nombreLS)
               setNivel(nivelLS)
+              if (idLS) localStorage.setItem('_id', idLS)
               return 'correcto'
             }
           }
@@ -181,11 +222,13 @@ function SesionProvider({ children }) {
         const user = localStorage.getItem('user')
         const nombreLS = localStorage.getItem('nombre')
         const nivelLS = localStorage.getItem('nivel')
+        const idLS = localStorage.getItem('_id')
         
         if (user && nombreLS && nivelLS) {
           setUsuario(user)
           setNombre(nombreLS)
           setNivel(nivelLS)
+          if (idLS) localStorage.setItem('_id', idLS)
           return 'correcto'
         }
         
@@ -201,9 +244,9 @@ function SesionProvider({ children }) {
   }
 
   return (
-    <SesionContext.Provider
-      value={{ usuario, iniciarSesion, cerrarSesion, existeSesion, nombre, nivel }}
-    >
+      <SesionContext.Provider
+        value={{ usuario, iniciarSesion, cerrarSesion, existeSesion, nombre, nivel, cambiarPassword }}
+      >
       {children}
     </SesionContext.Provider>
   )

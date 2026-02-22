@@ -2,7 +2,9 @@ import React, { useContext, useState, useEffect } from 'react'
 import './styles/login.css'
 import Loader from '../components/Loader'
 import Formlogin from '../components/Formlogin'
+import ModalCambiarPassword from '../components/ModalCambiarPassword'
 import Config from '../config'
+import userIcon from '../img/user.svg'
 
 import SesionContext from '../context/sesion'
 import MenuActivoContext from '../context/menuactivo'
@@ -12,9 +14,20 @@ function Usuario (props) {
     const [datos, setDatos] = useState({usuario: '', password: ''})
     const [cargando, setCargando] = useState(false)
     const [mensaje, setMensaje] = useState('')
-    const {iniciarSesion, nombre, cerrarSesion, existeSesion} = useContext(SesionContext)
+    const {iniciarSesion, nombre, nivel, cerrarSesion, existeSesion, cambiarPassword} = useContext(SesionContext)
     const {setPage} = useContext(MenuActivoContext)
-    const {temaPreferido, cambiarTema} = useContext(TemaContext)
+    const {temaPreferido, temaEfectivo, cambiarTema} = useContext(TemaContext)
+    const [mostrarModal, setMostrarModal] = useState(false)
+    const [mensajePassword, setMensajePassword] = useState(null)
+
+    const getNivelTexto = (nivel) => {
+        switch(nivel) {
+            case 1: return 'Administrador'
+            case 2: return 'Estandar'
+            case 3: return 'Visor'
+            default: return ''
+        }
+    }
 
     useEffect(() => {
         localStorage.setItem('pagina', '4')
@@ -87,6 +100,22 @@ function Usuario (props) {
     const salirDeSesion = () => {
         cerrarSesion()
         setMensaje('')
+    }
+
+    const handleCambiarPassword = async (datos) => {
+        const respuesta = await cambiarPassword(datos)
+        setMensajePassword(respuesta)
+        if (respuesta.ok) {
+            setTimeout(() => {
+                setMostrarModal(false)
+                setMensajePassword(null)
+            }, 2000)
+        }
+    }
+
+    const abrirModalPassword = () => {
+        setMensajePassword(null)
+        setMostrarModal(true)
     }
 
     /**
@@ -172,44 +201,67 @@ function Usuario (props) {
     }
 
     if (nombre) {
+        const bgColor = temaEfectivo === 'dark' ? '#2d2d2d' : '#d5d5d5'
+        const textColor = temaEfectivo === 'dark' ? '#E0E0E0' : '#000000'
+        const subtitleColor = temaEfectivo === 'dark' ? '#aaa' : '#666'
+        
         return (
-            <div className="container mt-3 d-flex justify-content-between flex-column">
-                <div className="d-flex flex-row justify-content-between mb-3">
-                    <div>
-                        Bienvenido {nombre}!
+            <div className="container mt-3 d-flex justify-content-center">
+                <div className="usuario-bloque p-4 d-flex flex-wrap flex-md-nowrap" style={{maxWidth: '1078px', width: '100%', backgroundColor: bgColor, color: textColor, borderRadius: '8px', minHeight: '180px'}}>
+                    <div className="d-flex align-items-center" style={{marginRight: '20px'}}>
+                        <div className="usuario-avatar d-flex justify-content-center align-items-center w-md-150" style={{width: '100px', height: '100px', borderRadius: '50%', backgroundColor: temaEfectivo === 'dark' ? '#444' : '#e0e0e0', overflow: 'hidden'}}>
+                            <img src={userIcon} alt="usuario" style={{width: '60px', height: '60px'}} />
+                        </div>
                     </div>
-                    <div>
-                        <button className="btn btn-danger btn-sm" onClick={salirDeSesion}>Cerrar sesion</button>
-                    </div>
-                </div>
-                <div className='border-bottom'></div>
-                <div className='mt-3 d-flex flex-column align-items-center'>
-                    <div className="mb-3 w-100" style={{maxWidth: '300px'}}>
-                        <label htmlFor="select-tema" className="form-label">Tema de la aplicación:</label>
-                        <select 
-                            id="select-tema"
-                            className="form-control" 
-                            value={temaPreferido} 
-                            onChange={handleTemaChange}
+                    <div className="d-flex flex-column justify-content-between" style={{flex: 1}}>
+                        <div>
+                            <span style={{fontSize: '24px', fontWeight: 'bold', lineHeight: 1.2}}>{nombre}</span>
+                            <span style={{fontSize: '16px', color: subtitleColor, display: 'block', lineHeight: 1.2}}>{getNivelTexto(nivel)}</span>
+                        </div>
+                        <button 
+                            onClick={abrirModalPassword} 
+                            style={{background: 'none', border: 'none', color: textColor, textDecoration: 'underline', cursor: 'pointer', padding: 0, alignSelf: 'flex-start'}}
                         >
-                            <option value="light">Claro</option>
-                            <option value="dark">Oscuro</option>
-                            <option value="system">Sistema</option>
-                        </select>
+                            Cambiar contraseña
+                        </button>
                     </div>
-                    <button 
-                        onClick={actualizarCache} 
-                        className="btn btn-primary" 
-                        id="btn-actualizar-lista"
-                        disabled={!navigator.onLine}
-                    >
-                        Actualizar datos de la App
-                    </button>
+                    <div className="d-flex flex-row flex-md-column justify-content-between align-items-start align-items-md-end usuario-separador-movil" style={{flex: 1, width: '100%'}}>
+                        <div className="d-flex flex-column">
+                            <label htmlFor="select-tema" className="form-label" style={{fontSize: '14px', color: textColor, marginBottom: '5px'}}>Tema de aplicación</label>
+                            <select 
+                                id="select-tema"
+                                className="form-control" 
+                                value={temaPreferido} 
+                                onChange={handleTemaChange}
+                                style={{
+                                    width: '150px', 
+                                    backgroundColor: temaEfectivo === 'dark' ? 'var(--card-bg)' : '#fff', 
+                                    color: textColor, 
+                                    borderColor: temaEfectivo === 'dark' ? 'var(--border-color)' : '#ced4da'
+                                }}
+                            >
+                                <option value="light">Claro</option>
+                                <option value="dark">Oscuro</option>
+                                <option value="system">Sistema</option>
+                            </select>
+                        </div>
+                        <div className="d-flex flex-column" style={{marginTop: '26px'}}>
+                            <button className="btn btn-danger btn-sm" onClick={salirDeSesion}>Cerrar sesión</button>
+                        </div>
+                    </div>
                 </div>
+                <ModalCambiarPassword 
+                    show={mostrarModal}
+                    onClose={() => setMostrarModal(false)}
+                    onSave={handleCambiarPassword}
+                    mensaje={mensajePassword}
+                />
             </div>
         )
     }
 
+    const textColor = temaEfectivo === 'dark' ? '#E0E0E0' : '#000000'
+    
     return (
         <div className="container mt-2 d-flex justify-content-center flex-column align-items-md-center">
             <Formlogin 
@@ -221,12 +273,17 @@ function Usuario (props) {
             <div className='border-bottom w-100'></div>
             <div className='mt-4 d-flex flex-column align-items-center'>
                 <div className="mb-3 w-100" style={{maxWidth: '300px'}}>
-                    <label htmlFor="select-tema-login" className="form-label">Tema de la aplicación:</label>
+                    <label htmlFor="select-tema-login" className="form-label" style={{color: textColor}}>Tema de la aplicación:</label>
                     <select 
                         id="select-tema-login"
                         className="form-control" 
                         value={temaPreferido} 
                         onChange={handleTemaChange}
+                        style={{
+                            backgroundColor: temaEfectivo === 'dark' ? 'var(--card-bg)' : '#fff', 
+                            color: textColor, 
+                            borderColor: temaEfectivo === 'dark' ? 'var(--border-color)' : '#ced4da'
+                        }}
                     >
                         <option value="light">Claro</option>
                         <option value="dark">Oscuro</option>

@@ -3,6 +3,8 @@ import './styles/login.css'
 import Loader from '../components/Loader'
 import Formlogin from '../components/Formlogin'
 import ModalCambiarPassword from '../components/ModalCambiarPassword'
+import ModalEditarUsuario from '../components/ModalEditarUsuario'
+import ModalEliminarUsuario from '../components/ModalEliminarUsuario'
 import UsuarioItem from '../components/UsuarioItem'
 import Config from '../config'
 import userIcon from '../img/user.svg'
@@ -22,6 +24,9 @@ function Usuario (props) {
     const [mensajePassword, setMensajePassword] = useState(null)
     const [usuarios, setUsuarios] = useState([])
     const [cargandoUsuarios, setCargandoUsuarios] = useState(false)
+    const [usuarioEditando, setUsuarioEditando] = useState(null)
+    const [mensajeEditar, setMensajeEditar] = useState(null)
+    const [usuarioEliminando, setUsuarioEliminando] = useState(null)
 
     const getNivelTexto = (nivel) => {
         switch(nivel) {
@@ -119,6 +124,74 @@ function Usuario (props) {
     const abrirModalPassword = () => {
         setMensajePassword(null)
         setMostrarModal(true)
+    }
+
+    const handleEditarUsuario = (usuario) => {
+        setMensajeEditar(null)
+        setUsuarioEditando(usuario)
+    }
+
+    const handleGuardarUsuario = async (datos) => {
+        try {
+            const accessToken = localStorage.getItem('accessToken')
+            
+            const bodyData = {
+                nombre: datos.nombre,
+                usuario: datos.usuario,
+                nivel: parseInt(datos.nivel)
+            }
+            
+            if (datos.password) {
+                bodyData.password = datos.password
+            }
+            
+            const response = await fetch(`${Config.urlapi}api/users/${usuarioEditando._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                },
+                body: JSON.stringify(bodyData)
+            })
+            const data = await response.json()
+            setMensajeEditar(data)
+            if (data.ok) {
+                setTimeout(() => {
+                    setUsuarioEditando(null)
+                    setMensajeEditar(null)
+                    obtenerUsuarios()
+                }, 2000)
+            }
+        } catch (error) {
+            console.error('Error al guardar usuario:', error)
+            setMensajeEditar({ ok: false, message: 'Error de conexión' })
+        }
+    }
+
+    const handleEliminarUsuario = (usuario) => {
+        setUsuarioEliminando(usuario)
+    }
+
+    const handleConfirmarEliminar = async () => {
+        try {
+            const accessToken = localStorage.getItem('accessToken')
+            const response = await fetch(`${Config.urlapi}api/users/${usuarioEliminando._id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+            const data = await response.json()
+            if (data.ok) {
+                setUsuarioEliminando(null)
+                obtenerUsuarios()
+            } else {
+                alert(data.message || 'Error al eliminar usuario')
+            }
+        } catch (error) {
+            console.error('Error al eliminar usuario:', error)
+            alert('Error de conexión')
+        }
     }
 
     const obtenerUsuarios = async () => {
@@ -284,6 +357,19 @@ function Usuario (props) {
                         onSave={handleCambiarPassword}
                         mensaje={mensajePassword}
                     />
+                    <ModalEditarUsuario
+                        show={usuarioEditando !== null}
+                        onClose={() => setUsuarioEditando(null)}
+                        onSave={handleGuardarUsuario}
+                        usuario={usuarioEditando}
+                        mensaje={mensajeEditar}
+                    />
+                    <ModalEliminarUsuario
+                        show={usuarioEliminando !== null}
+                        onClose={() => setUsuarioEliminando(null)}
+                        onConfirm={handleConfirmarEliminar}
+                        usuario={usuarioEliminando}
+                    />
                     {nivel === 1 && (
                         <div className="mt-4">
                             <h5 style={{color: textColor}}>Lista de usuarios</h5>
@@ -296,8 +382,8 @@ function Usuario (props) {
                                             key={usuario._id} 
                                             usuario={usuario} 
                                             indice={index + 1}
-                                            onEditar={() => {}}
-                                            onEliminar={() => {}}
+                                            onEditar={handleEditarUsuario}
+                                            onEliminar={handleEliminarUsuario}
                                         />
                                     ))}
                                 </div>

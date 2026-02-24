@@ -1,0 +1,51 @@
+.box_usuario {
+    display: flex;
+    align-items: center;
+    background: var(--card-bg, #D5D5D5);
+    border-radius: 10px;
+    padding: .5em;
+    margin: .5em 0;
+}
+.box_usuario:hover {
+    background-color: var(--card-hover, #B0DAEB);
+    transition: .5s ease all;
+}
+.box_usuario h6 {
+    padding: 0;
+    margin: 0;
+    font-size: 18px;
+    color: var(--text-color, black);
+}
+.box_usuario-id {
+    padding-right: 8px;
+    min-width: 40px;
+    text-align: center;
+}
+.box_usuario-id h6 {
+    font-weight: bold;
+}
+.box_usuario-datos {
+    flex: 1;
+    width: 100%;
+}
+.box_usuario-datos p {
+    padding: 0;
+    margin: 0;
+    color: var(--text-secondary, #5E5E5E);
+}
+.box_usuario-acciones {
+    display: flex;
+    gap: 8px;
+}
+.box_usuario-acciones button {
+    background: none;
+    border: none;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+.box_usuario-acciones button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}

@@ -3,6 +3,7 @@ import './styles/login.css'
 import Loader from '../components/Loader'
 import Formlogin from '../components/Formlogin'
 import ModalCambiarPassword from '../components/ModalCambiarPassword'
+import UsuarioItem from '../components/UsuarioItem'
 import Config from '../config'
 import userIcon from '../img/user.svg'
 
@@ -19,6 +20,8 @@ function Usuario (props) {
     const {temaPreferido, temaEfectivo, cambiarTema} = useContext(TemaContext)
     const [mostrarModal, setMostrarModal] = useState(false)
     const [mensajePassword, setMensajePassword] = useState(null)
+    const [usuarios, setUsuarios] = useState([])
+    const [cargandoUsuarios, setCargandoUsuarios] = useState(false)
 
     const getNivelTexto = (nivel) => {
         switch(nivel) {
@@ -118,6 +121,30 @@ function Usuario (props) {
         setMostrarModal(true)
     }
 
+    const obtenerUsuarios = async () => {
+        try {
+            const accessToken = localStorage.getItem('accessToken')
+            const response = await fetch(`${Config.urlapi}api/users`, {
+                headers: { 'Authorization': `Bearer ${accessToken}` }
+            })
+            const data = await response.json()
+            if (data.ok) {
+                setUsuarios(data.users || data)
+            }
+        } catch (error) {
+            console.error('Error al obtener usuarios:', error)
+        } finally {
+            setCargandoUsuarios(false)
+        }
+    }
+
+    useEffect(() => {
+        if (nombre && nivel === 1) {
+            setCargandoUsuarios(true)
+            obtenerUsuarios()
+        }
+    }, [nombre, nivel])
+
     /**
      * Actualiza manualmente el caché de canciones
      * 1. Limpia el caché existente de canciones
@@ -207,55 +234,77 @@ function Usuario (props) {
         
         return (
             <div className="container mt-3 d-flex justify-content-center">
-                <div className="usuario-bloque p-4 d-flex flex-wrap flex-md-nowrap" style={{maxWidth: '1078px', width: '100%', backgroundColor: bgColor, color: textColor, borderRadius: '8px', minHeight: '180px'}}>
-                    <div className="d-flex align-items-center" style={{marginRight: '20px'}}>
-                        <div className="usuario-avatar d-flex justify-content-center align-items-center w-md-150" style={{width: '100px', height: '100px', borderRadius: '50%', backgroundColor: temaEfectivo === 'dark' ? '#444' : '#e0e0e0', overflow: 'hidden'}}>
-                            <img src={userIcon} alt="usuario" style={{width: '60px', height: '60px'}} />
+                <div style={{maxWidth: '1078px', width: '100%'}}>
+                    <div className="usuario-bloque p-4 d-flex flex-wrap flex-md-nowrap" style={{width: '100%', backgroundColor: bgColor, color: textColor, borderRadius: '8px', minHeight: '180px'}}>
+                        <div className="d-flex align-items-center" style={{marginRight: '20px'}}>
+                            <div className="usuario-avatar d-flex justify-content-center align-items-center w-md-150" style={{width: '100px', height: '100px', borderRadius: '50%', backgroundColor: temaEfectivo === 'dark' ? '#444' : '#e0e0e0', overflow: 'hidden'}}>
+                                <img src={userIcon} alt="usuario" style={{width: '60px', height: '60px'}} />
+                            </div>
                         </div>
-                    </div>
-                    <div className="d-flex flex-column justify-content-between" style={{flex: 1}}>
-                        <div>
-                            <span style={{fontSize: '24px', fontWeight: 'bold', lineHeight: 1.2}}>{nombre}</span>
-                            <span style={{fontSize: '16px', color: subtitleColor, display: 'block', lineHeight: 1.2}}>{getNivelTexto(nivel)}</span>
-                        </div>
-                        <button 
-                            onClick={abrirModalPassword} 
-                            style={{background: 'none', border: 'none', color: textColor, textDecoration: 'underline', cursor: 'pointer', padding: 0, alignSelf: 'flex-start'}}
-                        >
-                            Cambiar contraseña
-                        </button>
-                    </div>
-                    <div className="d-flex flex-row flex-md-column justify-content-between align-items-start align-items-md-end usuario-separador-movil" style={{flex: 1, width: '100%'}}>
-                        <div className="d-flex flex-column">
-                            <label htmlFor="select-tema" className="form-label" style={{fontSize: '14px', color: textColor, marginBottom: '5px'}}>Tema de aplicación</label>
-                            <select 
-                                id="select-tema"
-                                className="form-control" 
-                                value={temaPreferido} 
-                                onChange={handleTemaChange}
-                                style={{
-                                    width: '150px', 
-                                    backgroundColor: temaEfectivo === 'dark' ? 'var(--card-bg)' : '#fff', 
-                                    color: textColor, 
-                                    borderColor: temaEfectivo === 'dark' ? 'var(--border-color)' : '#ced4da'
-                                }}
+                        <div className="d-flex flex-column justify-content-between" style={{flex: 1}}>
+                            <div>
+                                <span style={{fontSize: '24px', fontWeight: 'bold', lineHeight: 1.2}}>{nombre}</span>
+                                <span style={{fontSize: '16px', color: subtitleColor, display: 'block', lineHeight: 1.2}}>{getNivelTexto(nivel)}</span>
+                            </div>
+                            <button 
+                                onClick={abrirModalPassword} 
+                                style={{background: 'none', border: 'none', color: textColor, textDecoration: 'underline', cursor: 'pointer', padding: 0, alignSelf: 'flex-start'}}
                             >
-                                <option value="light">Claro</option>
-                                <option value="dark">Oscuro</option>
-                                <option value="system">Sistema</option>
-                            </select>
+                                Cambiar contraseña
+                            </button>
                         </div>
-                        <div className="d-flex flex-column" style={{marginTop: '26px'}}>
-                            <button className="btn btn-danger btn-sm" onClick={salirDeSesion}>Cerrar sesión</button>
+                        <div className="d-flex flex-row flex-md-column justify-content-between align-items-start align-items-md-end usuario-separador-movil" style={{flex: 1, width: '100%'}}>
+                            <div className="d-flex flex-column">
+                                <label htmlFor="select-tema" className="form-label" style={{fontSize: '14px', color: textColor, marginBottom: '5px'}}>Tema de aplicación</label>
+                                <select 
+                                    id="select-tema"
+                                    className="form-control" 
+                                    value={temaPreferido} 
+                                    onChange={handleTemaChange}
+                                    style={{
+                                        width: '150px', 
+                                        backgroundColor: temaEfectivo === 'dark' ? 'var(--card-bg)' : '#fff', 
+                                        color: textColor, 
+                                        borderColor: temaEfectivo === 'dark' ? 'var(--border-color)' : '#ced4da'
+                                    }}
+                                >
+                                    <option value="light">Claro</option>
+                                    <option value="dark">Oscuro</option>
+                                    <option value="system">Sistema</option>
+                                </select>
+                            </div>
+                            <div className="d-flex flex-column" style={{marginTop: '26px'}}>
+                                <button className="btn btn-danger btn-sm" onClick={salirDeSesion}>Cerrar sesión</button>
+                            </div>
                         </div>
                     </div>
+                    <ModalCambiarPassword 
+                        show={mostrarModal}
+                        onClose={() => setMostrarModal(false)}
+                        onSave={handleCambiarPassword}
+                        mensaje={mensajePassword}
+                    />
+                    {nivel === 1 && (
+                        <div className="mt-4">
+                            <h5 style={{color: textColor}}>Lista de usuarios</h5>
+                            {cargandoUsuarios ? (
+                                <Loader />
+                            ) : (
+                                <div>
+                                    {usuarios.map((usuario, index) => (
+                                        <UsuarioItem 
+                                            key={usuario._id} 
+                                            usuario={usuario} 
+                                            indice={index + 1}
+                                            onEditar={() => {}}
+                                            onEliminar={() => {}}
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
-                <ModalCambiarPassword 
-                    show={mostrarModal}
-                    onClose={() => setMostrarModal(false)}
-                    onSave={handleCambiarPassword}
-                    mensaje={mensajePassword}
-                />
             </div>
         )
     }

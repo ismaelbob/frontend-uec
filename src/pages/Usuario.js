@@ -1,11 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react'
 import './styles/login.css'
+import './styles/himnario.css'
 import Loader from '../components/Loader'
 import Formlogin from '../components/Formlogin'
 import ModalCambiarPassword from '../components/ModalCambiarPassword'
 import ModalEditarUsuario from '../components/ModalEditarUsuario'
 import ModalEliminarUsuario from '../components/ModalEliminarUsuario'
 import UsuarioItem from '../components/UsuarioItem'
+import BtnaddModal from '../components/BtnaddModal'
 import Config from '../config'
 import userIcon from '../img/user.svg'
 
@@ -27,6 +29,7 @@ function Usuario (props) {
     const [usuarioEditando, setUsuarioEditando] = useState(null)
     const [mensajeEditar, setMensajeEditar] = useState(null)
     const [usuarioEliminando, setUsuarioEliminando] = useState(null)
+    const [mostrarModalCrear, setMostrarModalCrear] = useState(false)
 
     const getNivelTexto = (nivel) => {
         switch(nivel) {
@@ -170,6 +173,37 @@ function Usuario (props) {
 
     const handleEliminarUsuario = (usuario) => {
         setUsuarioEliminando(usuario)
+    }
+
+    const handleCrearUsuario = () => {
+        setMensajeEditar(null)
+        setMostrarModalCrear(true)
+    }
+
+    const handleGuardarNuevoUsuario = async (datos) => {
+        try {
+            const accessToken = localStorage.getItem('accessToken')
+            const response = await fetch(`${Config.urlapi}api/users`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                },
+                body: JSON.stringify(datos)
+            })
+            const data = await response.json()
+            setMensajeEditar(data)
+            if (data.ok) {
+                setTimeout(() => {
+                    setMostrarModalCrear(false)
+                    setMensajeEditar(null)
+                    obtenerUsuarios()
+                }, 2000)
+            }
+        } catch (error) {
+            console.error('Error al crear usuario:', error)
+            setMensajeEditar({ ok: false, message: 'Error de conexión' })
+        }
     }
 
     const handleConfirmarEliminar = async () => {
@@ -370,9 +404,24 @@ function Usuario (props) {
                         onConfirm={handleConfirmarEliminar}
                         usuario={usuarioEliminando}
                     />
+                    <ModalEditarUsuario
+                        show={mostrarModalCrear}
+                        onClose={() => setMostrarModalCrear(false)}
+                        onSave={handleGuardarNuevoUsuario}
+                        usuario={null}
+                        mensaje={mensajeEditar}
+                    />
                     {nivel === 1 && (
                         <div className="mt-4">
-                            <h5 style={{color: textColor}}>Lista de usuarios</h5>
+                            <div className="barra_menu">
+                            <h4 style={{color: textColor, paddingTop: "0.5rem"}}>Lista de usuarios</h4>
+                                <div className="barra_menu-buttom">
+                                    <div className="barra_menu-buttom-add">
+                                        <BtnaddModal onClick={handleCrearUsuario} />
+                                    </div>
+                                </div>
+                                <div className="barra_menu-relleno"></div>
+                            </div>
                             {cargandoUsuarios ? (
                                 <Loader />
                             ) : (

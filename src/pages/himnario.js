@@ -56,7 +56,6 @@ function Himnario (props) {
     }
 
     const canciones = datos?.songs || (Array.isArray(datos) ? datos : [])
-    console.log(loading)
     if(!canciones.length || loading || !datos) {
         return (
             <div className="container mt-2 d-flex justify-content-center">

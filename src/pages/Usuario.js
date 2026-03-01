@@ -1,15 +1,18 @@
 import React, { useContext, useState, useEffect } from 'react'
 import './styles/login.css'
-import './styles/himnario.css'
+import './styles/usuario.css'
 import Loader from '../components/Loader'
 import Formlogin from '../components/Formlogin'
 import ModalCambiarPassword from '../components/ModalCambiarPassword'
 import ModalEditarUsuario from '../components/ModalEditarUsuario'
 import ModalEliminarUsuario from '../components/ModalEliminarUsuario'
 import UsuarioItem from '../components/UsuarioItem'
+import UsuarioItemInactivo from '../components/UsuarioItemInactivo'
 import BtnaddModal from '../components/BtnaddModal'
+import BtnToggleInactivos from '../components/BtnToggleInactivos'
 import Config from '../config'
 import userIcon from '../img/user.svg'
+import Footer from '../components/Footer'
 
 import SesionContext from '../context/sesion'
 import MenuActivoContext from '../context/menuactivo'
@@ -30,6 +33,9 @@ function Usuario (props) {
     const [mensajeEditar, setMensajeEditar] = useState(null)
     const [usuarioEliminando, setUsuarioEliminando] = useState(null)
     const [mostrarModalCrear, setMostrarModalCrear] = useState(false)
+    const [mostrarInactivos, setMostrarInactivos] = useState(false)
+    const [usuariosInactivos, setUsuariosInactivos] = useState([])
+    const [cargandoInactivos, setCargandoInactivos] = useState(false)
 
     const getNivelTexto = (nivel) => {
         switch(nivel) {
@@ -68,18 +74,6 @@ function Usuario (props) {
             setCargando(false)
             setMensaje('')
         }
-
-        if(navigator.onLine) {
-            document.getElementById('btn-actualizar-lista')?.classList.remove('d-none')
-        } else {
-            document.getElementById('btn-actualizar-lista')?.classList.add('d-none')
-        }
-        window.addEventListener('online', () => {
-            document.getElementById('btn-actualizar-lista')?.classList.remove('d-none')
-        })
-        window.addEventListener('offline', () => {
-            document.getElementById('btn-actualizar-lista')?.classList.add('d-none')
-        })
         // eslint-disable-next-line
     }, [])
 
@@ -206,6 +200,53 @@ function Usuario (props) {
         }
     }
 
+    const obtenerUsuariosInactivos = async () => {
+        try {
+            const accessToken = localStorage.getItem('accessToken')
+            const response = await fetch(`${Config.urlapi}api/users/admin/inactivos`, {
+                headers: { 'Authorization': `Bearer ${accessToken}` }
+            })
+            const data = await response.json()
+            if (data.ok) {
+                setUsuariosInactivos(data.users || data)
+            }
+        } catch (error) {
+            console.error('Error al obtener usuarios inactivos:', error)
+        } finally {
+            setCargandoInactivos(false)
+        }
+    }
+
+    const handleRestaurarUsuario = async (id) => {
+        try {
+            const accessToken = localStorage.getItem('accessToken')
+            const response = await fetch(`${Config.urlapi}api/users/${id}/restore`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
+            const data = await response.json()
+            if (data.ok) {
+                obtenerUsuariosInactivos()
+                obtenerUsuarios()
+            } else {
+                alert(data.message || 'Error al restaurar usuario')
+            }
+        } catch (error) {
+            console.error('Error al restaurar usuario:', error)
+            alert('Error de conexión')
+        }
+    }
+
+    const toggleInactivos = () => {
+        if (!mostrarInactivos && usuariosInactivos.length === 0) {
+            setCargandoInactivos(true)
+            obtenerUsuariosInactivos()
+        }
+        setMostrarInactivos(!mostrarInactivos)
+    }
+
     const handleConfirmarEliminar = async () => {
         try {
             const accessToken = localStorage.getItem('accessToken')
@@ -252,75 +293,6 @@ function Usuario (props) {
         }
     }, [nombre, nivel])
 
-    /**
-     * Actualiza manualmente el caché de canciones
-     * 1. Limpia el caché existente de canciones
-     * 2. Fuerza una nueva petición a la API para obtener datos actualizados
-     * 3. Recarga la página para reflejar los cambios
-     */
-    const actualizarCache = async () => {
-        setCargando(true);
-    
-        try {
-            // Verificar que el service worker esté registrado
-            if (!('serviceWorker' in navigator)) {
-                throw new Error('Service Worker no está disponible en este navegador');
-            }
-
-            const registration = await navigator.serviceWorker.ready;
-            
-            // Crear un canal de mensajes para comunicación con el service worker
-            const messageChannel = new MessageChannel();
-            
-            // Escuchar la respuesta del service worker
-            messageChannel.port1.onmessage = (event) => {
-                if (event.data.success) {
-                    console.log('✅ Caché limpiado exitosamente');
-                    
-                    // Ahora forzar la actualización de los datos desde la API
-                    // Haciendo peticiones fetch que actualizarán el caché automáticamente
-                    const urlsToUpdate = [
-                        `${Config.urlapi}api/songs/jovenes`,
-                        `${Config.urlapi}api/songs/poder`,
-                        `${Config.urlapi}api/songs/verde`
-                    ];
-                    
-                    // Hacer peticiones con cache: 'no-store' para forzar actualización
-                    Promise.all(
-                        urlsToUpdate.map(url => 
-                            fetch(url, { 
-                                cache: 'no-store',
-                                headers: {
-                                    'Cache-Control': 'no-cache'
-                                }
-                            })
-                        )
-                    ).then(() => {
-                        console.log('✅ Datos actualizados desde la API');
-                        // Recargar la página para reflejar los cambios
-                        window.location.reload();
-                    }).catch((error) => {
-                        console.error('Error al actualizar datos:', error);
-                        setMensaje('Error al actualizar datos. Intenta recargar la página.');
-                        setCargando(false);
-                    });
-                } else {
-                    throw new Error(event.data.message || 'Error al limpiar caché');
-                }
-            };
-            
-            // Enviar mensaje al service worker para limpiar el caché
-            registration.active?.postMessage(
-                { type: 'CLEAR_SONGS_CACHE' },
-                [messageChannel.port2]
-            );
-            
-        } catch (error) {
-            console.error('Error al actualizar la caché:', error);
-            setMensaje('Error al actualizar caché. Intenta recargar la página manualmente.');
-            setCargando(false);
-        }
-    };
 
     if (cargando === true) {
         return (
@@ -340,8 +312,8 @@ function Usuario (props) {
         const subtitleColor = temaEfectivo === 'dark' ? '#aaa' : '#666'
         
         return (
-            <div className="container mt-3 d-flex justify-content-center">
-                <div style={{maxWidth: '1078px', width: '100%'}}>
+            <div className="container mt-3 d-flex flex-column justify-content-center">
+                <div>
                     <div className="usuario-bloque p-4 d-flex flex-wrap flex-md-nowrap" style={{width: '100%', backgroundColor: bgColor, color: textColor, borderRadius: '8px', minHeight: '180px'}}>
                         <div className="d-flex align-items-center" style={{marginRight: '20px'}}>
                             <div className="usuario-avatar d-flex justify-content-center align-items-center w-md-150" style={{width: '100px', height: '100px', borderRadius: '50%', backgroundColor: temaEfectivo === 'dark' ? '#444' : '#e0e0e0', overflow: 'hidden'}}>
@@ -416,11 +388,17 @@ function Usuario (props) {
                             <div className="barra_menu">
                             <h4 style={{color: textColor, paddingTop: "0.5rem"}}>Lista de usuarios</h4>
                                 <div className="barra_menu-buttom">
+                                    <div className="barra_menu-buttom-toggle">
+                                        <BtnToggleInactivos 
+                                            count={usuariosInactivos.length}
+                                            onClick={toggleInactivos}
+                                            expanded={mostrarInactivos}
+                                        />
+                                    </div>
                                     <div className="barra_menu-buttom-add">
                                         <BtnaddModal onClick={handleCrearUsuario} />
                                     </div>
                                 </div>
-                                <div className="barra_menu-relleno"></div>
                             </div>
                             {cargandoUsuarios ? (
                                 <Loader />
@@ -437,9 +415,29 @@ function Usuario (props) {
                                     ))}
                                 </div>
                             )}
+                            {mostrarInactivos && (
+                                <div className="mt-4">
+                                    <h5 className="barra_menu-titulo" style={{color: textColor}}>Usuarios Inactivos</h5>
+                                    {cargandoInactivos ? (
+                                        <Loader />
+                                    ) : (
+                                        <div>
+                                            {usuariosInactivos.map((usuario, index) => (
+                                                <UsuarioItemInactivo 
+                                                    key={usuario._id} 
+                                                    usuario={usuario} 
+                                                    indice={index + 1}
+                                                    onRestaurar={handleRestaurarUsuario}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
+                <Footer />
             </div>
         )
     }
@@ -474,14 +472,6 @@ function Usuario (props) {
                         <option value="system">Sistema</option>
                     </select>
                 </div>
-                <button 
-                    onClick={actualizarCache} 
-                    className="btn btn-secondary" 
-                    id="btn-actualizar-lista"
-                    disabled={!navigator.onLine}
-                >
-                    Actualizar App
-                </button>
             </div>
         </div>
     )

@@ -68,34 +68,34 @@ function SesionProvider({ children }) {
   const cambiarPassword = async (datos) => {
     try {
       const accessToken = localStorage.getItem('accessToken')
-      const userId = localStorage.getItem('_id')
 
-      if (!accessToken || !userId) {
+      if (!accessToken) {
         return { ok: false, message: 'No hay sesión activa' }
       }
 
-      const response = await fetch(`${Config.urlapi}api/users/${userId}`, {
+      const response = await fetch(`${Config.urlapi}api/users/change-password`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`
         },
         body: JSON.stringify({
-          password: datos.passwordNuevo
+          currentPassword: datos.passwordActual,
+          newPassword: datos.passwordNuevo
         })
       })
 
       const data = await response.json().catch(() => null)
 
-      if (!response.ok || !data) {
+      if (!data) {
         return { ok: false, message: 'Error de conexión' }
       }
 
-      if (data.ok === true) {
+      if (response.ok && data.ok === true) {
         return { ok: true, message: data.message || 'Contraseña actualizada correctamente' }
       }
 
-      return { ok: false, message: data.message || 'Datos incorrectos' }
+      return { ok: false, message: data.message || 'Error al cambiar contraseña' }
     } catch (error) {
       console.error('Error al cambiar contraseña:', error)
       return { ok: false, message: 'No se pudo conectar' }

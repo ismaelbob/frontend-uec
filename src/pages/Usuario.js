@@ -289,7 +289,9 @@ function Usuario (props) {
     useEffect(() => {
         if (nombre && nivel === 1) {
             setCargandoUsuarios(true)
+            setCargandoInactivos(true)
             obtenerUsuarios()
+            obtenerUsuariosInactivos()
         }
     }, [nombre, nivel])
 

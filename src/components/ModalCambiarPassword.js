@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import TemaContext from '../context/tema'
 
 const inputStyle = (temaEfectivo) => ({
@@ -22,6 +22,13 @@ function ModalCambiarPassword({ show, onClose, onSave, mensaje }) {
     })
     const [error, setError] = useState('')
     const [guardando, setGuardando] = useState(false)
+
+    useEffect(() => {
+        if (!show) {
+            setDatos({ passwordActual: '', passwordNuevo: '', passwordRepetir: '' })
+            setError('')
+        }
+    }, [show])
 
     const handleChange = (event) => {
         setDatos({
@@ -54,6 +61,7 @@ function ModalCambiarPassword({ show, onClose, onSave, mensaje }) {
             passwordActual: datos.passwordActual,
             passwordNuevo: datos.passwordNuevo
         })
+
         setGuardando(false)
     }
 

@@ -93,9 +93,11 @@ function Usuario (props) {
             setCargando(true)
             const respuesta = await iniciarSesion(datos)
             if (respuesta === 'correcto') {
-                setMensaje('Bienvenido!')
+                setMensaje('')
+                setDatos({usuario: '', password: ''})
             } else {
                 setMensaje(respuesta)
+                setDatos({usuario: '', password: ''})
             }
             setCargando(false)
             form.classList.remove('was-validated')
@@ -114,6 +116,8 @@ function Usuario (props) {
             setTimeout(() => {
                 setMostrarModal(false)
                 setMensajePassword(null)
+                cerrarSesion()
+                setDatos({usuario: '', password: ''})
             }, 2000)
         }
     }

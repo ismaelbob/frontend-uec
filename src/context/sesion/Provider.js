@@ -52,7 +52,22 @@ function SesionProvider({ children }) {
     }
   }
 
-  const cerrarSesion = () => {
+  const cerrarSesion = async () => {
+    try {
+      const refreshToken = localStorage.getItem('refreshToken')
+      const accessToken = localStorage.getItem('accessToken')
+      if (refreshToken) {
+        await fetch(`${Config.urlapi}api/auth/logout`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 
+            'Authorization': `Bearer ${accessToken}` },
+          body: JSON.stringify({ refreshToken })
+        })
+      }
+    } catch (error) {
+      console.error('Error en logout:', error)
+    }
+
     setUsuario(null)
     setNombre(null)
     setNivel(null)

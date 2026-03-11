@@ -63,4 +63,27 @@
         display: inline-block;
         font-size: 14px;
     }
+    .box_btntoggle .burbuja-inactivos-mobile {
+        display: none;
+    }
+}
+
+.burbuja-inactivos-mobile {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.box_btntoggle {
+    position: relative;
 }

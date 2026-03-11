@@ -49,3 +49,25 @@
 .box_usuario-acciones button:hover {
     background-color: rgba(0, 0, 0, 0.1);
 }
+
+.box_usuario-acciones .burbuja-inactivos {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+@media only screen and (max-width: 991px) {
+    .box_usuario-acciones .burbuja-inactivos {
+        display: flex;
+    }
+}

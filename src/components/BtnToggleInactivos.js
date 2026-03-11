@@ -17,6 +17,7 @@ function BtnToggleInactivos({ count, onClick, expanded }) {
                 )}
                 <span className="texto-inactivos">{expanded ? 'Ocultar' : `Inactivos (${count})`}</span>
             </button>
+            <span className="burbuja-inactivos-mobile">{count}</span>
         </div>
     )
 }

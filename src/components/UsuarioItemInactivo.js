@@ -20,7 +20,7 @@ function UsuarioItemInactivo({ usuario, indice, onRestaurar }) {
                 <h6>{usuario.nombre} - {usuario.usuario}</h6>
                 <p>{getNivelTexto(usuario.nivel)}</p>
             </div>
-            <div className="box_usuario-acciones">
+            <div className="box_usuario-acciones" style={{position: 'relative'}}>
                 <button 
                     type="button" 
                     className="text-success" 

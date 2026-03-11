@@ -434,6 +434,7 @@ function Usuario (props) {
                                                     usuario={usuario} 
                                                     indice={index + 1}
                                                     onRestaurar={handleRestaurarUsuario}
+                                                    count={usuariosInactivos.length}
                                                 />
                                             ))}
                                         </div>

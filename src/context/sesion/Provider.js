@@ -22,6 +22,10 @@ function SesionProvider({ children }) {
         setUsuario(null)
         setNombre(null)
         setNivel(null)
+        // Verificar si la API devolvió un mensaje de error válido
+        if (data && data.message) {
+            return data.message
+        }
         return 'No se pudo conectar'
       }
 
@@ -53,6 +57,20 @@ function SesionProvider({ children }) {
   }
 
   const cerrarSesion = async () => {
+    // Limpiar localStorage PRIMERO (síncrono, inmediato)
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
+    localStorage.removeItem('user')
+    localStorage.removeItem('nombre')
+    localStorage.removeItem('nivel')
+    localStorage.removeItem('_id')
+
+    // Limpiar estados (causará re-render pero tokens ya están limpios)
+    setUsuario(null)
+    setNombre(null)
+    setNivel(null)
+
+    // Fetch al backend para invalidar sesión en servidor (si falla, no importa - sesión local ya está cerrada)
     try {
       const refreshToken = localStorage.getItem('refreshToken')
       const accessToken = localStorage.getItem('accessToken')
@@ -67,17 +85,6 @@ function SesionProvider({ children }) {
     } catch (error) {
       console.error('Error en logout:', error)
     }
-
-    setUsuario(null)
-    setNombre(null)
-    setNivel(null)
-
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('refreshToken')
-    localStorage.removeItem('user')
-    localStorage.removeItem('nombre')
-    localStorage.removeItem('nivel')
-    localStorage.removeItem('_id')
   }
 
   const cambiarPassword = async (datos) => {

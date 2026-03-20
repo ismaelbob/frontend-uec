@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect, useCallback } from 'react'
 import './styles/login.css'
 import './styles/usuario.css'
 import Loader from '../components/Loader'
@@ -18,7 +18,7 @@ import SesionContext from '../context/sesion'
 import MenuActivoContext from '../context/menuactivo'
 import TemaContext from '../context/tema'
 
-function Usuario (props) {
+function Usuario () {
     const [datos, setDatos] = useState({usuario: '', password: ''})
     const [cargando, setCargando] = useState(false)
     const [mensaje, setMensaje] = useState('')
@@ -74,8 +74,7 @@ function Usuario (props) {
             setCargando(false)
             setMensaje('')
         }
-        // eslint-disable-next-line
-    }, [])
+    }, [existeSesion, setPage, setMensaje])
 
     const handleChange = (event) => {
         setDatos({
@@ -84,7 +83,7 @@ function Usuario (props) {
             }
         )
     }
-    const handleSubmitSesion = async (event) => {
+    const handleSubmitSesion = useCallback(async (event) => {
         event.preventDefault()
         const form = event.target
         if (datos.usuario === '' || datos.password === '') {
@@ -97,19 +96,18 @@ function Usuario (props) {
                 setDatos({usuario: '', password: ''})
             } else {
                 setMensaje(respuesta)
-                setDatos({usuario: '', password: ''})
             }
             setCargando(false)
             form.classList.remove('was-validated')
         }
-    }
+    }, [datos, iniciarSesion])
 
     const salirDeSesion = () => {
         cerrarSesion()
         setMensaje('')
     }
 
-    const handleCambiarPassword = async (datos) => {
+    const handleCambiarPassword = useCallback(async (datos) => {
         const respuesta = await cambiarPassword(datos)
         setMensajePassword(respuesta)
         if (respuesta.ok) {
@@ -120,19 +118,53 @@ function Usuario (props) {
                 setDatos({usuario: '', password: ''})
             }, 2000)
         }
-    }
+    }, [cambiarPassword, cerrarSesion])
 
     const abrirModalPassword = () => {
         setMensajePassword(null)
         setMostrarModal(true)
     }
 
-    const handleEditarUsuario = (usuario) => {
+    const handleEditarUsuario = useCallback((usuario) => {
         setMensajeEditar(null)
         setUsuarioEditando(usuario)
-    }
+    }, [])
 
-    const handleGuardarUsuario = async (datos) => {
+    const obtenerUsuarios = useCallback(async () => {
+        try {
+            const accessToken = localStorage.getItem('accessToken')
+            const response = await fetch(`${Config.urlapi}api/users`, {
+                headers: { 'Authorization': `Bearer ${accessToken}` }
+            })
+            const data = await response.json()
+            if (data.ok) {
+                setUsuarios(data.users || data)
+            }
+        } catch (error) {
+            console.error('Error al obtener usuarios:', error)
+        } finally {
+            setCargandoUsuarios(false)
+        }
+    }, [])
+
+    const obtenerUsuariosInactivos = useCallback(async () => {
+        try {
+            const accessToken = localStorage.getItem('accessToken')
+            const response = await fetch(`${Config.urlapi}api/users/admin/inactivos`, {
+                headers: { 'Authorization': `Bearer ${accessToken}` }
+            })
+            const data = await response.json()
+            if (data.ok) {
+                setUsuariosInactivos(data.users || data)
+            }
+        } catch (error) {
+            console.error('Error al obtener usuarios inactivos:', error)
+        } finally {
+            setCargandoInactivos(false)
+        }
+    }, [])
+
+    const handleGuardarUsuario = useCallback(async (datos) => {
         try {
             const accessToken = localStorage.getItem('accessToken')
             
@@ -167,18 +199,18 @@ function Usuario (props) {
             console.error('Error al guardar usuario:', error)
             setMensajeEditar({ ok: false, message: 'Error de conexión' })
         }
-    }
+    }, [usuarioEditando, obtenerUsuarios])
 
-    const handleEliminarUsuario = (usuario) => {
+    const handleEliminarUsuario = useCallback((usuario) => {
         setUsuarioEliminando(usuario)
-    }
+    }, [])
 
-    const handleCrearUsuario = () => {
+    const handleCrearUsuario = useCallback(() => {
         setMensajeEditar(null)
         setMostrarModalCrear(true)
-    }
+    }, [])
 
-    const handleGuardarNuevoUsuario = async (datos) => {
+    const handleGuardarNuevoUsuario = useCallback(async (datos) => {
         try {
             const accessToken = localStorage.getItem('accessToken')
             const response = await fetch(`${Config.urlapi}api/users`, {
@@ -202,26 +234,9 @@ function Usuario (props) {
             console.error('Error al crear usuario:', error)
             setMensajeEditar({ ok: false, message: 'Error de conexión' })
         }
-    }
+    }, [obtenerUsuarios])
 
-    const obtenerUsuariosInactivos = async () => {
-        try {
-            const accessToken = localStorage.getItem('accessToken')
-            const response = await fetch(`${Config.urlapi}api/users/admin/inactivos`, {
-                headers: { 'Authorization': `Bearer ${accessToken}` }
-            })
-            const data = await response.json()
-            if (data.ok) {
-                setUsuariosInactivos(data.users || data)
-            }
-        } catch (error) {
-            console.error('Error al obtener usuarios inactivos:', error)
-        } finally {
-            setCargandoInactivos(false)
-        }
-    }
-
-    const handleRestaurarUsuario = async (id) => {
+    const handleRestaurarUsuario = useCallback(async (id) => {
         try {
             const accessToken = localStorage.getItem('accessToken')
             const response = await fetch(`${Config.urlapi}api/users/${id}/restore`, {
@@ -241,17 +256,17 @@ function Usuario (props) {
             console.error('Error al restaurar usuario:', error)
             alert('Error de conexión')
         }
-    }
+    }, [obtenerUsuarios, obtenerUsuariosInactivos])
 
-    const toggleInactivos = () => {
+    const toggleInactivos = useCallback(() => {
         if (!mostrarInactivos && usuariosInactivos.length === 0) {
             setCargandoInactivos(true)
             obtenerUsuariosInactivos()
         }
         setMostrarInactivos(!mostrarInactivos)
-    }
+    }, [mostrarInactivos, usuariosInactivos, obtenerUsuariosInactivos])
 
-    const handleConfirmarEliminar = async () => {
+    const handleConfirmarEliminar = useCallback(async () => {
         try {
             const accessToken = localStorage.getItem('accessToken')
             const response = await fetch(`${Config.urlapi}api/users/${usuarioEliminando._id}`, {
@@ -264,6 +279,7 @@ function Usuario (props) {
             if (data.ok) {
                 setUsuarioEliminando(null)
                 obtenerUsuarios()
+                obtenerUsuariosInactivos()
             } else {
                 alert(data.message || 'Error al eliminar usuario')
             }
@@ -271,24 +287,7 @@ function Usuario (props) {
             console.error('Error al eliminar usuario:', error)
             alert('Error de conexión')
         }
-    }
-
-    const obtenerUsuarios = async () => {
-        try {
-            const accessToken = localStorage.getItem('accessToken')
-            const response = await fetch(`${Config.urlapi}api/users`, {
-                headers: { 'Authorization': `Bearer ${accessToken}` }
-            })
-            const data = await response.json()
-            if (data.ok) {
-                setUsuarios(data.users || data)
-            }
-        } catch (error) {
-            console.error('Error al obtener usuarios:', error)
-        } finally {
-            setCargandoUsuarios(false)
-        }
-    }
+    }, [usuarioEliminando, obtenerUsuarios, obtenerUsuariosInactivos])
 
     useEffect(() => {
         if (nombre && nivel === 1) {
@@ -297,7 +296,7 @@ function Usuario (props) {
             obtenerUsuarios()
             obtenerUsuariosInactivos()
         }
-    }, [nombre, nivel])
+    }, [nombre, nivel, obtenerUsuarios, obtenerUsuariosInactivos])
 
 
     if (cargando === true) {
@@ -434,7 +433,6 @@ function Usuario (props) {
                                                     usuario={usuario} 
                                                     indice={index + 1}
                                                     onRestaurar={handleRestaurarUsuario}
-                                                    count={usuariosInactivos.length}
                                                 />
                                             ))}
                                         </div>

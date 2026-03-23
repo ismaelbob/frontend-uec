@@ -247,8 +247,20 @@ function Usuario () {
             })
             const data = await response.json()
             if (data.ok) {
-                await obtenerUsuariosInactivos()
-                await obtenerUsuarios()
+                const [usuariosRes, inactivosRes] = await Promise.all([
+                    fetch(`${Config.urlapi}api/users`, {
+                        headers: { 'Authorization': `Bearer ${accessToken}` }
+                    }),
+                    fetch(`${Config.urlapi}api/users/admin/inactivos`, {
+                        headers: { 'Authorization': `Bearer ${accessToken}` }
+                    })
+                ])
+                
+                const usuariosData = await usuariosRes.json()
+                const inactivosData = await inactivosRes.json()
+                
+                if (usuariosData.ok) setUsuarios(usuariosData.users || usuariosData)
+                if (inactivosData.ok) setUsuariosInactivos(inactivosData.users || inactivosData)
             } else {
                 alert(data.message || 'Error al restaurar usuario')
             }
@@ -256,7 +268,7 @@ function Usuario () {
             console.error('Error al restaurar usuario:', error)
             alert('Error de conexión')
         }
-    }, [obtenerUsuarios, obtenerUsuariosInactivos])
+    }, [])
 
     const toggleInactivos = useCallback(() => {
         if (!mostrarInactivos && usuariosInactivos.length === 0) {
@@ -278,8 +290,21 @@ function Usuario () {
             const data = await response.json()
             if (data.ok) {
                 setUsuarioEliminando(null)
-                await obtenerUsuarios()
-                await obtenerUsuariosInactivos()
+                
+                const [usuariosRes, inactivosRes] = await Promise.all([
+                    fetch(`${Config.urlapi}api/users`, {
+                        headers: { 'Authorization': `Bearer ${accessToken}` }
+                    }),
+                    fetch(`${Config.urlapi}api/users/admin/inactivos`, {
+                        headers: { 'Authorization': `Bearer ${accessToken}` }
+                    })
+                ])
+                
+                const usuariosData = await usuariosRes.json()
+                const inactivosData = await inactivosRes.json()
+                
+                if (usuariosData.ok) setUsuarios(usuariosData.users || usuariosData)
+                if (inactivosData.ok) setUsuariosInactivos(inactivosData.users || inactivosData)
             } else {
                 alert(data.message || 'Error al eliminar usuario')
             }
@@ -287,7 +312,7 @@ function Usuario () {
             console.error('Error al eliminar usuario:', error)
             alert('Error de conexión')
         }
-    }, [usuarioEliminando, obtenerUsuarios, obtenerUsuariosInactivos])
+    }, [usuarioEliminando])
 
     useEffect(() => {
         if (nombre && nivel === 1) {

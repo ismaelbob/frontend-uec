@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useCallback } from 'react'
+import React, { useContext, useState, useEffect, useCallback, useRef } from 'react'
 import './styles/login.css'
 import './styles/usuario.css'
 import Loader from '../components/Loader'
@@ -37,6 +37,19 @@ function Usuario () {
     const [usuariosInactivos, setUsuariosInactivos] = useState([])
     const [cargandoInactivos, setCargandoInactivos] = useState(false)
 
+    // Refs para almacenar setters - evitan problemas de stale closures en producción
+    const setUsuariosRef = useRef(setUsuarios)
+    const setUsuariosInactivosRef = useRef(setUsuariosInactivos)
+
+    // Mantener refs actualizados con los setters más recientes
+    useEffect(() => {
+        setUsuariosRef.current = setUsuarios
+    }, [setUsuarios])
+
+    useEffect(() => {
+        setUsuariosInactivosRef.current = setUsuariosInactivos
+    }, [setUsuariosInactivos])
+
     const getNivelTexto = (nivel) => {
         switch(nivel) {
             case 1: return 'Administrador'
@@ -54,7 +67,7 @@ function Usuario () {
             })
             const data = await response.json()
             if (data.ok) {
-                setUsuarios(data.users || data)
+                setUsuariosRef.current(data.users || data)
             }
         } catch (error) {
             console.error('Error al obtener usuarios:', error)
@@ -71,7 +84,7 @@ function Usuario () {
             })
             const data = await response.json()
             if (data.ok) {
-                setUsuariosInactivos(data.users || data)
+                setUsuariosInactivosRef.current(data.users || data)
             }
         } catch (error) {
             console.error('Error al obtener usuarios inactivos:', error)
@@ -259,8 +272,8 @@ function Usuario () {
                 const usuariosData = await usuariosRes.json()
                 const inactivosData = await inactivosRes.json()
                 
-                if (usuariosData.ok) setUsuarios(usuariosData.users || usuariosData)
-                if (inactivosData.ok) setUsuariosInactivos(inactivosData.users || inactivosData)
+                if (usuariosData.ok) setUsuariosRef.current(usuariosData.users || usuariosData)
+                if (inactivosData.ok) setUsuariosInactivosRef.current(inactivosData.users || inactivosData)
             } else {
                 alert(data.message || 'Error al restaurar usuario')
             }
@@ -303,8 +316,8 @@ function Usuario () {
                 const usuariosData = await usuariosRes.json()
                 const inactivosData = await inactivosRes.json()
                 
-                if (usuariosData.ok) setUsuarios(usuariosData.users || usuariosData)
-                if (inactivosData.ok) setUsuariosInactivos(inactivosData.users || inactivosData)
+                if (usuariosData.ok) setUsuariosRef.current(usuariosData.users || usuariosData)
+                if (inactivosData.ok) setUsuariosInactivosRef.current(inactivosData.users || inactivosData)
             } else {
                 alert(data.message || 'Error al eliminar usuario')
             }

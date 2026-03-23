@@ -46,6 +46,40 @@ function Usuario () {
         }
     }
 
+    const obtenerUsuarios = useCallback(async () => {
+        try {
+            const accessToken = localStorage.getItem('accessToken')
+            const response = await fetch(`${Config.urlapi}api/users`, {
+                headers: { 'Authorization': `Bearer ${accessToken}` }
+            })
+            const data = await response.json()
+            if (data.ok) {
+                setUsuarios(data.users || data)
+            }
+        } catch (error) {
+            console.error('Error al obtener usuarios:', error)
+        } finally {
+            setCargandoUsuarios(false)
+        }
+    }, [])
+
+    const obtenerUsuariosInactivos = useCallback(async () => {
+        try {
+            const accessToken = localStorage.getItem('accessToken')
+            const response = await fetch(`${Config.urlapi}api/users/admin/inactivos`, {
+                headers: { 'Authorization': `Bearer ${accessToken}` }
+            })
+            const data = await response.json()
+            if (data.ok) {
+                setUsuariosInactivos(data.users || data)
+            }
+        } catch (error) {
+            console.error('Error al obtener usuarios inactivos:', error)
+        } finally {
+            setCargandoInactivos(false)
+        }
+    }, [])
+
     useEffect(() => {
         localStorage.setItem('pagina', '4')
         setPage('4')
@@ -128,40 +162,6 @@ function Usuario () {
     const handleEditarUsuario = useCallback((usuario) => {
         setMensajeEditar(null)
         setUsuarioEditando(usuario)
-    }, [])
-
-    const obtenerUsuarios = useCallback(async () => {
-        try {
-            const accessToken = localStorage.getItem('accessToken')
-            const response = await fetch(`${Config.urlapi}api/users`, {
-                headers: { 'Authorization': `Bearer ${accessToken}` }
-            })
-            const data = await response.json()
-            if (data.ok) {
-                setUsuarios(data.users || data)
-            }
-        } catch (error) {
-            console.error('Error al obtener usuarios:', error)
-        } finally {
-            setCargandoUsuarios(false)
-        }
-    }, [])
-
-    const obtenerUsuariosInactivos = useCallback(async () => {
-        try {
-            const accessToken = localStorage.getItem('accessToken')
-            const response = await fetch(`${Config.urlapi}api/users/admin/inactivos`, {
-                headers: { 'Authorization': `Bearer ${accessToken}` }
-            })
-            const data = await response.json()
-            if (data.ok) {
-                setUsuariosInactivos(data.users || data)
-            }
-        } catch (error) {
-            console.error('Error al obtener usuarios inactivos:', error)
-        } finally {
-            setCargandoInactivos(false)
-        }
     }, [])
 
     const handleGuardarUsuario = useCallback(async (datos) => {
@@ -247,8 +247,8 @@ function Usuario () {
             })
             const data = await response.json()
             if (data.ok) {
-                obtenerUsuariosInactivos()
-                obtenerUsuarios()
+                await obtenerUsuariosInactivos()
+                await obtenerUsuarios()
             } else {
                 alert(data.message || 'Error al restaurar usuario')
             }
@@ -278,8 +278,8 @@ function Usuario () {
             const data = await response.json()
             if (data.ok) {
                 setUsuarioEliminando(null)
-                obtenerUsuarios()
-                obtenerUsuariosInactivos()
+                await obtenerUsuarios()
+                await obtenerUsuariosInactivos()
             } else {
                 alert(data.message || 'Error al eliminar usuario')
             }

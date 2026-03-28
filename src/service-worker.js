@@ -11,7 +11,7 @@ import { clientsClaim } from 'workbox-core';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate } from 'workbox-strategies';
+import { StaleWhileRevalidate, NetworkFirst } from 'workbox-strategies';
 
 const API_BASE_URL = 'https://api-uec.onrender.com';
 
@@ -91,11 +91,28 @@ registerRoute(
   })
 );
 
-// Estrategia StaleWhileRevalidate para otros endpoints de la API
+// Estrategia NetworkFirst para endpoints de usuarios
+// Prioriza datos frescos del servidor, usa cache solo si no hay red
+registerRoute(
+  ({ url }) =>
+    url.origin === API_BASE_URL && url.pathname.startsWith('/api/users'),
+  new NetworkFirst({
+    cacheName: 'api-users-v1',
+    plugins: [
+      new ExpirationPlugin({
+        maxEntries: 20,
+        maxAgeSeconds: 5 * 60, // 5 minutos
+        purgeOnQuotaError: true,
+      }),
+    ],
+  })
+);
+
+// Estrategia StaleWhileRevalidate para otros endpoints de la API (canciones, etc.)
 // Sirve caché inmediatamente y actualiza en segundo plano
 registerRoute(
   ({ url }) => {
-    return url.origin === API_BASE_URL;
+    return url.origin === API_BASE_URL && !url.pathname.startsWith('/api/users');
   },
   new StaleWhileRevalidate({
     cacheName: 'api-other-v1',

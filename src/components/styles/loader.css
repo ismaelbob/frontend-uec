@@ -14,6 +14,10 @@
     animation: lds-grid 1.2s linear infinite;
 }
 
+body.dark-theme .lds-grid div {
+    background: #fff;
+}
+
 .lds-grid div:nth-child(1) {
     top: 6px;
     left: 6px;

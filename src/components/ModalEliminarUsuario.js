@@ -7,7 +7,7 @@ const modalContentStyle = (temaEfectivo) => ({
     border: temaEfectivo === 'dark' ? '1px solid var(--border-color)' : '1px solid rgba(0,0,0,0.2)'
 })
 
-function ModalEliminarUsuario({ show, onClose, onConfirm, usuario }) {
+function ModalEliminarUsuario({ show, onClose, onConfirm, usuario, procesando }) {
     const { temaEfectivo } = useContext(TemaContext)
 
     if (!show) return null
@@ -35,11 +35,11 @@ function ModalEliminarUsuario({ show, onClose, onConfirm, usuario }) {
                         <p className="text-muted">Esta acción no se puede deshacer.</p>
                     </div>
                     <div className="modal-footer" style={{ borderTop: '1px solid var(--border-color)' }}>
-                        <button type="button" className="btn btn-secondary" onClick={onClose}>
+                        <button type="button" className="btn btn-secondary" onClick={onClose} disabled={procesando}>
                             Cancelar
                         </button>
-                        <button type="button" className="btn btn-danger" onClick={onConfirm}>
-                            Eliminar
+                        <button type="button" className="btn btn-danger" onClick={onConfirm} disabled={procesando}>
+                            {procesando ? 'Eliminando...' : 'Eliminar'}
                         </button>
                     </div>
                 </div>

@@ -10,6 +10,7 @@ import UsuarioItem from '../components/UsuarioItem'
 import UsuarioItemInactivo from '../components/UsuarioItemInactivo'
 import BtnaddModal from '../components/BtnaddModal'
 import BtnToggleInactivos from '../components/BtnToggleInactivos'
+import ProcessingOverlay from '../components/ProcessingOverlay'
 import Config from '../config'
 import userIcon from '../img/user.svg'
 import Footer from '../components/Footer'
@@ -36,6 +37,7 @@ function Usuario () {
     const [mostrarInactivos, setMostrarInactivos] = useState(false)
     const [usuariosInactivos, setUsuariosInactivos] = useState([])
     const [cargandoInactivos, setCargandoInactivos] = useState(false)
+    const [procesando, setProcesando] = useState(false)
 
 
 
@@ -167,6 +169,7 @@ function Usuario () {
     }, [])
 
     const handleGuardarUsuario = useCallback(async (datos) => {
+        setProcesando(true)
         try {
             const accessToken = localStorage.getItem('accessToken')
             
@@ -194,12 +197,16 @@ function Usuario () {
                 setTimeout(() => {
                     setUsuarioEditando(null)
                     setMensajeEditar(null)
+                    setProcesando(false)
                     obtenerUsuarios()
                 }, 2000)
+            } else {
+                setProcesando(false)
             }
         } catch (error) {
             console.error('Error al guardar usuario:', error)
             setMensajeEditar({ ok: false, message: 'Error de conexión' })
+            setProcesando(false)
         }
     }, [usuarioEditando, obtenerUsuarios])
 
@@ -213,6 +220,7 @@ function Usuario () {
     }, [])
 
     const handleGuardarNuevoUsuario = useCallback(async (datos) => {
+        setProcesando(true)
         try {
             const accessToken = localStorage.getItem('accessToken')
             const response = await fetch(`${Config.urlapi}api/users`, {
@@ -229,16 +237,21 @@ function Usuario () {
                 setTimeout(() => {
                     setMostrarModalCrear(false)
                     setMensajeEditar(null)
+                    setProcesando(false)
                     obtenerUsuarios()
                 }, 2000)
+            } else {
+                setProcesando(false)
             }
         } catch (error) {
             console.error('Error al crear usuario:', error)
             setMensajeEditar({ ok: false, message: 'Error de conexión' })
+            setProcesando(false)
         }
     }, [obtenerUsuarios])
 
     const handleRestaurarUsuario = useCallback(async (id) => {
+        setProcesando(true)
         try {
             const accessToken = localStorage.getItem('accessToken')
             const response = await fetch(`${Config.urlapi}api/users/${id}/restore`, {
@@ -263,12 +276,15 @@ function Usuario () {
                 
                 if (usuariosData.ok) setUsuarios(usuariosData.users || usuariosData)
                 if (inactivosData.ok) setUsuariosInactivos(inactivosData.users || inactivosData)
+                setProcesando(false)
             } else {
                 alert(data.message || 'Error al restaurar usuario')
+                setProcesando(false)
             }
         } catch (error) {
             console.error('Error al restaurar usuario:', error)
             alert('Error de conexión')
+            setProcesando(false)
         }
     }, [])
 
@@ -281,6 +297,7 @@ function Usuario () {
     }, [mostrarInactivos, usuariosInactivos, obtenerUsuariosInactivos])
 
     const handleConfirmarEliminar = useCallback(async () => {
+        setProcesando(true)
         try {
             const accessToken = localStorage.getItem('accessToken')
             const response = await fetch(`${Config.urlapi}api/users/${usuarioEliminando._id}`, {
@@ -307,12 +324,15 @@ function Usuario () {
                 
                 if (usuariosData.ok) setUsuarios(usuariosData.users || usuariosData)
                 if (inactivosData.ok) setUsuariosInactivos(inactivosData.users || inactivosData)
+                setProcesando(false)
             } else {
                 alert(data.message || 'Error al eliminar usuario')
+                setProcesando(false)
             }
         } catch (error) {
             console.error('Error al eliminar usuario:', error)
             alert('Error de conexión')
+            setProcesando(false)
         }
     }, [usuarioEliminando])
 
@@ -344,6 +364,7 @@ function Usuario () {
         const subtitleColor = temaEfectivo === 'dark' ? '#aaa' : '#666'
         
         return (
+            <>
             <div className="container mt-3 d-flex flex-column justify-content-center">
                 <div>
                     <div className="usuario-bloque p-4 d-flex flex-wrap flex-md-nowrap" style={{width: '100%', backgroundColor: bgColor, color: textColor, borderRadius: '8px', minHeight: '180px'}}>
@@ -407,6 +428,7 @@ function Usuario () {
                         onClose={() => setUsuarioEliminando(null)}
                         onConfirm={handleConfirmarEliminar}
                         usuario={usuarioEliminando}
+                        procesando={procesando}
                     />
                     <ModalEditarUsuario
                         show={mostrarModalCrear}
@@ -471,6 +493,8 @@ function Usuario () {
                 </div>
                 <Footer />
             </div>
+            <ProcessingOverlay show={procesando} />
+            </>
         )
     }
 

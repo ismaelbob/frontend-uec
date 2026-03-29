@@ -145,7 +145,9 @@ function ModalEditarUsuario({ show, onClose, onSave, usuario, mensaje }) {
                         <div className="modal-body">
                             {mensaje && (
                                 <div className={`alert ${mensaje.ok ? 'alert-success' : 'alert-danger'}`}>
-                                    {mensaje.message}
+                                    {mensaje.ok ? mensaje.message : 
+                                        mensaje.errors ? mensaje.errors.join(', ') : 
+                                        mensaje.message}
                                 </div>
                             )}
                             <div className="form-group">

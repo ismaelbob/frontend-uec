@@ -142,7 +142,7 @@ function Home () {
             <div className='container'>
                 <div className="text-primary fs-3 text-center mb-5 mb-md-3 mt-3">LIDERAZGO 2026</div>
                 <div className='tarjetero'>
-                    <Tarjeta icono={avatar} nombre="Hno. Teofilo Condori" telefono="" cargo="PASTOR" link={true}/>
+                    <Tarjeta icono={avatar} nombre="Hno. Teofilo Condori" telefono="71781184" cargo="PASTOR" link={true}/>
                     <Tarjeta icono={avatar} nombre="Hno. Jhony Mamani" telefono="71098525" cargo="PRIMER DIACONO" link={true}/>
                     <Tarjeta icono={avatar} nombre="Hna. Jhovana Caceres" telefono="72267426" cargo="DIACONO E. CRISTIANA" link={true}/>
                     <Tarjeta icono={avatar} nombre="Hno. Elias Carreño" telefono="69543969" cargo="DIACONO TESORERO" link={true}/>

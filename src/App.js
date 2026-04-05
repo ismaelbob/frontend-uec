@@ -11,6 +11,7 @@ import Actividades from './pages/Actividades'
 import Ofrendas from './pages/Ofrendas'
 import NotFound from './pages/NotFound'
 import Usuario from './pages/Usuario'
+import VerificarEmail from './pages/VerificarEmail'
 
 import HimnarioProvider from './context/himnario/Provider'
 import SesionProvider from './context/sesion/Provider'
@@ -38,6 +39,7 @@ function App () {
                                     <Route path="/actividades/editarmes/:id" exact component={EditMes}/>
                                     <Route path="/ofrendas" exact component={Ofrendas}/>
                                     <Route path="/login" exact component={Usuario}/>
+                                    <Route path="/verificar" exact component={VerificarEmail}/>
                                     <Route path="/cancionero/:himnario/nuevacancion" exact component={Addcancion}/>
                                     <Route path="/cancionero/:himnario/:id/editar" exact component={Editcancion}/>
                                     <Route path="/cancionero/:himnario" exact component={Himnario}/>

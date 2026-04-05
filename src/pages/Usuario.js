@@ -3,6 +3,7 @@ import './styles/login.css'
 import './styles/usuario.css'
 import Loader from '../components/Loader'
 import Formlogin from '../components/Formlogin'
+import FormRegistro from '../components/FormRegistro'
 import ModalCambiarPassword from '../components/ModalCambiarPassword'
 import ModalEditarUsuario from '../components/ModalEditarUsuario'
 import ModalEliminarUsuario from '../components/ModalEliminarUsuario'
@@ -21,6 +22,9 @@ import TemaContext from '../context/tema'
 
 function Usuario () {
     const [datos, setDatos] = useState({usuario: '', password: ''})
+    const [mostrarRegistro, setMostrarRegistro] = useState(false)
+    const [mensajeRegistro, setMensajeRegistro] = useState(null)
+    const [cargandoRegistro, setCargandoRegistro] = useState(false)
     const [cargando, setCargando] = useState(false)
     const [mensaje, setMensaje] = useState('')
     const {iniciarSesion, nombre, nivel, cerrarSesion, existeSesion, cambiarPassword} = useContext(SesionContext)
@@ -139,6 +143,47 @@ function Usuario () {
             form.classList.remove('was-validated')
         }
     }, [datos, iniciarSesion])
+
+    const handleSubmitRegistro = useCallback(async (datos) => {
+        setCargandoRegistro(true)
+        try {
+            const response = await fetch(`${Config.urlapi}api/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datos)
+            })
+            const data = await response.json()
+            
+            if (response.ok || response.status === 201) {
+                setMensajeRegistro(data)
+                if (data.ok) {
+                    setTimeout(() => {
+                        setMostrarRegistro(false)
+                        setMensajeRegistro(null)
+                        setDatos({usuario: '', password: ''})
+                    }, 3000)
+                }
+            } else {
+                setMensajeRegistro({ ok: false, message: data.message || 'Error del servidor' })
+            }
+        } catch (error) {
+            console.error('Error al registrar usuario:', error)
+            setMensajeRegistro({ ok: false, message: 'Error de conexión' })
+        }
+        setCargandoRegistro(false)
+    }, [])
+
+    const handleCancelarRegistro = () => {
+        setMostrarRegistro(false)
+        setMensajeRegistro(null)
+    }
+
+    const handleMostrarRegistro = () => {
+        setMensajeRegistro(null)
+        setMostrarRegistro(true)
+    }
 
     const salirDeSesion = () => {
         cerrarSesion()
@@ -502,12 +547,22 @@ function Usuario () {
     
     return (
         <div className="container mt-2 d-flex justify-content-center flex-column align-items-md-center">
-            <Formlogin 
-                onChange={handleChange}
-                onSubmit={handleSubmitSesion}
-                datos={datos} 
-                mensaje={mensaje}
-            />
+            {mostrarRegistro ? (
+                <FormRegistro 
+                    onSubmit={handleSubmitRegistro}
+                    onCancel={handleCancelarRegistro}
+                    mensaje={mensajeRegistro}
+                    cargando={cargandoRegistro}
+                />
+            ) : (
+                <Formlogin 
+                    onChange={handleChange}
+                    onSubmit={handleSubmitSesion}
+                    datos={datos} 
+                    mensaje={mensaje}
+                    onRegister={handleMostrarRegistro}
+                />
+            )}
             <div className='border-bottom w-100'></div>
             <div className='mt-4 d-flex flex-column align-items-center'>
                 <div className="mb-3 w-100" style={{maxWidth: '300px'}}>
@@ -529,6 +584,7 @@ function Usuario () {
                     </select>
                 </div>
             </div>
+            <ProcessingOverlay show={cargandoRegistro} />
         </div>
     )
 }

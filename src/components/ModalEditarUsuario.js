@@ -18,6 +18,7 @@ function ModalEditarUsuario({ show, onClose, onSave, usuario, mensaje }) {
     const [datos, setDatos] = useState({
         nombre: '',
         usuario: '',
+        email: '',
         nivel: 2,
         password: '',
         passwordRepetir: ''
@@ -30,6 +31,7 @@ function ModalEditarUsuario({ show, onClose, onSave, usuario, mensaje }) {
             setDatos({
                 nombre: usuario.nombre || '',
                 usuario: usuario.usuario || '',
+                email: usuario.email || '',
                 nivel: usuario.nivel || 2,
                 password: '',
                 passwordRepetir: ''
@@ -38,6 +40,7 @@ function ModalEditarUsuario({ show, onClose, onSave, usuario, mensaje }) {
             setDatos({
                 nombre: '',
                 usuario: '',
+                email: '',
                 nivel: 2,
                 password: '',
                 passwordRepetir: ''
@@ -57,8 +60,14 @@ function ModalEditarUsuario({ show, onClose, onSave, usuario, mensaje }) {
     const handleSubmit = async (event) => {
         event.preventDefault()
 
-        if (!datos.nombre || !datos.usuario) {
-            setError('Nombre y usuario son requeridos')
+        if (!datos.nombre || !datos.usuario || !datos.email) {
+            setError('Nombre, usuario y email son requeridos')
+            return
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(datos.email)) {
+            setError('Ingresa un email válido')
             return
         }
 
@@ -97,6 +106,7 @@ function ModalEditarUsuario({ show, onClose, onSave, usuario, mensaje }) {
         await onSave({
             nombre: datos.nombre,
             usuario: datos.usuario,
+            email: datos.email,
             nivel: datos.nivel,
             password: datos.password || null
         })
@@ -104,7 +114,7 @@ function ModalEditarUsuario({ show, onClose, onSave, usuario, mensaje }) {
     }
 
     const handleClose = () => {
-        setDatos({ nombre: '', usuario: '', nivel: 2, password: '', passwordRepetir: '' })
+        setDatos({ nombre: '', usuario: '', email: '', nivel: 2, password: '', passwordRepetir: '' })
         setError('')
         onClose()
     }
@@ -173,6 +183,21 @@ function ModalEditarUsuario({ show, onClose, onSave, usuario, mensaje }) {
                                     id="usuario"
                                     name="usuario"
                                     value={datos.usuario}
+                                    onChange={handleChange}
+                                    onFocus={handleInputFocus}
+                                    onBlur={handleInputBlur}
+                                    required
+                                    style={inputStyle(temaEfectivo)}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="email">Email:</label>
+                                <input
+                                    type="email"
+                                    className="form-control"
+                                    id="email"
+                                    name="email"
+                                    value={datos.email}
                                     onChange={handleChange}
                                     onFocus={handleInputFocus}
                                     onBlur={handleInputBlur}

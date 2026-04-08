@@ -221,6 +221,7 @@ function Usuario () {
             const bodyData = {
                 nombre: datos.nombre,
                 usuario: datos.usuario,
+                email: datos.email,
                 nivel: parseInt(datos.nivel)
             }
             

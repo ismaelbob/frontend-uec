@@ -18,6 +18,7 @@ function UsuarioItem({ usuario, indice, onEditar, onEliminar }) {
             </div>
             <div className="box_usuario-datos">
                 <h6>{usuario.nombre} - {usuario.usuario}</h6>
+                <p>{usuario.email}</p>
                 <p>{getNivelTexto(usuario.nivel)}</p>
             </div>
             <div className="box_usuario-acciones">

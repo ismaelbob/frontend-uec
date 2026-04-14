@@ -14,8 +14,8 @@ import MenuActivoContext from '../context/menuactivo'
 function Himnario (props) {
     const { himnario } = useParams()
     const [buscar, setBuscar] = useState('')
-    const {datos, getDatos, loading} = useContext(HimnarioContext)
-    const {nombre, existeSesion} = useContext(SesionContext)
+    const {datos, getDatos, loading, toggleFavorite} = useContext(HimnarioContext)
+    const {nombre, existeSesion, usuario} = useContext(SesionContext)
     const {setPage} = useContext(MenuActivoContext)
 
 
@@ -54,6 +54,12 @@ function Himnario (props) {
     const handleClick = (event) => {
         setBuscar('')
     }
+
+    const handleToggleFavorite = async (himnario, songId, isFavorite) => {
+        await toggleFavorite(himnario, songId, isFavorite)
+    }
+
+    const isLoggedIn = usuario !== null
 
     const canciones = datos?.songs || (Array.isArray(datos) ? datos : [])
     if(!canciones.length || loading || !datos) {
@@ -114,7 +120,13 @@ function Himnario (props) {
             <div>
                 {datosFiltrados.map(cancion => {
                     return (
-                        <Cancion key={cancion.idcancion} cancion={cancion} himnario={props.match.params.himnario}/>
+                        <Cancion 
+                            key={cancion.idcancion} 
+                            cancion={cancion} 
+                            himnario={props.match.params.himnario}
+                            isLoggedIn={isLoggedIn}
+                            onToggleFavorite={handleToggleFavorite}
+                        />
                     )
                 })}
                 <div className="mb-5 p-1"></div>

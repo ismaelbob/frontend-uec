@@ -33,3 +33,17 @@
     margin: 0;
     color: var(--text-secondary, #5E5E5E);
 }
+.box_cancion-favorite {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 8px;
+    transition: transform 0.2s ease;
+}
+.box_cancion-favorite:hover {
+    transform: scale(1.2);
+}
+.box_cancion-favorite:focus {
+    outline: none;
+}

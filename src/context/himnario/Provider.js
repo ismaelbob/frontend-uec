@@ -55,6 +55,12 @@ function HimnarioProvider ({children}) {
                     return { ...prevDatos, songs: updatedSongs }
                 })
                 
+                if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.controller.postMessage({
+                        type: 'CLEAR_SONGS_CACHE'
+                    })
+                }
+                
                 return { ok: true }
             }
             

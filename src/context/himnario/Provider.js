@@ -89,6 +89,7 @@ function HimnarioProvider ({children}) {
         }
     }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         const handleOnline = () => {
             console.log('Conexión restaurada, procesando favoritos pendientes...')

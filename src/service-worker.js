@@ -138,8 +138,6 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'CLEAR_SONGS_CACHE') {
     event.waitUntil(
       caches.open('api-songs-v1').then(async (cache) => {
-        const cachedRequests = await cache.keys();
-        
         const urlsToDelete = API_ENDPOINTS.map(endpoint => 
           new Request(`${API_BASE_URL}${endpoint}`)
         );

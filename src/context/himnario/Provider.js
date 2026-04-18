@@ -1,5 +1,5 @@
 import HimnarioContext from './index'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Config from '../../config'
 
 const FAVORITES_KEY = 'favorites_cache'
@@ -63,7 +63,8 @@ function HimnarioProvider ({children}) {
         }
     }
 
-    const processPendingFavorites = async () => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const processPendingFavorites = useCallback(async () => {
         const accessToken = localStorage.getItem('accessToken')
         if (!accessToken) return
 
@@ -87,9 +88,8 @@ function HimnarioProvider ({children}) {
                 console.error('Error procesando favorito pendiente:', error)
             }
         }
-    }
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         const handleOnline = () => {
             console.log('Conexión restaurada, procesando favoritos pendientes...')
@@ -98,7 +98,7 @@ function HimnarioProvider ({children}) {
 
         window.addEventListener('online', handleOnline)
         return () => window.removeEventListener('online', handleOnline)
-    }, [])
+    }, [processPendingFavorites])
 
     const getDatos = async (himnario) => {
         setLoading(true)

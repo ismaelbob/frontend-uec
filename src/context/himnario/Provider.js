@@ -149,7 +149,8 @@ function HimnarioProvider ({children}) {
 
         if (navigator.serviceWorker && navigator.serviceWorker.controller) {
             navigator.serviceWorker.controller.postMessage({
-                type: 'CLEAR_SONGS_CACHE'
+                type: 'CLEAR_HIMNARIO_CACHE',
+                himnario: himnario
             })
         }
 
@@ -169,6 +170,7 @@ function HimnarioProvider ({children}) {
             
             if (response.ok && data.ok === true) {
                 clearPendingFavorite(songId)
+                getDatos(himnario)
                 return { ok: true }
             }
             

@@ -11,7 +11,7 @@ import { clientsClaim } from 'workbox-core';
 import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
-import { StaleWhileRevalidate, NetworkFirst } from 'workbox-strategies';
+import { StaleWhileRevalidate, NetworkFirst, CacheFirst } from 'workbox-strategies';
 
 const API_BASE_URL = 'https://api-uec.onrender.com';
 
@@ -73,18 +73,18 @@ const API_ENDPOINTS = [
 ];
 
 // Estrategia de caché para endpoints de la API de canciones
-// Usa StaleWhileRevalidate: sirve caché inmediatamente y actualiza en segundo plano
+// Usa CacheFirst: sirve del caché primero, si no existe va a la red
+// Sin expiración para mantener disponibles offline indefinidamente
 registerRoute(
   ({ url, request }) =>
     request.method === 'GET' &&
     url.origin === API_BASE_URL &&
     url.pathname.startsWith('/api/songs/'),
-  new StaleWhileRevalidate({
+  new CacheFirst({
     cacheName: 'api-songs-v1',
     plugins: [
       new ExpirationPlugin({
         maxEntries: 20,
-        maxAgeSeconds: 7 * 24 * 60 * 60,
         purgeOnQuotaError: true,
       }),
     ],
@@ -134,31 +134,25 @@ self.addEventListener('message', (event) => {
     self.skipWaiting();
   }
 
-  // Manejo de invalidación manual del caché de canciones
+  // Manejo de invalidación manual del caché de TODAS las canciones
   if (event.data && event.data.type === 'CLEAR_SONGS_CACHE') {
     event.waitUntil(
       caches.open('api-songs-v1').then(async (cache) => {
-        // Obtener todas las URLs cacheadas
-// eslint-disable-next-line no-unused-vars
         const cachedRequests = await cache.keys();
         
-        // Construir las URLs completas de los endpoints
         const urlsToDelete = API_ENDPOINTS.map(endpoint => 
           new Request(`${API_BASE_URL}${endpoint}`)
         );
         
-        // Eliminar cada entrada del caché
         await Promise.all(
           urlsToDelete.map(url => cache.delete(url))
         );
         
-        // Responder al cliente que la limpieza fue exitosa
         event.ports[0]?.postMessage({ 
           success: true, 
           message: 'Caché de canciones limpiado exitosamente' 
         });
       }).catch((error) => {
-        // Responder con error si algo falla
         event.ports[0]?.postMessage({ 
           success: false, 
           message: `Error al limpiar caché: ${error.message}` 
@@ -166,4 +160,46 @@ self.addEventListener('message', (event) => {
       })
     );
   }
+
+  // Manejo de invalidación manual del caché de un himnario específico
+  if (event.data && event.data.type === 'CLEAR_HIMNARIO_CACHE') {
+    const himnario = event.data.himnario;
+    event.waitUntil(
+      caches.open('api-songs-v1').then(async (cache) => {
+        const urlToDelete = new Request(`${API_BASE_URL}/api/songs/${himnario}`);
+        await cache.delete(urlToDelete);
+        
+        event.ports[0]?.postMessage({ 
+          success: true, 
+          message: `Caché de ${himnario} limpiado exitosamente` 
+        });
+      }).catch((error) => {
+        event.ports[0]?.postMessage({ 
+          success: false, 
+          message: `Error al limpiar caché: ${error.message}` 
+        });
+      })
+    );
+  }
+});
+
+// Precargar los 3 himnarios al instalar el Service Worker
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open('api-songs-v1').then(async (cache) => {
+      const promises = API_ENDPOINTS.map(endpoint => 
+        fetch(`${API_BASE_URL}${endpoint}`, { mode: 'cors' })
+          .then(response => {
+            if (response.ok) {
+              return cache.put(`${API_BASE_URL}${endpoint}`, response);
+            }
+          })
+          .catch(error => {
+            console.log(`No se pudo precargar ${endpoint}:`, error);
+          })
+      );
+      await Promise.all(promises);
+      console.log('Precarga de himnarios completada');
+    })
+  );
 });

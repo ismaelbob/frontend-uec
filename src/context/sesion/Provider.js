@@ -69,7 +69,7 @@ function SesionProvider({ children }) {
         localStorage.removeItem(`favorites_cache_${userId}`)
         localStorage.removeItem(`favorites_pending_${userId}`)
         
-        // Limpiar cache del SW para datos frescos
+        // Limpiar cache del SW para datos frescos y precargar himnarios
         if (navigator.serviceWorker && navigator.serviceWorker.controller) {
           navigator.serviceWorker.controller.postMessage({
             type: 'CLEAR_SONGS_CACHE'
@@ -96,6 +96,9 @@ function SesionProvider({ children }) {
   const cerrarSesion = async () => {
     // Obtener el ID del usuario antes de limpiarlo
     const userId = localStorage.getItem('_id')
+    // Obtener tokens antes de limpiar localStorage para precargar himnarios y logout
+    const accessToken = localStorage.getItem('accessToken')
+    const refreshToken = localStorage.getItem('refreshToken')
     
     // Limpiar localStorage PRIMERO (síncrono, inmediato)
     localStorage.removeItem('accessToken')
@@ -111,11 +114,29 @@ function SesionProvider({ children }) {
         localStorage.removeItem(`favorites_pending_${userId}`)
     }
 
-    // Limpiar caché del Service Worker para datos de usuario
+    // Limpiar caché del Service Worker para datos de usuario y himnarios
     if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'CLEAR_SONGS_CACHE'
+      })
       navigator.serviceWorker.controller.postMessage({
         type: 'CLEAR_USER_CACHE'
       })
+    }
+
+    // Precargar los 3 himnarios para que estén disponibles offline sin sesión
+    if (accessToken) {
+      const himnarios = ['verde', 'poder', 'jovenes']
+      const promises = himnarios.map(async (himnario) => {
+        try {
+          await fetch(`${Config.urlapi}api/songs/${himnario}`, {
+            headers: { 'Authorization': `Bearer ${accessToken}` }
+          })
+        } catch (error) {
+          console.error(`Error precargando ${himnario}:`, error)
+        }
+      })
+      await Promise.all(promises)
     }
 
     // Limpiar estados (causará re-render pero tokens ya están limpios)
@@ -125,9 +146,7 @@ function SesionProvider({ children }) {
 
     // Fetch al backend para invalidar sesión en servidor (si falla, no importa - sesión local ya está cerrada)
     try {
-      const refreshToken = localStorage.getItem('refreshToken')
-      const accessToken = localStorage.getItem('accessToken')
-      if (refreshToken) {
+      if (refreshToken && accessToken) {
         await fetch(`${Config.urlapi}api/auth/logout`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 

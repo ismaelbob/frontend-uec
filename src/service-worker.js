@@ -190,18 +190,21 @@ self.addEventListener('message', (event) => {
     event.waitUntil((async () => {
       const accessToken = event.data.accessToken
       
-      // 1. Limpiar caché de songs primero
+      // 1. Abrir caché y limpiar primero
       const cache = await caches.open('api-songs-v1')
       const keys = await cache.keys()
       await Promise.all(keys.map(req => cache.delete(req)))
       
-      // 2. Luego precargar (las peticiones serán interceptadas por CacheFirst)
+      // 2. Precargar y guardar manualmente (como en install)
       const himnarios = ['verde', 'poder', 'jovenes']
       const promises = himnarios.map(async (himnario) => {
         try {
-          await fetch(`${API_BASE_URL}/api/songs/${himnario}`, {
+          const response = await fetch(`${API_BASE_URL}/api/songs/${himnario}`, {
             headers: { 'Authorization': `Bearer ${accessToken}` }
           })
+          if (response.ok) {
+            await cache.put(`${API_BASE_URL}/api/songs/${himnario}`, response.clone())
+          }
         } catch (error) {
           console.error(`Error precargando ${himnario}:`, error)
         }
@@ -215,13 +218,17 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'PRECARGAR_HIMNARIOS') {
     event.waitUntil((async () => {
       const accessToken = event.data.accessToken
+      const cache = await caches.open('api-songs-v1')
       const himnarios = ['verde', 'poder', 'jovenes']
       
       const promises = himnarios.map(async (himnario) => {
         try {
-          await fetch(`${API_BASE_URL}/api/songs/${himnario}`, {
+          const response = await fetch(`${API_BASE_URL}/api/songs/${himnario}`, {
             headers: { 'Authorization': `Bearer ${accessToken}` }
           })
+          if (response.ok) {
+            await cache.put(`${API_BASE_URL}/api/songs/${himnario}`, response.clone())
+          }
         } catch (error) {
           console.error(`Error precargando ${himnario}:`, error)
         }

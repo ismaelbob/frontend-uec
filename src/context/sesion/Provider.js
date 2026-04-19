@@ -13,15 +13,19 @@ function SesionProvider({ children }) {
     
     const himnarios = ['verde', 'poder', 'jovenes']
     
-    for (const himnario of himnarios) {
+    const promises = himnarios.map(async (himnario) => {
       try {
-        await fetch(`${Config.urlapi}api/songs/${himnario}`, {
+        const response = await fetch(`${Config.urlapi}api/songs/${himnario}`, {
           headers: { 'Authorization': `Bearer ${accessToken}` }
         })
+        return response.ok
       } catch (error) {
         console.error(`Error precargando ${himnario}:`, error)
+        return false
       }
-    }
+    })
+    
+    await Promise.all(promises)
   }
 
   const iniciarSesion = async (datos) => {

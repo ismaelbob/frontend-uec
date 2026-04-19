@@ -185,6 +185,24 @@ self.addEventListener('message', (event) => {
     );
   }
 
+  // Manejo de precarga de himnarios
+  if (event.data && event.data.type === 'PRECARGAR_HIMNARIOS') {
+    const accessToken = event.data.accessToken
+    const himnarios = ['verde', 'poder', 'jovenes']
+    
+    const promises = himnarios.map(async (himnario) => {
+      try {
+        await fetch(`${API_BASE_URL}/api/songs/${himnario}`, {
+          headers: { 'Authorization': `Bearer ${accessToken}` }
+        })
+      } catch (error) {
+        console.error(`Error precargando ${himnario}:`, error)
+      }
+    })
+    
+    await Promise.all(promises)
+  }
+
   // Manejo de invalidación manual del caché de un himnario específico
   if (event.data && event.data.type === 'CLEAR_HIMNARIO_CACHE') {
     const himnario = event.data.himnario;

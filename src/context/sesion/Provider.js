@@ -69,15 +69,20 @@ function SesionProvider({ children }) {
         localStorage.removeItem(`favorites_cache_${userId}`)
         localStorage.removeItem(`favorites_pending_${userId}`)
         
-        // Limpiar cache del SW para datos frescos y precargar himnarios
+        // Limpiar cache del SW para datos frescos
         if (navigator.serviceWorker && navigator.serviceWorker.controller) {
           navigator.serviceWorker.controller.postMessage({
             type: 'CLEAR_SONGS_CACHE'
           })
         }
         
-        // Precargar los 3 himnarios en background con los favoritos del usuario
-        precargarHimnarios()
+        // Enviar accesoToken al SW para precargar himnarios
+        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({
+            type: 'PRECARGAR_HIMNARIOS',
+            accessToken: data.accessToken
+          })
+        }
 
         // Para compatibilidad con tu `Usuario.js` actual
         return 'correcto'
@@ -122,21 +127,13 @@ function SesionProvider({ children }) {
       navigator.serviceWorker.controller.postMessage({
         type: 'CLEAR_USER_CACHE'
       })
-    }
-
-    // Precargar los 3 himnarios para que estén disponibles offline sin sesión
-    if (accessToken) {
-      const himnarios = ['verde', 'poder', 'jovenes']
-      const promises = himnarios.map(async (himnario) => {
-        try {
-          await fetch(`${Config.urlapi}api/songs/${himnario}`, {
-            headers: { 'Authorization': `Bearer ${accessToken}` }
-          })
-        } catch (error) {
-          console.error(`Error precargando ${himnario}:`, error)
-        }
-      })
-      await Promise.all(promises)
+      // Precargar himnarios para offline sin sesión
+      if (accessToken) {
+        navigator.serviceWorker.controller.postMessage({
+          type: 'PRECARGAR_HIMNARIOS',
+          accessToken: accessToken
+        })
+      }
     }
 
     // Limpiar estados (causará re-render pero tokens ya están limpios)

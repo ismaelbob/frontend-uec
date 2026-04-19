@@ -1,6 +1,8 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import './styles/cancion.css'
+import MarkOutline from '../img/mark-outline.svg'
+import MarkFilled from '../img/mark-filled.svg'
 
 class Cancion extends React.Component {
     handleFavoriteClick = (e) => {
@@ -40,7 +42,11 @@ class Cancion extends React.Component {
                         onClick={this.handleFavoriteClick}
                         aria-label={isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
                     >
-                        {isFavorite ? '❤️' : '🤍'}
+                        <img 
+                            src={isFavorite ? MarkFilled : MarkOutline} 
+                            alt={isFavorite ? 'Favorito' : 'Marcar favorito'} 
+                            className="mark-icon"
+                        />
                     </button>
                 )}
             </div>

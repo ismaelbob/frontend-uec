@@ -36,14 +36,31 @@
 .box_cancion-favorite {
     background: none;
     border: none;
-    font-size: 20px;
     cursor: pointer;
     padding: 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: transform 0.2s ease;
 }
-.box_cancion-favorite:hover {
+.mark-icon {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.2s ease;
+}
+.box_cancion-favorite:hover .mark-icon {
     transform: scale(1.2);
+}
+.box_cancion-favorite:active .mark-icon {
+    transform: scale(0.9);
 }
 .box_cancion-favorite:focus {
     outline: none;
+}
+.box_cancion-favorite:not(.active) .mark-icon {
+    filter: grayscale(100%);
+    opacity: 0.6;
+}
+.box_cancion-favorite.active .mark-icon {
+    filter: drop-shadow(0 0 2px rgba(255, 213, 79, 0.5));
 }

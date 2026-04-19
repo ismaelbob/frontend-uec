@@ -7,6 +7,23 @@ function SesionProvider({ children }) {
   const [nombre, setNombre] = useState(null)
   const [nivel, setNivel] = useState(null)
 
+  const precargarHimnarios = async () => {
+    const accessToken = localStorage.getItem('accessToken')
+    if (!accessToken) return
+    
+    const himnarios = ['verde', 'poder', 'jovenes']
+    
+    for (const himnario of himnarios) {
+      try {
+        await fetch(`${Config.urlapi}api/songs/${himnario}`, {
+          headers: { 'Authorization': `Bearer ${accessToken}` }
+        })
+      } catch (error) {
+        console.error(`Error precargando ${himnario}:`, error)
+      }
+    }
+  }
+
   const iniciarSesion = async (datos) => {
     try {
       const response = await fetch(`${Config.urlapi}api/auth/login`, {
@@ -40,7 +57,23 @@ function SesionProvider({ children }) {
         localStorage.setItem('user', data.usuario)
         localStorage.setItem('nombre', data.nombre)
         localStorage.setItem('nivel', String(data.nivel))
-        localStorage.setItem('_id', data._id)
+        
+        const userId = data._id
+        localStorage.setItem('_id', userId)
+        
+        // Limpiar favoritos del usuario anterior
+        localStorage.removeItem(`favorites_cache_${userId}`)
+        localStorage.removeItem(`favorites_pending_${userId}`)
+        
+        // Limpiar cache del SW para datos frescos
+        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({
+            type: 'CLEAR_SONGS_CACHE'
+          })
+        }
+        
+        // Precargar los 3 himnarios en background con los favoritos del usuario
+        precargarHimnarios()
 
         // Para compatibilidad con tu `Usuario.js` actual
         return 'correcto'

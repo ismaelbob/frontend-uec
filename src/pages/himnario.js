@@ -15,7 +15,7 @@ function Himnario (props) {
     const { himnario } = useParams()
     const [buscar, setBuscar] = useState('')
     const {datos, getDatos, loading, toggleFavorite} = useContext(HimnarioContext)
-    const {nombre, existeSesion, usuario} = useContext(SesionContext)
+    const {nombre, nivel, existeSesion, usuario} = useContext(SesionContext)
     const {setPage} = useContext(MenuActivoContext)
 
 
@@ -90,7 +90,7 @@ function Himnario (props) {
                     <div className="barra_menu-buttom">
                         <div className="barra_menu-buttom-back"><Btnback url="/cancionero"/></div>
                         {
-                            nombre && <div className="barra_menu-buttom-add"><Btnadd url={`/cancionero/${props.match.params.himnario}/nuevacancion`}/></div>
+                            nombre && (nivel === 1 || nivel === 2) && <div className="barra_menu-buttom-add"><Btnadd url={`/cancionero/${props.match.params.himnario}/nuevacancion`}/></div>
                         }
                     </div>
                     <div className="barra_menu-search"><Searchbox buscar={handleChange} val={buscar} onClick={handleClick}/></div>
@@ -110,7 +110,7 @@ function Himnario (props) {
                 <div className="barra_menu-buttom">
                     <div className="barra_menu-buttom-back"><Btnback url="/cancionero"/></div>
                     {
-                        nombre && <div className="barra_menu-buttom-add"><Btnadd url={`/cancionero/${props.match.params.himnario}/nuevacancion`}/></div>
+                        nombre && (nivel === 1 || nivel === 2) && <div className="barra_menu-buttom-add"><Btnadd url={`/cancionero/${props.match.params.himnario}/nuevacancion`}/></div>
                     }
                 </div>
                 <div className="barra_menu-search"><Searchbox buscar={handleChange} val={buscar} onClick={handleClick}/></div>

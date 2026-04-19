@@ -159,6 +159,32 @@ self.addEventListener('message', (event) => {
     );
   }
 
+  // Manejo de invalidación manual del caché de usuarios
+  if (event.data && event.data.type === 'CLEAR_USER_CACHE') {
+    event.waitUntil(
+      Promise.all([
+        caches.open('api-users-v1').then(async (cache) => {
+          const keys = await cache.keys();
+          await Promise.all(keys.map(request => cache.delete(request)));
+        }),
+        caches.open('api-other-v1').then(async (cache) => {
+          const keys = await cache.keys();
+          await Promise.all(keys.map(request => cache.delete(request)));
+        })
+      ]).then(() => {
+        event.ports[0]?.postMessage({ 
+          success: true, 
+          message: 'Caché de usuario limpiado exitosamente' 
+        });
+      }).catch((error) => {
+        event.ports[0]?.postMessage({ 
+          success: false, 
+          message: `Error al limpiar caché: ${error.message}` 
+        });
+      })
+    );
+  }
+
   // Manejo de invalidación manual del caché de un himnario específico
   if (event.data && event.data.type === 'CLEAR_HIMNARIO_CACHE') {
     const himnario = event.data.himnario;

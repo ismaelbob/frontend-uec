@@ -12,7 +12,7 @@ import MenuActivoContext from '../context/menuactivo'
 function Showcancion (props) {
     const [cancionSeleccionada, setCancionSelecionada ] = useState([])
     const {datos, loading, getDatos} = useContext(HimnarioContext)
-    const {nombre, existeSesion} = useContext(SesionContext)
+    const {nombre, nivel, existeSesion} = useContext(SesionContext)
     const {setPage} = useContext(MenuActivoContext)
 
     const obtenerCanciones = () => {
@@ -96,7 +96,7 @@ function Showcancion (props) {
                     </div>
                     <div className="menu_buttom">
                         <div className="box_button-back"><Btnback url={`/cancionero/${props.match.params.himnario}`}/></div>
-                        {nombre && <div className="menu_buttom-edit"><Btnedit url={`/cancionero/${props.match.params.himnario}/${cancionSeleccionada[0].idcancion}/editar`}/></div>}
+                        {nombre && (nivel === 1 || nivel === 2) && <div className="menu_buttom-edit"><Btnedit url={`/cancionero/${props.match.params.himnario}/${cancionSeleccionada[0].idcancion}/editar`}/></div>}
                     </div>
                 </div>
                 <div className="position-relative w-100">

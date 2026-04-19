@@ -107,6 +107,13 @@ function SesionProvider({ children }) {
         localStorage.removeItem(`favorites_pending_${userId}`)
     }
 
+    // Limpiar caché del Service Worker para datos de usuario
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'CLEAR_USER_CACHE'
+      })
+    }
+
     // Limpiar estados (causará re-render pero tokens ya están limpios)
     setUsuario(null)
     setNombre(null)

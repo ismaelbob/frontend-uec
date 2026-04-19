@@ -185,7 +185,33 @@ self.addEventListener('message', (event) => {
     );
   }
 
-  // Manejo de precarga de himnarios
+  // Manejo de limpiar y precargar himnarios en secuencia
+  if (event.data && event.data.type === 'CLEAR_AND_PRECARGAR') {
+    event.waitUntil((async () => {
+      const accessToken = event.data.accessToken
+      
+      // 1. Limpiar caché de songs primero
+      const cache = await caches.open('api-songs-v1')
+      const keys = await cache.keys()
+      await Promise.all(keys.map(req => cache.delete(req)))
+      
+      // 2. Luego precargar (las peticiones serán interceptadas por CacheFirst)
+      const himnarios = ['verde', 'poder', 'jovenes']
+      const promises = himnarios.map(async (himnario) => {
+        try {
+          await fetch(`${API_BASE_URL}/api/songs/${himnario}`, {
+            headers: { 'Authorization': `Bearer ${accessToken}` }
+          })
+        } catch (error) {
+          console.error(`Error precargando ${himnario}:`, error)
+        }
+      })
+      
+      await Promise.all(promises)
+    })())
+  }
+
+  // handler legacy - mantener por compatibilidad
   if (event.data && event.data.type === 'PRECARGAR_HIMNARIOS') {
     event.waitUntil((async () => {
       const accessToken = event.data.accessToken

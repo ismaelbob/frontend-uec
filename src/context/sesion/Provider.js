@@ -48,17 +48,10 @@ function SesionProvider({ children }) {
         localStorage.removeItem(`favorites_cache_${userId}`)
         localStorage.removeItem(`favorites_pending_${userId}`)
         
-        // Limpiar cache del SW para datos frescos
+        // Limpiar cache y precargar himnarios en un solo mensaje
         if (navigator.serviceWorker && navigator.serviceWorker.controller) {
           navigator.serviceWorker.controller.postMessage({
-            type: 'CLEAR_SONGS_CACHE'
-          })
-        }
-        
-        // Enviar accesoToken al SW para precargar himnarios
-        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-          navigator.serviceWorker.controller.postMessage({
-            type: 'PRECARGAR_HIMNARIOS',
+            type: 'CLEAR_AND_PRECARGAR',
             accessToken: data.accessToken
           })
         }
@@ -98,18 +91,15 @@ function SesionProvider({ children }) {
         localStorage.removeItem(`favorites_pending_${userId}`)
     }
 
-    // Limpiar caché del Service Worker para datos de usuario y himnarios
+    // Limpiar caché del Service Worker para usuarios
     if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({
-        type: 'CLEAR_SONGS_CACHE'
-      })
       navigator.serviceWorker.controller.postMessage({
         type: 'CLEAR_USER_CACHE'
       })
-      // Precargar himnarios para offline sin sesión
+      // Limpiar cache y precargar himnarios para offline sin sesión
       if (accessToken) {
         navigator.serviceWorker.controller.postMessage({
-          type: 'PRECARGAR_HIMNARIOS',
+          type: 'CLEAR_AND_PRECARGAR',
           accessToken: accessToken
         })
       }

@@ -57,6 +57,9 @@ function SesionProvider({ children }) {
   }
 
   const cerrarSesion = async () => {
+    // Obtener el ID del usuario antes de limpiarlo
+    const userId = localStorage.getItem('_id')
+    
     // Limpiar localStorage PRIMERO (síncrono, inmediato)
     localStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
@@ -64,6 +67,12 @@ function SesionProvider({ children }) {
     localStorage.removeItem('nombre')
     localStorage.removeItem('nivel')
     localStorage.removeItem('_id')
+    
+    // Limpiar favoritos específicos del usuario
+    if (userId) {
+        localStorage.removeItem(`favorites_cache_${userId}`)
+        localStorage.removeItem(`favorites_pending_${userId}`)
+    }
 
     // Limpiar estados (causará re-render pero tokens ya están limpios)
     setUsuario(null)

@@ -2,8 +2,8 @@ import HimnarioContext from './index'
 import { useState, useEffect, useCallback } from 'react'
 import Config from '../../config'
 
-const FAVORITES_KEY = 'favorites_cache'
-const PENDING_FAVORITES_KEY = 'favorites_pending'
+const getFavoritesKey = () => `favorites_cache_${localStorage.getItem('_id') || 'anonymous'}`
+const getPendingKey = () => `favorites_pending_${localStorage.getItem('_id') || 'anonymous'}`
 
 function HimnarioProvider ({children}) {
 
@@ -12,7 +12,7 @@ function HimnarioProvider ({children}) {
 
     const getLocalFavorites = () => {
         try {
-            const stored = localStorage.getItem(FAVORITES_KEY)
+            const stored = localStorage.getItem(getFavoritesKey())
             return stored ? JSON.parse(stored) : {}
         } catch {
             return {}
@@ -23,7 +23,7 @@ function HimnarioProvider ({children}) {
         try {
             const favorites = getLocalFavorites()
             favorites[songId] = isFavorite
-            localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites))
+            localStorage.setItem(getFavoritesKey(), JSON.stringify(favorites))
         } catch (error) {
             console.error('Error guardando favorito en localStorage:', error)
         }
@@ -31,7 +31,7 @@ function HimnarioProvider ({children}) {
 
     const getPendingFavorites = () => {
         try {
-            const stored = localStorage.getItem(PENDING_FAVORITES_KEY)
+            const stored = localStorage.getItem(getPendingKey())
             return stored ? JSON.parse(stored) : []
         } catch {
             return []
@@ -48,7 +48,7 @@ function HimnarioProvider ({children}) {
             } else {
                 pending.push({ songId, action, himnario, timestamp: Date.now() })
             }
-            localStorage.setItem(PENDING_FAVORITES_KEY, JSON.stringify(pending))
+            localStorage.setItem(getPendingKey(), JSON.stringify(pending))
         } catch (error) {
             console.error('Error guardando pendiente:', error)
         }
@@ -57,7 +57,7 @@ function HimnarioProvider ({children}) {
     const clearPendingFavorite = (songId) => {
         try {
             const pending = getPendingFavorites().filter(p => p.songId !== songId)
-            localStorage.setItem(PENDING_FAVORITES_KEY, JSON.stringify(pending))
+            localStorage.setItem(getPendingKey(), JSON.stringify(pending))
         } catch (error) {
             console.error('Error limpiando pendiente:', error)
         }

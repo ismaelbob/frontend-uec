@@ -1,6 +1,7 @@
 import HimnarioContext from './index'
 import { useState, useEffect, useCallback } from 'react'
 import Config from '../../config'
+import { fetchConAuth } from '../../utils/api'
 
 const getFavoritesKey = () => `favorites_cache_${localStorage.getItem('_id') || 'anonymous'}`
 const getPendingKey = () => `favorites_pending_${localStorage.getItem('_id') || 'anonymous'}`
@@ -76,12 +77,9 @@ function HimnarioProvider ({children}) {
             const url = `${Config.urlapi}api/songs/${item.himnario}/favorites/${item.songId}`
             
             try {
-                await fetch(url, {
+                await fetchConAuth(url, {
                     method,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`
-                    }
+                    headers: { 'Content-Type': 'application/json' }
                 })
                 clearPendingFavorite(item.songId)
             } catch (error) {
@@ -104,22 +102,18 @@ function HimnarioProvider ({children}) {
         setLoading(true)
         setDatos(null)
         try {
-            const accessToken = localStorage.getItem('accessToken')
-            const headers = accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {}
+            const response = await fetchConAuth(`${Config.urlapi}api/songs/${himnario}`)
+            const data = await response.json()
             
-            await fetch(`${Config.urlapi}api/songs/${himnario}`, { headers })
-                .then(response => response.json())
-                .then(data => {
-                    if (data && data.songs) {
-                        const localFavorites = getLocalFavorites()
-                        const updatedSongs = data.songs.map(song => ({
-                            ...song,
-                            isFavorite: localFavorites[song._id] ?? song.isFavorite
-                        }))
-                        data.songs = updatedSongs
-                    }
-                    setDatos(data)
-                })
+            if (data && data.songs) {
+                const localFavorites = getLocalFavorites()
+                const updatedSongs = data.songs.map(song => ({
+                    ...song,
+                    isFavorite: localFavorites[song._id] ?? song.isFavorite
+                }))
+                data.songs = updatedSongs
+            }
+            setDatos(data)
             setLoading(false)
         } catch (error) {
             setLoading(false)

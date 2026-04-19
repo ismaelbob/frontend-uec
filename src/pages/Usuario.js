@@ -13,6 +13,7 @@ import BtnaddModal from '../components/BtnaddModal'
 import BtnToggleInactivos from '../components/BtnToggleInactivos'
 import ProcessingOverlay from '../components/ProcessingOverlay'
 import Config from '../config'
+import { fetchConAuth } from '../utils/api'
 import userIcon from '../img/user.svg'
 import Footer from '../components/Footer'
 
@@ -56,10 +57,7 @@ function Usuario () {
 
     const obtenerUsuarios = useCallback(async () => {
         try {
-            const accessToken = localStorage.getItem('accessToken')
-            const response = await fetch(`${Config.urlapi}api/users`, {
-                headers: { 'Authorization': `Bearer ${accessToken}` }
-            })
+            const response = await fetchConAuth(`${Config.urlapi}api/users`)
             const data = await response.json()
             if (data.ok) {
                 setUsuarios(data.users || data)
@@ -73,10 +71,7 @@ function Usuario () {
 
     const obtenerUsuariosInactivos = useCallback(async () => {
         try {
-            const accessToken = localStorage.getItem('accessToken')
-            const response = await fetch(`${Config.urlapi}api/users/admin/inactivos`, {
-                headers: { 'Authorization': `Bearer ${accessToken}` }
-            })
+            const response = await fetchConAuth(`${Config.urlapi}api/users/admin/inactivos`)
             const data = await response.json()
             if (data.ok) {
                 setUsuariosInactivos(data.users || data)
@@ -216,8 +211,6 @@ function Usuario () {
     const handleGuardarUsuario = useCallback(async (datos) => {
         setProcesando(true)
         try {
-            const accessToken = localStorage.getItem('accessToken')
-            
             const bodyData = {
                 nombre: datos.nombre,
                 usuario: datos.usuario,
@@ -229,12 +222,9 @@ function Usuario () {
                 bodyData.password = datos.password
             }
             
-            const response = await fetch(`${Config.urlapi}api/users/${usuarioEditando._id}`, {
+            const response = await fetchConAuth(`${Config.urlapi}api/users/${usuarioEditando._id}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(bodyData)
             })
             const data = await response.json()
@@ -268,13 +258,9 @@ function Usuario () {
     const handleGuardarNuevoUsuario = useCallback(async (datos) => {
         setProcesando(true)
         try {
-            const accessToken = localStorage.getItem('accessToken')
-            const response = await fetch(`${Config.urlapi}api/users`, {
+            const response = await fetchConAuth(`${Config.urlapi}api/users`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(datos)
             })
             const data = await response.json()
@@ -299,22 +285,14 @@ function Usuario () {
     const handleRestaurarUsuario = useCallback(async (id) => {
         setProcesando(true)
         try {
-            const accessToken = localStorage.getItem('accessToken')
-            const response = await fetch(`${Config.urlapi}api/users/${id}/restore`, {
-                method: 'PATCH',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
+            const response = await fetchConAuth(`${Config.urlapi}api/users/${id}/restore`, {
+                method: 'PATCH'
             })
             const data = await response.json()
             if (data.ok) {
                 const [usuariosRes, inactivosRes] = await Promise.all([
-                    fetch(`${Config.urlapi}api/users`, {
-                        headers: { 'Authorization': `Bearer ${accessToken}` }
-                    }),
-                    fetch(`${Config.urlapi}api/users/admin/inactivos`, {
-                        headers: { 'Authorization': `Bearer ${accessToken}` }
-                    })
+                    fetchConAuth(`${Config.urlapi}api/users`),
+                    fetchConAuth(`${Config.urlapi}api/users/admin/inactivos`)
                 ])
                 
                 const usuariosData = await usuariosRes.json()
@@ -345,24 +323,16 @@ function Usuario () {
     const handleConfirmarEliminar = useCallback(async () => {
         setProcesando(true)
         try {
-            const accessToken = localStorage.getItem('accessToken')
-            const response = await fetch(`${Config.urlapi}api/users/${usuarioEliminando._id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
+            const response = await fetchConAuth(`${Config.urlapi}api/users/${usuarioEliminando._id}`, {
+                method: 'DELETE'
             })
             const data = await response.json()
             if (data.ok) {
                 setUsuarioEliminando(null)
                 
                 const [usuariosRes, inactivosRes] = await Promise.all([
-                    fetch(`${Config.urlapi}api/users`, {
-                        headers: { 'Authorization': `Bearer ${accessToken}` }
-                    }),
-                    fetch(`${Config.urlapi}api/users/admin/inactivos`, {
-                        headers: { 'Authorization': `Bearer ${accessToken}` }
-                    })
+                    fetchConAuth(`${Config.urlapi}api/users`),
+                    fetchConAuth(`${Config.urlapi}api/users/admin/inactivos`)
                 ])
                 
                 const usuariosData = await usuariosRes.json()

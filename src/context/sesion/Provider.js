@@ -7,27 +7,6 @@ function SesionProvider({ children }) {
   const [nombre, setNombre] = useState(null)
   const [nivel, setNivel] = useState(null)
 
-  const precargarHimnarios = async () => {
-    const accessToken = localStorage.getItem('accessToken')
-    if (!accessToken) return
-    
-    const himnarios = ['verde', 'poder', 'jovenes']
-    
-    const promises = himnarios.map(async (himnario) => {
-      try {
-        const response = await fetch(`${Config.urlapi}api/songs/${himnario}`, {
-          headers: { 'Authorization': `Bearer ${accessToken}` }
-        })
-        return response.ok
-      } catch (error) {
-        console.error(`Error precargando ${himnario}:`, error)
-        return false
-      }
-    })
-    
-    await Promise.all(promises)
-  }
-
   const iniciarSesion = async (datos) => {
     try {
       const response = await fetch(`${Config.urlapi}api/auth/login`, {

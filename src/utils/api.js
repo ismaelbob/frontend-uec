@@ -15,7 +15,7 @@ function cerrarSesionApp() {
     localStorage.removeItem('nivel')
     localStorage.removeItem('_id')
   }
-  window.location.href = '/usuario'
+  window.location.href = '/login'
 }
 
 export async function fetchConAuth(url, options = {}) {

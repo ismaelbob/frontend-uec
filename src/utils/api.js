@@ -50,10 +50,18 @@ export async function fetchConAuth(url, options = {}) {
     // Si ya hay un refresh en progreso, esperar a que termine
     if (isRefreshing && refreshPromise) {
       await refreshPromise
-      // Reintentar con el nuevo token
+      
+      // Verificar si el refresh fue exitoso
       const newAccessToken = localStorage.getItem('accessToken')
-      headers['Authorization'] = `Bearer ${newAccessToken}`
-      response = await fetch(url, { ...fetchOptions, headers })
+      
+      if (newAccessToken) {
+        // Refresh exitoso, reintentar con el nuevo token
+        headers['Authorization'] = `Bearer ${newAccessToken}`
+        response = await fetch(url, { ...fetchOptions, headers })
+      } else {
+        // Refresh falló, cerrar sesión
+        cerrarSesionApp(onUnauthorized)
+      }
       return response
     }
     

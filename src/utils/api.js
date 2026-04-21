@@ -1,5 +1,23 @@
 import Config from '../config'
 
+function cerrarSesionApp() {
+  // Usar window.cerrarSesionApp definida en el Provider
+  if (typeof window.cerrarSesionAppApp === 'function') {
+    window.cerrarSesionAppApp()
+  } else if (typeof window.cerrarSesionApp === 'function') {
+    window.cerrarSesionApp()
+  } else {
+    // Fallback: limpiar manualmente
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
+    localStorage.removeItem('user')
+    localStorage.removeItem('nombre')
+    localStorage.removeItem('nivel')
+    localStorage.removeItem('_id')
+  }
+  window.location.href = '/usuario'
+}
+
 export async function fetchConAuth(url, options = {}) {
   const accessToken = localStorage.getItem('accessToken')
   
@@ -31,13 +49,13 @@ export async function fetchConAuth(url, options = {}) {
           headers['Authorization'] = `Bearer ${newAccessToken}`
           response = await fetch(url, { ...options, headers })
         } else {
-          throw new Error('Token refresh failed')
+          cerrarSesionApp()
         }
       } else {
-        throw new Error('Token refresh failed')
+        cerrarSesionApp()
       }
     } else {
-      throw new Error('No refresh token')
+      cerrarSesionApp()
     }
   }
   

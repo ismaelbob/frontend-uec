@@ -296,14 +296,17 @@ function SesionProvider({ children }) {
         return 'No se pudo conectar'
       }
       
-    } catch (error) {
+} catch (error) {
       console.error('Error en existeSesion:', error)
       cerrarSesion()
       return 'No se pudo conectar'
     }
   }
 
-return (
+  // Exponer cerrarSesion globalmente para api.js
+  window.cerrarSesionAppApp = cerrarSesion
+
+  return (
       <SesionContext.Provider
         value={{ usuario, iniciarSesion, cerrarSesion, existeSesion, nombre, nivel, cambiarPassword }}
       >

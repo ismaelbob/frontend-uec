@@ -47,25 +47,23 @@ export async function fetchConAuth(url, options = {}) {
   if (response.status === 401) {
     const refreshTokenLS = localStorage.getItem('refreshToken')
     
-    // Si ya hay un refresh en progreso, esperar a que termine
+    // CASO 1: Ya hay un refresh en progreso - esperar
     if (isRefreshing && refreshPromise) {
       await refreshPromise
       
-      // Verificar si el refresh fue exitoso
+      // Después de esperar, reintentar con el nuevo token
       const newAccessToken = localStorage.getItem('accessToken')
       
       if (newAccessToken) {
-        // Refresh exitoso, reintentar con el nuevo token
         headers['Authorization'] = `Bearer ${newAccessToken}`
         response = await fetch(url, { ...fetchOptions, headers })
       } else {
-        // Refresh falló, cerrar sesión
         cerrarSesionApp(onUnauthorized)
       }
       return response
     }
     
-    // Iniciar refresh si no hay uno en progreso
+    // CASO 2: No hay refresh en progreso - iniciar uno nuevo
     if (refreshTokenLS) {
       isRefreshing = true
       refreshPromise = performRefresh(refreshTokenLS)
@@ -75,29 +73,37 @@ export async function fetchConAuth(url, options = {}) {
         
         if (refreshResponse.ok) {
           const data = await refreshResponse.json()
+          
           if (data.ok && data.accessToken) {
             localStorage.setItem('accessToken', data.accessToken)
             if (data.refreshToken) {
               localStorage.setItem('refreshToken', data.refreshToken)
             }
-            
-            // Reintentar con el nuevo token
-            const newAccessToken = localStorage.getItem('accessToken')
-            headers['Authorization'] = `Bearer ${newAccessToken}`
-            response = await fetch(url, { ...fetchOptions, headers })
           } else {
             cerrarSesionApp(onUnauthorized)
+            return response
           }
         } else {
           cerrarSesionApp(onUnauthorized)
+          return response
         }
+      } catch (error) {
+        console.error('Error en refresh:', error)
+        cerrarSesionApp(onUnauthorized)
+        return response
       } finally {
         isRefreshing = false
         refreshPromise = null
       }
     } else {
       cerrarSesionApp(onUnauthorized)
+      return response
     }
+    
+    // Reintentar la petición original DESPUÉS del refresh
+    const newAccessToken = localStorage.getItem('accessToken')
+    headers['Authorization'] = `Bearer ${newAccessToken}`
+    response = await fetch(url, { ...fetchOptions, headers })
   }
   
   return response

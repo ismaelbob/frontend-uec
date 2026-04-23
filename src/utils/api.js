@@ -51,6 +51,9 @@ export async function fetchConAuth(url, options = {}) {
     if (isRefreshing && refreshPromise) {
       await refreshPromise
       
+      // Delay pequeño para asegurar que el token esté disponible
+      await new Promise(resolve => setTimeout(resolve, 50))
+      
       // Después de esperar, reintentar con el nuevo token
       const newAccessToken = localStorage.getItem('accessToken')
       
@@ -101,6 +104,9 @@ export async function fetchConAuth(url, options = {}) {
     }
     
     // Reintentar la petición original DESPUÉS del refresh
+    // Delay pequeño para asegurar que el token esté disponible en localStorage
+    await new Promise(resolve => setTimeout(resolve, 50))
+    
     const newAccessToken = localStorage.getItem('accessToken')
     headers['Authorization'] = `Bearer ${newAccessToken}`
     response = await fetch(url, { ...fetchOptions, headers })

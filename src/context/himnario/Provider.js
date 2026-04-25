@@ -153,11 +153,10 @@ function HimnarioProvider ({children}) {
         const url = `${Config.urlapi}api/songs/${himnario}/favorites/${songId}`
         
         try {
-            const response = await fetch(url, {
+            const response = await fetchConAuth(url, {
                 method,
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`
+                    'Content-Type': 'application/json'
                 }
             })
             
@@ -167,6 +166,11 @@ function HimnarioProvider ({children}) {
                 clearPendingFavorite(songId)
                 getDatos(himnario)
                 return { ok: true }
+            }
+            
+            if (!response.ok && response.status === 401) {
+                savePendingFavorite(songId, action, himnario)
+                return { ok: true, offline: true, message: 'Token expirado, se sincronizará al hacer login' }
             }
             
             if (!navigator.onLine) {

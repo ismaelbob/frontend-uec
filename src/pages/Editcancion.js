@@ -4,6 +4,7 @@ import Btnback from '../components/Btnback'
 import Formcancion from '../components/Formcancion'
 import Loader from '../components/Loader'
 import Config from '../config'
+import { fetchConAuth } from '../utils/api'
 
 import SesionContext from '../context/sesion'
 import HimnarioContext from '../context/himnario'
@@ -63,7 +64,7 @@ function Editcancion() {
     
         const timeoutId = setTimeout(async () => {
             try {
-                const response = await fetch(
+                const response = await fetchConAuth(
                   `${Config.urlapi}api/songs/${himnario}/${datosCancion.idcancion}/exists`
                 )
                 const res = await response.json()
@@ -122,11 +123,10 @@ function Editcancion() {
         setRespuesta('')
 
         try {
-            const response = await fetch(`${Config.urlapi}api/songs/${datosCancion._id}`, {
+            const response = await fetchConAuth(`${Config.urlapi}api/songs/${datosCancion._id}`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(datosCancion)
             })

@@ -161,6 +161,9 @@ function HimnarioProvider ({children}) {
         const method = isFavorite ? 'DELETE' : 'POST'
         const url = `${Config.urlapi}api/songs/${himnario}/favorites/${songId}`
         
+        // Guardar como pendiente ANTES de hacer el fetch (mientras _id existe en localStorage)
+        savePendingFavorite(songId, action, himnario)
+        
         try {
             const response = await fetchConAuth(url, {
                 method,
@@ -177,13 +180,13 @@ function HimnarioProvider ({children}) {
                 return { ok: true }
             }
             
-            if (!response.ok && response.status === 401) {
-                savePendingFavorite(songId, action, himnario)
+            // Si la respuesta es 401 pero el favorito ya está guardado como pendiente, retornar éxito
+            if (response.status === 401) {
                 return { ok: true, offline: true, message: 'Token expirado, se sincronizará al hacer login' }
             }
             
             if (!navigator.onLine) {
-                savePendingFavorite(songId, action, himnario)
+                // Ya estaba guardado arriba, retornar éxito
                 return { ok: true, offline: true, message: 'Guardado localmente, se sincronizará cuando haya conexión' }
             }
             
@@ -191,8 +194,8 @@ function HimnarioProvider ({children}) {
         } catch (error) {
             console.error('Error toggling favorite:', error)
             
+            // El favorito ya está guardado como pendiente gracias al savePendingFavorite arriba
             if (!navigator.onLine) {
-                savePendingFavorite(songId, action, himnario)
                 return { ok: true, offline: true, message: 'Guardado localmente, se sincronizará cuando haya conexión' }
             }
             

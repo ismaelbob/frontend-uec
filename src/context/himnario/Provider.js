@@ -93,9 +93,18 @@ function HimnarioProvider ({children}) {
             console.log('Conexión restaurada, procesando favoritos pendientes...')
             processPendingFavorites()
         }
-
+        
+        const handleLoginExitoso = () => {
+            console.log('Login exitoso, procesando favoritos pendientes...')
+            processPendingFavorites()
+        }
+        
         window.addEventListener('online', handleOnline)
-        return () => window.removeEventListener('online', handleOnline)
+        window.addEventListener('loginExitoso', handleLoginExitoso)
+        return () => {
+            window.removeEventListener('online', handleOnline)
+            window.removeEventListener('loginExitoso', handleLoginExitoso)
+        }
     }, [processPendingFavorites])
 
     const getDatos = async (himnario) => {

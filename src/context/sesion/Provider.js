@@ -42,9 +42,15 @@ function SesionProvider({ children }) {
         localStorage.setItem('nivel', String(data.nivel))
         
         const userId = data._id
-localStorage.setItem('_id', userId)
+        localStorage.setItem('_id', userId)
         
-        // Limpiar favoritos del usuario anterior
+        // Dispatch evento para procesar favoritos pendientes DEL USUARIO ANTES de limpiar
+        // Esto permite que se guarden en DB antes de borrar
+        window.dispatchEvent(new CustomEvent('loginExitoso', { 
+          detail: { userId: userId } 
+        }))
+        
+        // Limpiar favoritos del usuario anterior (después de procesar)
         localStorage.removeItem(`favorites_cache_${userId}`)
         localStorage.removeItem(`favorites_pending_${userId}`)
         
@@ -55,11 +61,6 @@ localStorage.setItem('_id', userId)
             accessToken: data.accessToken
           })
         }
-        
-        // Dispatch evento para procesar favoritos pendientes del usuario
-        window.dispatchEvent(new CustomEvent('loginExitoso', { 
-          detail: { userId: userId } 
-        }))
         
         // Para compatibilidad con tu `Usuario.js` actual
         return 'correcto'

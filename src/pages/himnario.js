@@ -14,6 +14,7 @@ import MenuActivoContext from '../context/menuactivo'
 function Himnario (props) {
     const { himnario } = useParams()
     const [buscar, setBuscar] = useState('')
+    const [soloFavoritos, setSoloFavoritos] = useState(false)
     const {datos, getDatos, loading, toggleFavorite} = useContext(HimnarioContext)
     const {nombre, nivel, existeSesion, usuario} = useContext(SesionContext)
     const {setPage} = useContext(MenuActivoContext)
@@ -23,6 +24,7 @@ function Himnario (props) {
         localStorage.setItem('pagina', '2')
         setPage('2')
         getDatos(himnario)
+        setSoloFavoritos(false)
 
         const accessToken = localStorage.getItem('accessToken')
         const refreshToken = localStorage.getItem('refreshToken')
@@ -41,11 +43,18 @@ function Himnario (props) {
         if (!canciones.length) return []
         
         return canciones.filter(cancion => {
-            return `${cancion.idcancion} ${cancion.titulo} ${cancion.letra}`
+            const coincideBusqueda = `${cancion.idcancion} ${cancion.titulo} ${cancion.letra}`
                 .toLowerCase()
                 .includes(buscar.toLowerCase())
+            const coincideFavorito = soloFavoritos ? cancion.isFavorite === true : true
+            return coincideBusqueda && coincideFavorito
         })
-    }, [datos, buscar])
+    }, [datos, buscar, soloFavoritos])
+
+    const favoritosCount = useMemo(() => {
+        const canciones = datos?.songs || []
+        return canciones.filter(c => c.isFavorite === true).length
+    }, [datos])
 
     const handleChange = ({target: {value}}) => {
         setBuscar(value)
@@ -53,6 +62,10 @@ function Himnario (props) {
 
     const handleClick = (event) => {
         setBuscar('')
+    }
+
+    const handleToggleFavoritos = () => {
+        setSoloFavoritos(prev => !prev)
     }
 
     const handleToggleFavorite = async (himnario, songId, isFavorite) => {
@@ -93,7 +106,7 @@ function Himnario (props) {
                             nombre && (nivel === 1 || nivel === 2) && <div className="barra_menu-buttom-add"><Btnadd url={`/cancionero/${props.match.params.himnario}/nuevacancion`}/></div>
                         }
                     </div>
-                    <div className="barra_menu-search"><Searchbox buscar={handleChange} val={buscar} onClick={handleClick}/></div>
+                    <div className="barra_menu-search"><Searchbox buscar={handleChange} val={buscar} onClick={handleClick} soloFavoritos={soloFavoritos} onToggleFavoritos={handleToggleFavoritos} favoritosCount={favoritosCount}/></div>
                     <div className="barra_menu-relleno"></div>
                 </div>
                 
@@ -113,7 +126,7 @@ function Himnario (props) {
                         nombre && (nivel === 1 || nivel === 2) && <div className="barra_menu-buttom-add"><Btnadd url={`/cancionero/${props.match.params.himnario}/nuevacancion`}/></div>
                     }
                 </div>
-                <div className="barra_menu-search"><Searchbox buscar={handleChange} val={buscar} onClick={handleClick}/></div>
+                <div className="barra_menu-search"><Searchbox buscar={handleChange} val={buscar} onClick={handleClick} soloFavoritos={soloFavoritos} onToggleFavoritos={handleToggleFavoritos} favoritosCount={favoritosCount}/></div>
                 <div className="barra_menu-relleno"></div>
             </div>
 

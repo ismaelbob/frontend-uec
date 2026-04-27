@@ -31,6 +31,36 @@
 .box_searchbox button:hover {
     color: #2A71B2;
 }
+.box_searchbox .btn_favoritos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    padding: 0px 8px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+.box_searchbox .btn_favoritos img {
+    width: 25px;
+    height: 25px;
+    opacity: 0.5;
+}
+.box_searchbox .btn_favoritos.active img {
+    opacity: 1;
+}
+.box_searchbox .btn_favoritos:hover img {
+    opacity: 1;
+}
+.box_searchbox .favoritos_count {
+    font-size: 15px;
+    font-weight: bold;
+    margin-left: 2px;
+    color: #555;
+}
+.box_searchbox .btn_favoritos.active .favoritos_count {
+    color: #d32f2f;
+}
 
 @media only screen and (min-width: 768px) {
     .box_searchbox {

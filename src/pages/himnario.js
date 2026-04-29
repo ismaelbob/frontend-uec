@@ -24,7 +24,6 @@ function Himnario (props) {
         localStorage.setItem('pagina', '2')
         setPage('2')
         getDatos(himnario)
-        setSoloFavoritos(false)
 
         const accessToken = localStorage.getItem('accessToken')
         const refreshToken = localStorage.getItem('refreshToken')
@@ -35,6 +34,11 @@ function Himnario (props) {
             verificar()
         }
         // eslint-disable-next-line
+    }, [himnario])
+
+    useEffect(() => {
+        const savedFilter = localStorage.getItem(`favoritos_filter_${himnario}`)
+        setSoloFavoritos(savedFilter === 'true')
     }, [himnario])
 
     const datosFiltrados = useMemo(() => {
@@ -65,7 +69,11 @@ function Himnario (props) {
     }
 
     const handleToggleFavoritos = () => {
-        setSoloFavoritos(prev => !prev)
+        setSoloFavoritos(prev => {
+            const newValue = !prev
+            localStorage.setItem(`favoritos_filter_${himnario}`, newValue.toString())
+            return newValue
+        })
     }
 
     const handleToggleFavorite = async (himnario, songId, isFavorite) => {

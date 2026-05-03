@@ -1,5 +1,5 @@
 import HimnarioContext from './index'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import Config from '../../config'
 import { fetchConAuth } from '../../utils/api'
 
@@ -64,6 +64,35 @@ function HimnarioProvider ({children}) {
         }
     }
 
+    const getDatos = async (himnario) => {
+        setLoading(true)
+        setDatos(null)
+        try {
+            const response = await fetchConAuth(`${Config.urlapi}api/songs/${himnario}`)
+            const data = await response.json()
+            
+            if (data && data.songs) {
+                const localFavorites = getLocalFavorites()
+                const updatedSongs = data.songs.map(song => ({
+                    ...song,
+                    isFavorite: localFavorites[song._id] ?? song.isFavorite
+                }))
+                data.songs = updatedSongs
+            }
+            setDatos(data)
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            console.log(`Ocurrio un error: ${error}`)
+        }
+    }
+
+    const getDatosRef = useRef(getDatos)
+
+    useEffect(() => {
+        getDatosRef.current = getDatos
+    }, [getDatos])
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const processPendingFavorites = useCallback(async () => {
         const accessToken = localStorage.getItem('accessToken')
@@ -71,6 +100,8 @@ function HimnarioProvider ({children}) {
 
         const pending = getPendingFavorites()
         if (pending.length === 0) return
+
+        console.log('Procesando favoritos pendientes:', pending.length)
 
         const processedHimnarios = new Set()
 
@@ -100,7 +131,7 @@ function HimnarioProvider ({children}) {
                     himnario: himnario
                 })
             }
-            getDatos(himnario)
+            getDatosRef.current(himnario)
         }
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -123,28 +154,6 @@ function HimnarioProvider ({children}) {
         }
     }, [processPendingFavorites])
 
-    const getDatos = async (himnario) => {
-        setLoading(true)
-        setDatos(null)
-        try {
-            const response = await fetchConAuth(`${Config.urlapi}api/songs/${himnario}`)
-            const data = await response.json()
-            
-            if (data && data.songs) {
-                const localFavorites = getLocalFavorites()
-                const updatedSongs = data.songs.map(song => ({
-                    ...song,
-                    isFavorite: localFavorites[song._id] ?? song.isFavorite
-                }))
-                data.songs = updatedSongs
-            }
-            setDatos(data)
-            setLoading(false)
-        } catch (error) {
-            setLoading(false)
-            console.log(`Ocurrio un error: ${error}`)
-        }
-    }
     
     const toggleFavorite = async (himnario, songId, isFavorite) => {
         const accessToken = localStorage.getItem('accessToken')

@@ -1,5 +1,5 @@
 import HimnarioContext from './index'
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Config from '../../config'
 import { fetchConAuth } from '../../utils/api'
 
@@ -64,7 +64,7 @@ function HimnarioProvider ({children}) {
         }
     }
 
-    const getDatos = async (himnario) => {
+    const getDatos = useCallback(async (himnario) => {
         setLoading(true)
         setDatos(null)
         try {
@@ -85,13 +85,7 @@ function HimnarioProvider ({children}) {
             setLoading(false)
             console.log(`Ocurrio un error: ${error}`)
         }
-    }
-
-    const getDatosRef = useRef(getDatos)
-
-    useEffect(() => {
-        getDatosRef.current = getDatos
-    }, [getDatos])
+    }, [])
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const processPendingFavorites = useCallback(async () => {
@@ -131,7 +125,7 @@ function HimnarioProvider ({children}) {
                     himnario: himnario
                 })
             }
-            getDatosRef.current(himnario)
+            getDatos(himnario)
         }
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 

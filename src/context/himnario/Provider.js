@@ -72,19 +72,35 @@ function HimnarioProvider ({children}) {
         const pending = getPendingFavorites()
         if (pending.length === 0) return
 
+        const processedHimnarios = new Set()
+
         for (const item of pending) {
             const method = item.action === 'add' ? 'POST' : 'DELETE'
             const url = `${Config.urlapi}api/songs/${item.himnario}/favorites/${item.songId}`
             
             try {
-                await fetchConAuth(url, {
+                const response = await fetchConAuth(url, {
                     method,
                     headers: { 'Content-Type': 'application/json' }
                 })
-                clearPendingFavorite(item.songId)
+                
+                if (response.ok) {
+                    clearPendingFavorite(item.songId)
+                    processedHimnarios.add(item.himnario)
+                }
             } catch (error) {
                 console.error('Error procesando favorito pendiente:', error)
             }
+        }
+
+        for (const himnario of processedHimnarios) {
+            if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+                navigator.serviceWorker.controller.postMessage({
+                    type: 'CLEAR_HIMNARIO_CACHE',
+                    himnario: himnario
+                })
+            }
+            getDatos(himnario)
         }
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -151,13 +167,6 @@ function HimnarioProvider ({children}) {
 
         saveLocalFavorite(songId, newValue)
 
-        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-            navigator.serviceWorker.controller.postMessage({
-                type: 'CLEAR_HIMNARIO_CACHE',
-                himnario: himnario
-            })
-        }
-
         const method = isFavorite ? 'DELETE' : 'POST'
         const url = `${Config.urlapi}api/songs/${himnario}/favorites/${songId}`
         
@@ -176,6 +185,14 @@ function HimnarioProvider ({children}) {
             
             if (response.ok && data.ok === true) {
                 clearPendingFavorite(songId)
+                
+                if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.controller.postMessage({
+                        type: 'CLEAR_HIMNARIO_CACHE',
+                        himnario: himnario
+                    })
+                }
+                
                 getDatos(himnario)
                 return { ok: true }
             }

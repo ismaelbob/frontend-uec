@@ -199,9 +199,8 @@ self.addEventListener('message', (event) => {
       const himnarios = ['verde', 'poder', 'jovenes']
       const promises = himnarios.map(async (himnario) => {
         try {
-          const response = await fetch(`${API_BASE_URL}/api/songs/${himnario}`, {
-            headers: { 'Authorization': `Bearer ${accessToken}` }
-          })
+          const headers = accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {}
+          const response = await fetch(`${API_BASE_URL}/api/songs/${himnario}`, { headers })
           if (response.ok) {
             await cache.put(`${API_BASE_URL}/api/songs/${himnario}`, response.clone())
           }

@@ -97,18 +97,20 @@ function SesionProvider({ children }) {
         localStorage.removeItem(`favorites_pending_${userId}`)
     }
 
+    // Limpiar filtros de favoritos del toggle
+    localStorage.removeItem('favoritos_filter_verde')
+    localStorage.removeItem('favoritos_filter_poder')
+    localStorage.removeItem('favoritos_filter_jovenes')
+
     // Limpiar caché del Service Worker para usuarios
     if (navigator.serviceWorker && navigator.serviceWorker.controller) {
       navigator.serviceWorker.controller.postMessage({
         type: 'CLEAR_USER_CACHE'
       })
-      // Limpiar cache y precargar himnarios para offline sin sesión
-      if (accessToken) {
-        navigator.serviceWorker.controller.postMessage({
-          type: 'CLEAR_AND_PRECARGAR',
-          accessToken: accessToken
-        })
-      }
+      // Limpiar cache y precargar himnarios para offline sin sesión (sin token → isFavorite: false)
+      navigator.serviceWorker.controller.postMessage({
+        type: 'CLEAR_AND_PRECARGAR'
+      })
     }
 
     // Limpiar estados (causará re-render pero tokens ya están limpios)

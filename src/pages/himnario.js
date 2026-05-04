@@ -37,9 +37,13 @@ function Himnario (props) {
     }, [himnario])
 
     useEffect(() => {
+        if (!usuario) {
+            setSoloFavoritos(false)
+            return
+        }
         const savedFilter = localStorage.getItem(`favoritos_filter_${himnario}`)
         setSoloFavoritos(savedFilter === 'true')
-    }, [himnario])
+    }, [himnario, usuario])
 
     const datosFiltrados = useMemo(() => {
         const canciones = datos?.songs || (Array.isArray(datos) ? datos : [])

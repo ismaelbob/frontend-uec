@@ -1,6 +1,7 @@
 import SesionContext from './index'
 import { useState } from 'react'
 import Config from '../../config'
+import { runPostLoginSync } from '../../utils/himnarioSyncBridge'
 
 function SesionProvider({ children }) {
   const [usuario, setUsuario] = useState(null)
@@ -30,6 +31,8 @@ function SesionProvider({ children }) {
       }
 
       if (data.ok === true) {
+        const previousUserId = localStorage.getItem('_id')
+
         setUsuario(data.usuario)
         setNombre(data.nombre)
         setNivel(data.nivel)
@@ -49,10 +52,14 @@ function SesionProvider({ children }) {
         window.dispatchEvent(new CustomEvent('loginExitoso', { 
           detail: { userId: userId } 
         }))
-        
-        // Limpiar favoritos del usuario anterior (después de procesar)
-        localStorage.removeItem(`favorites_cache_${userId}`)
-        localStorage.removeItem(`favorites_pending_${userId}`)
+
+        await runPostLoginSync()
+
+        // Limpiar favoritos del usuario anterior si cambió la cuenta
+        if (previousUserId && previousUserId !== userId) {
+          localStorage.removeItem(`favorites_cache_${previousUserId}`)
+          localStorage.removeItem(`favorites_pending_${previousUserId}`)
+        }
         
         // Limpiar cache y precargar himnarios en un solo mensaje
         if (navigator.serviceWorker && navigator.serviceWorker.controller) {
@@ -209,6 +216,10 @@ function SesionProvider({ children }) {
           setNivel(data.nivel)
           localStorage.setItem('nivel', String(data.nivel))
         }
+
+        window.dispatchEvent(new CustomEvent('tokenActualizado', {
+          detail: { source: 'refresh' }
+        }))
         
         return true
       }
@@ -256,6 +267,9 @@ function SesionProvider({ children }) {
             localStorage.setItem('nombre', userData.user.nombre)
             localStorage.setItem('nivel', String(userData.user.nivel))
             localStorage.setItem('_id', userData.user._id)
+            window.dispatchEvent(new CustomEvent('tokenActualizado', {
+              detail: { source: 'verify' }
+            }))
             return 'correcto'
           }
         }

@@ -1,7 +1,8 @@
 import HimnarioContext from './index'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import Config from '../../config'
 import { fetchConAuth } from '../../utils/api'
+import { setPostLoginSyncHandler } from '../../utils/himnarioSyncBridge'
 
 const getFavoritesKey = () => `favorites_cache_${localStorage.getItem('_id') || 'anonymous'}`
 const getPendingKey = () => `favorites_pending_${localStorage.getItem('_id') || 'anonymous'}`
@@ -10,6 +11,7 @@ function HimnarioProvider ({children}) {
 
     const [datos, setDatos] = useState(null)
     const [loading, setLoading] = useState(false)
+    const syncQueueRef = useRef(Promise.resolve())
 
     const getLocalFavorites = () => {
         try {
@@ -64,6 +66,32 @@ function HimnarioProvider ({children}) {
         }
     }
 
+    const enqueueSync = useCallback((task) => {
+        syncQueueRef.current = syncQueueRef.current
+            .then(() => task())
+            .catch((error) => {
+                console.error('Error en cola de sincronización de favoritos:', error)
+            })
+        return syncQueueRef.current
+    }, [])
+
+    const updateHimnarioCache = useCallback((himnario) => {
+        if (!(navigator.serviceWorker && navigator.serviceWorker.controller)) return
+        navigator.serviceWorker.controller.postMessage({
+            type: 'UPDATE_HIMNARIO_CACHE',
+            himnario,
+            accessToken: localStorage.getItem('accessToken') || undefined
+        })
+    }, [])
+
+    const refreshAllHimnariosCache = useCallback(() => {
+        if (!(navigator.serviceWorker && navigator.serviceWorker.controller)) return
+        navigator.serviceWorker.controller.postMessage({
+            type: 'REFRESH_ALL_HIMNARIOS',
+            accessToken: localStorage.getItem('accessToken') || undefined
+        })
+    }, [])
+
     const getDatos = useCallback(async (himnario) => {
         setLoading(true)
         setDatos(null)
@@ -87,7 +115,6 @@ function HimnarioProvider ({children}) {
         }
     }, [])
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const processPendingFavorites = useCallback(async () => {
         const accessToken = localStorage.getItem('accessToken')
         if (!accessToken) return
@@ -119,34 +146,57 @@ function HimnarioProvider ({children}) {
         }
 
         for (const himnario of processedHimnarios) {
-            if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-                navigator.serviceWorker.controller.postMessage({
-                    type: 'CLEAR_HIMNARIO_CACHE',
-                    himnario: himnario
-                })
-            }
+            updateHimnarioCache(himnario)
             getDatos(himnario)
         }
-    }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [getDatos, updateHimnarioCache])
 
     useEffect(() => {
         const handleOnline = () => {
             console.log('Conexión restaurada, procesando favoritos pendientes...')
-            processPendingFavorites()
+            enqueueSync(async () => {
+                await processPendingFavorites()
+                refreshAllHimnariosCache()
+            })
         }
         
         const handleLoginExitoso = () => {
             console.log('Login exitoso, procesando favoritos pendientes...')
-            processPendingFavorites()
+            enqueueSync(async () => {
+                await processPendingFavorites()
+                refreshAllHimnariosCache()
+            })
+        }
+
+        const handleTokenActualizado = () => {
+            console.log('Token actualizado, procesando favoritos pendientes...')
+            enqueueSync(async () => {
+                await processPendingFavorites()
+                refreshAllHimnariosCache()
+            })
         }
         
         window.addEventListener('online', handleOnline)
         window.addEventListener('loginExitoso', handleLoginExitoso)
+        window.addEventListener('tokenActualizado', handleTokenActualizado)
         return () => {
             window.removeEventListener('online', handleOnline)
             window.removeEventListener('loginExitoso', handleLoginExitoso)
+            window.removeEventListener('tokenActualizado', handleTokenActualizado)
         }
-    }, [processPendingFavorites])
+    }, [enqueueSync, processPendingFavorites, refreshAllHimnariosCache])
+
+    useEffect(() => {
+        setPostLoginSyncHandler(() =>
+            enqueueSync(async () => {
+                await processPendingFavorites()
+                refreshAllHimnariosCache()
+            })
+        )
+        return () => {
+            setPostLoginSyncHandler(null)
+        }
+    }, [enqueueSync, processPendingFavorites, refreshAllHimnariosCache])
 
     
     const toggleFavorite = async (himnario, songId, isFavorite) => {
@@ -188,14 +238,7 @@ function HimnarioProvider ({children}) {
             
             if (response.ok && data.ok === true) {
                 clearPendingFavorite(songId)
-                
-                if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-                    navigator.serviceWorker.controller.postMessage({
-                        type: 'CLEAR_HIMNARIO_CACHE',
-                        himnario: himnario
-                    })
-                }
-                
+                updateHimnarioCache(himnario)
                 getDatos(himnario)
                 return { ok: true }
             }

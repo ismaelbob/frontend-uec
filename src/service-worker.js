@@ -129,6 +129,21 @@ registerRoute(
 // Handler de mensajes del service worker
 // Permite comunicación bidireccional con la aplicación
 self.addEventListener('message', (event) => {
+  const updateHimnarioCache = async (himnario, accessToken) => {
+    const cache = await caches.open('api-songs-v1');
+    try {
+      const headers = accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {};
+      const response = await fetch(`${API_BASE_URL}/api/songs/${himnario}`, { headers });
+      if (response.ok) {
+        await cache.put(`${API_BASE_URL}/api/songs/${himnario}`, response.clone());
+        return true;
+      }
+    } catch (error) {
+      console.error(`Error actualizando cache de ${himnario}:`, error);
+    }
+    return false;
+  };
+
   // Manejo de SKIP_WAITING para actualizaciones del service worker
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
@@ -188,53 +203,34 @@ self.addEventListener('message', (event) => {
   // Manejo de limpiar y precargar himnarios en secuencia
   if (event.data && event.data.type === 'CLEAR_AND_PRECARGAR') {
     event.waitUntil((async () => {
-      const accessToken = event.data.accessToken
-      
-      // 1. Abrir caché y limpiar primero
-      const cache = await caches.open('api-songs-v1')
-      const keys = await cache.keys()
-      await Promise.all(keys.map(req => cache.delete(req)))
-      
-      // 2. Precargar y guardar manualmente (como en install)
-      const himnarios = ['verde', 'poder', 'jovenes']
-      const promises = himnarios.map(async (himnario) => {
-        try {
-          const headers = accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {}
-          const response = await fetch(`${API_BASE_URL}/api/songs/${himnario}`, { headers })
-          if (response.ok) {
-            await cache.put(`${API_BASE_URL}/api/songs/${himnario}`, response.clone())
-          }
-        } catch (error) {
-          console.error(`Error precargando ${himnario}:`, error)
-        }
-      })
-      
-      await Promise.all(promises)
-    })())
+      const accessToken = event.data.accessToken;
+      const himnarios = ['verde', 'poder', 'jovenes'];
+      await Promise.all(himnarios.map((himnario) => updateHimnarioCache(himnario, accessToken)));
+    })());
   }
 
   // handler legacy - mantener por compatibilidad
   if (event.data && event.data.type === 'PRECARGAR_HIMNARIOS') {
     event.waitUntil((async () => {
-      const accessToken = event.data.accessToken
-      const cache = await caches.open('api-songs-v1')
-      const himnarios = ['verde', 'poder', 'jovenes']
-      
-      const promises = himnarios.map(async (himnario) => {
-        try {
-          const response = await fetch(`${API_BASE_URL}/api/songs/${himnario}`, {
-            headers: { 'Authorization': `Bearer ${accessToken}` }
-          })
-          if (response.ok) {
-            await cache.put(`${API_BASE_URL}/api/songs/${himnario}`, response.clone())
-          }
-        } catch (error) {
-          console.error(`Error precargando ${himnario}:`, error)
-        }
-      })
-      
-      await Promise.all(promises)
-    })())
+      const accessToken = event.data.accessToken;
+      const himnarios = ['verde', 'poder', 'jovenes'];
+      await Promise.all(himnarios.map((himnario) => updateHimnarioCache(himnario, accessToken)));
+    })());
+  }
+
+  // Actualiza cache de un himnario sin borrar previamente
+  if (event.data && event.data.type === 'UPDATE_HIMNARIO_CACHE') {
+    const { himnario, accessToken } = event.data;
+    event.waitUntil(updateHimnarioCache(himnario, accessToken));
+  }
+
+  // Refresca los 3 himnarios en segundo plano
+  if (event.data && event.data.type === 'REFRESH_ALL_HIMNARIOS') {
+    event.waitUntil((async () => {
+      const accessToken = event.data.accessToken;
+      const himnarios = ['verde', 'poder', 'jovenes'];
+      await Promise.all(himnarios.map((himnario) => updateHimnarioCache(himnario, accessToken)));
+    })());
   }
 
   // Manejo de invalidación manual del caché de un himnario específico

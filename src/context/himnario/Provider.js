@@ -32,14 +32,14 @@ function HimnarioProvider ({children}) {
         }
     }
 
-    const getPendingFavorites = () => {
+    const getPendingFavorites = useCallback(() => {
         try {
             const stored = localStorage.getItem(getPendingKey())
             return stored ? JSON.parse(stored) : []
         } catch {
             return []
         }
-    }
+    }, [])
 
     const savePendingFavorite = (songId, action, himnario) => {
         try {
@@ -57,14 +57,14 @@ function HimnarioProvider ({children}) {
         }
     }
 
-    const clearPendingFavorite = (songId) => {
+    const clearPendingFavorite = useCallback((songId) => {
         try {
             const pending = getPendingFavorites().filter(p => p.songId !== songId)
             localStorage.setItem(getPendingKey(), JSON.stringify(pending))
         } catch (error) {
             console.error('Error limpiando pendiente:', error)
         }
-    }
+    }, [getPendingFavorites])
 
     const enqueueSync = useCallback((task) => {
         syncQueueRef.current = syncQueueRef.current
@@ -149,7 +149,7 @@ function HimnarioProvider ({children}) {
             updateHimnarioCache(himnario)
             getDatos(himnario)
         }
-    }, [getDatos, updateHimnarioCache])
+    }, [clearPendingFavorite, getDatos, updateHimnarioCache, getPendingFavorites])
 
     useEffect(() => {
         const handleOnline = () => {

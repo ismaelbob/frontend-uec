@@ -13,7 +13,7 @@ class Searchbox extends React.Component {
                 <div>
                     {val !== '' && <button onClick={onClick}>&times;</button>}
                 </div>
-                {favoritosCount > 0 || soloFavoritos && (
+                {(favoritosCount > 0 || soloFavoritos) && (
                     <button 
                         className={`btn_favoritos ${soloFavoritos ? 'active' : ''}`}
                         onClick={onToggleFavoritos}

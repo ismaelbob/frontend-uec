@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react'
 import './styles/showcancion.css'
 import Btnedit from '../components/Btnedit'
 import Btnback from '../components/Btnback'
+import BtnfavoriteToggle from '../components/BtnfavoriteToggle'
 import Loader from '../components/Loader'
 
 import HimnarioContext from '../context/himnario'
@@ -11,8 +12,8 @@ import MenuActivoContext from '../context/menuactivo'
 
 function Showcancion (props) {
     const [cancionSeleccionada, setCancionSelecionada ] = useState([])
-    const {datos, loading, getDatos} = useContext(HimnarioContext)
-    const {nombre, nivel, existeSesion} = useContext(SesionContext)
+    const {datos, loading, getDatos, toggleFavorite} = useContext(HimnarioContext)
+    const {nombre, nivel, existeSesion, usuario} = useContext(SesionContext)
     const {setPage} = useContext(MenuActivoContext)
 
     const obtenerCanciones = () => {
@@ -73,6 +74,12 @@ function Showcancion (props) {
         )
     }
 
+    const handleToggleFavorite = async () => {
+        const c = cancionSeleccionada[0]
+        if (!c?._id) return
+        await toggleFavorite(props.match.params.himnario, c._id, c.isFavorite === true)
+    }
+
     let versos = []
     if (cancionSeleccionada[0]?.letra) {
         if (cancionSeleccionada[0].letra.includes('\r\n\r\n')) {
@@ -96,6 +103,13 @@ function Showcancion (props) {
                     </div>
                     <div className="menu_buttom">
                         <div className="box_button-back"><Btnback url={`/cancionero/${props.match.params.himnario}`}/></div>
+                        <div className="menu_buttom-favorite">
+                            <BtnfavoriteToggle
+                                isLoggedIn={usuario !== null}
+                                isFavorite={cancionSeleccionada[0].isFavorite === true}
+                                onToggle={handleToggleFavorite}
+                            />
+                        </div>
                         {nombre && (nivel === 1 || nivel === 2) && <div className="menu_buttom-edit"><Btnedit url={`/cancionero/${props.match.params.himnario}/${cancionSeleccionada[0].idcancion}/editar`}/></div>}
                     </div>
                 </div>

@@ -6,6 +6,7 @@ import Btnback from '../components/Btnback'
 import Searchbox from '../components/Searchbox'
 import Cancion from '../components/Cancion'
 import Loader from '../components/Loader'
+import Footer from '../components/Footer'
 
 import HimnarioContext from '../context/himnario'
 import SesionContext from '../context/sesion'
@@ -154,8 +155,9 @@ function Himnario (props) {
                         />
                     )
                 })}
-                <div className="mb-5 p-1"></div>
+                <div className="mb-2 p-1"></div>
             </div>
+            <Footer/>
         </div>
     )
 

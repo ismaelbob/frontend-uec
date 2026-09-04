@@ -3,6 +3,7 @@ import './styles/showcancion.css'
 import Btnedit from '../components/Btnedit'
 import Btnback from '../components/Btnback'
 import BtnfavoriteToggle from '../components/BtnfavoriteToggle'
+import BtnFontSize from '../components/BtnFontSize'
 import Loader from '../components/Loader'
 
 import HimnarioContext from '../context/himnario'
@@ -12,6 +13,10 @@ import MenuActivoContext from '../context/menuactivo'
 
 function Showcancion (props) {
     const [cancionSeleccionada, setCancionSelecionada ] = useState([])
+    const [fontSize, setFontSize] = useState(() => {
+        const saved = localStorage.getItem('fuenteCancion')
+        return saved ? Number(saved) : 16
+    })
     const {datos, loading, getDatos, toggleFavorite} = useContext(HimnarioContext)
     const {nombre, nivel, existeSesion, usuario} = useContext(SesionContext)
     const {setPage} = useContext(MenuActivoContext)
@@ -45,7 +50,11 @@ function Showcancion (props) {
         
         // eslint-disable-next-line
     }, [])
-    
+
+    useEffect(() => {
+        localStorage.setItem('fuenteCancion', String(fontSize))
+    }, [fontSize])
+
     useEffect(() => {
         const canciones = obtenerCanciones()
         if (canciones.length) {
@@ -103,6 +112,15 @@ function Showcancion (props) {
                     </div>
                     <div className="menu_buttom">
                         <div className="box_button-back"><Btnback url={`/cancionero/${props.match.params.himnario}`}/></div>
+                        <div className="box_button-fontsize">
+                            <BtnFontSize
+                                size={fontSize}
+                                onChange={setFontSize}
+                                min={14}
+                                max={32}
+                                step={2}
+                            />
+                        </div>
                         <div className="menu_buttom-favorite">
                             <BtnfavoriteToggle
                                 isLoggedIn={usuario !== null}
@@ -116,7 +134,7 @@ function Showcancion (props) {
                 <div className="position-relative w-100">
 
                 </div>
-                <div className="box_contenido">
+                <div className="box_contenido" style={{ fontSize: fontSize + 'px' }}>
                     {
                         versos.map((verso, id) => {
                             return (

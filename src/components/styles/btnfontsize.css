@@ -38,12 +38,6 @@
     line-height: 1;
 }
 
-.btnfontsize-icon {
-    width: 23px;
-    height: 23px;
-    flex-shrink: 0;
-}
-
 .btnfontsize-label {
     display: none;
 }

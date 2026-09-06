@@ -1,6 +1,5 @@
 import React from 'react'
 import './styles/btnfontsize.css'
-import textReset from '../img/text-reset.svg'
 
 function BtnFontSize ({ size, onChange, min, max, step, defaultValue = 16 }) {
     const aumentar = () => {
@@ -40,7 +39,7 @@ function BtnFontSize ({ size, onChange, min, max, step, defaultValue = 16 }) {
                 disabled={disabledReset}
                 aria-label="Restablecer tamaño de letra"
             >
-                <img src={textReset} alt="" className="btnfontsize-icon" />
+                <div className="btnfontsize-letter">A&#176;</div>
                 <div className="btnfontsize-label">Restablecer</div>
             </button>
             <button

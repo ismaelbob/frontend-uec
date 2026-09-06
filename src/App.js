@@ -1,6 +1,7 @@
 import React from 'react'
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
 import Layout from './Layout'
+import PwaUpdateBanner from './components/PwaUpdateBanner'
 import Home from './pages/home'
 import Cancionero from './pages/cancionero'
 import Himnario from './pages/himnario'
@@ -24,6 +25,7 @@ import EditMes from './pages/EditNombreMes'
 function App () {
     return (
         <BrowserRouter>
+            <PwaUpdateBanner />
             <TemaProvider>
                 <MenuActivoProvider>
                     <SesionProvider>

@@ -1,0 +1,86 @@
+.box_pwaupdate {
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: min(calc(100% - 24px), 440px);
+    padding: 10px 12px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid #2A71B2;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--shadow);
+    color: var(--text-color);
+}
+
+.box_pwaupdate-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.box_pwaupdate-title {
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.box_pwaupdate-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.box_pwaupdate-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.pwaupdate-btn {
+    border: none;
+    border-radius: 40px;
+    padding: 6px 16px;
+    background-color: #2A71B2;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.pwaupdate-btn:hover {
+    background-color: #1f619e;
+}
+
+.pwaupdate-close {
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 40px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.pwaupdate-close:hover {
+    background-color: var(--border-color);
+}
+
+@media only screen and (max-width: 360px) {
+    .box_pwaupdate {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .box_pwaupdate-actions {
+        justify-content: flex-end;
+    }
+}

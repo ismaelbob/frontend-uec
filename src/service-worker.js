@@ -75,11 +75,13 @@ const API_ENDPOINTS = [
 // Estrategia de caché para endpoints de la API de canciones
 // Usa CacheFirst: sirve del caché primero, si no existe va a la red
 // Sin expiración para mantener disponibles offline indefinidamente
+// Solo cachea las listas de los 3 himnarios; los endpoints de validación
+// (exists, next-number) van directo a la red para no dar resultados viejos
 registerRoute(
   ({ url, request }) =>
     request.method === 'GET' &&
     url.origin === API_BASE_URL &&
-    url.pathname.startsWith('/api/songs/'),
+    API_ENDPOINTS.includes(url.pathname),
   new CacheFirst({
     cacheName: 'api-songs-v1',
     plugins: [
@@ -108,11 +110,15 @@ registerRoute(
   })
 );
 
-// Estrategia StaleWhileRevalidate para otros endpoints de la API (canciones, etc.)
+// Estrategia StaleWhileRevalidate para otros endpoints de la API
 // Sirve caché inmediatamente y actualiza en segundo plano
 registerRoute(
   ({ url }) => {
-    return url.origin === API_BASE_URL && !url.pathname.startsWith('/api/users');
+    return (
+      url.origin === API_BASE_URL &&
+      !url.pathname.startsWith('/api/users') &&
+      !url.pathname.startsWith('/api/songs/')
+    );
   },
   new StaleWhileRevalidate({
     cacheName: 'api-other-v1',

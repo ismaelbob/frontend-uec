@@ -11,6 +11,8 @@ function Formcancion({
     onClick,
     isSubmitting
 }) {
+    const idValido = respuestaId === 'Disponible' || respuestaId === ''
+
     return (
         <form
             onSubmit={onSubmit}
@@ -46,7 +48,7 @@ function Formcancion({
                                 />
                             </div>
 
-                            {(respuestaId !== 'Actual' || datos.idcancion === '') && (
+                            {respuestaId !== '' && (
                                 <div
                                     className={
                                         respuestaId === 'Disponible'
@@ -129,14 +131,12 @@ function Formcancion({
                             value={datos.letra}
                         />
 
-                        {(respuestaId === 'Disponible' || respuestaId === '') && (
-                            <input
-                                type="submit"
-                                value={isSubmitting ? 'Guardando...' : 'Guardar'}
-                                className="btn btn-primary my-4 w-100"
-                                disabled={isSubmitting}
-                            />
-                        )}
+                        <input
+                            type="submit"
+                            value={isSubmitting ? 'Guardando...' : 'Guardar'}
+                            className="btn btn-primary my-4 w-100"
+                            disabled={isSubmitting || !idValido}
+                        />
 
                         {respuesta === 'correcto' && (
                             <div

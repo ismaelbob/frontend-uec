@@ -80,6 +80,12 @@ function Addcancion() {
                 const response = await fetchConAuth(
                   `${Config.urlapi}api/songs/${himnario}/${datosCancion.idcancion}/exists`
                 )
+
+                if (response.status === 204) {
+                    setRespuestaId('Disponible')
+                    return
+                }
+
                 const res = await response.json()
     
                 res.exists

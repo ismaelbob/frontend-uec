@@ -267,7 +267,19 @@ function HimnarioProvider ({children}) {
     }
     
     const refreshHimnario = (himnario) => {
-        getDatos(himnario)
+        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+            return new Promise((resolve) => {
+                const channel = new MessageChannel()
+                channel.port1.onmessage = () => {
+                    getDatos(himnario).then(resolve)
+                }
+                navigator.serviceWorker.controller.postMessage(
+                    { type: 'CLEAR_HIMNARIO_CACHE', himnario },
+                    [channel.port2]
+                )
+            })
+        }
+        return getDatos(himnario)
     }
 
     return (

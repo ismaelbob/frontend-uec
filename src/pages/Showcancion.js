@@ -10,12 +10,14 @@ import HimnarioContext from '../context/himnario'
 import SesionContext from '../context/sesion'
 import MenuActivoContext from '../context/menuactivo'
 
+const FONT_SIZE_DEFAULT = 16
+
 
 function Showcancion (props) {
     const [cancionSeleccionada, setCancionSelecionada ] = useState([])
     const [fontSize, setFontSize] = useState(() => {
         const saved = localStorage.getItem('fuenteCancion')
-        return saved ? Number(saved) : 16
+        return saved ? Number(saved) : FONT_SIZE_DEFAULT
     })
     const {datos, loading, getDatos, toggleFavorite} = useContext(HimnarioContext)
     const {nombre, nivel, existeSesion, usuario} = useContext(SesionContext)
@@ -119,6 +121,7 @@ function Showcancion (props) {
                                 min={14}
                                 max={32}
                                 step={2}
+                                defaultValue={FONT_SIZE_DEFAULT}
                             />
                         </div>
                         <div className="menu_buttom-favorite">

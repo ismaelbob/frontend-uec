@@ -5,6 +5,7 @@ import 'bootstrap/dist/js/bootstrap'
 import './index.css';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import { setRegistracionPendiente } from './utils/pwaUpdate';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -19,6 +20,7 @@ ReactDOM.render(
 serviceWorkerRegistration.register({
     updateViaCache: 'none',
     onUpdate: (registration) => {
+        setRegistracionPendiente(registration);
         window.dispatchEvent(
             new CustomEvent('pwa-update-available', { detail: registration })
         );

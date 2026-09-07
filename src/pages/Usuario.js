@@ -14,6 +14,7 @@ import BtnToggleInactivos from '../components/BtnToggleInactivos'
 import ProcessingOverlay from '../components/ProcessingOverlay'
 import Config from '../config'
 import { fetchConAuth } from '../utils/api'
+import { aplicarActualizacion, buscarActualizaciones, getRegistracionPendiente } from '../utils/pwaUpdate'
 import userIcon from '../img/user.svg'
 import Footer from '../components/Footer'
 
@@ -43,6 +44,9 @@ function Usuario () {
     const [usuariosInactivos, setUsuariosInactivos] = useState([])
     const [cargandoInactivos, setCargandoInactivos] = useState(false)
     const [procesando, setProcesando] = useState(false)
+    const [registracion, setRegistracion] = useState(() => getRegistracionPendiente())
+    const [buscandoActualizacion, setBuscandoActualizacion] = useState(false)
+    const [mensajeActualizacion, setMensajeActualizacion] = useState(null)
 
 
 
@@ -374,6 +378,59 @@ function Usuario () {
         cambiarTema(event.target.value)
     }
 
+    const handleBuscarActualizaciones = async () => {
+        setBuscandoActualizacion(true)
+        setMensajeActualizacion(null)
+        const reg = await buscarActualizaciones()
+        setBuscandoActualizacion(false)
+        if (reg && reg.waiting) {
+            setRegistracion(reg)
+        } else {
+            setMensajeActualizacion('no-disponible')
+        }
+    }
+
+    const handleAplicarActualizacion = () => {
+        if (!registracion) return
+        aplicarActualizacion(registracion)
+    }
+
+    const renderSeccionActualizacion = () => {
+        if (!('serviceWorker' in navigator)) return null
+
+        return (
+            <div className="usuario-actualizacion mt-4 p-3">
+                <div className="usuario-actualizacion-titulo">Actualización de la aplicación</div>
+                {registracion && registracion.waiting ? (
+                    <div>
+                        <p className="usuario-actualizacion-texto">Nueva versión disponible para instalar.</p>
+                        <button
+                            type="button"
+                            className="btn btn-primary btn-sm"
+                            onClick={handleAplicarActualizacion}
+                        >
+                            Aplicar actualización
+                        </button>
+                    </div>
+                ) : (
+                    <div>
+                        <button
+                            type="button"
+                            className="btn btn-outline-primary btn-sm"
+                            onClick={handleBuscarActualizaciones}
+                            disabled={buscandoActualizacion}
+                        >
+                            {buscandoActualizacion ? 'Buscando...' : 'Buscar actualizaciones'}
+                        </button>
+                        {mensajeActualizacion === 'no-disponible' && (
+                            <p className="usuario-actualizacion-texto">No hay actualizaciones disponibles.</p>
+                        )}
+                    </div>
+                )}
+            </div>
+        )
+    }
+
     if (nombre) {
         const bgColor = temaEfectivo === 'dark' ? '#2d2d2d' : '#d5d5d5'
         const textColor = temaEfectivo === 'dark' ? '#E0E0E0' : '#000000'
@@ -426,6 +483,7 @@ function Usuario () {
                             </div>
                         </div>
                     </div>
+                    {renderSeccionActualizacion()}
                     <ModalCambiarPassword 
                         show={mostrarModal}
                         onClose={() => setMostrarModal(false)}
@@ -555,6 +613,7 @@ function Usuario () {
                     </select>
                 </div>
             </div>
+            {renderSeccionActualizacion()}
             <ProcessingOverlay show={cargandoRegistro} />
         </div>
     )

@@ -1,35 +1,11 @@
 import { useState, useEffect } from 'react'
+import { aplicarActualizacion } from '../utils/pwaUpdate'
 import './styles/pwaupdatebanner.css'
 
 const INTERVALO_CHECK_MIN = 60
 
 function PwaUpdateBanner () {
     const [registration, setRegistration] = useState(null)
-
-    const aplicarActualizacion = () => {
-        if (!registration || !registration.waiting) return
-
-        const recargar = () => window.location.reload()
-        let recargado = false
-        const manejarControllerChange = () => {
-            if (recargado) return
-            recargado = true
-            window.removeEventListener('controllerchange', manejarControllerChange)
-            recargar()
-        }
-
-        window.addEventListener('controllerchange', manejarControllerChange)
-
-        registration.waiting.postMessage({ type: 'SKIP_WAITING' })
-
-        setTimeout(() => {
-            if (!recargado) {
-                recargado = true
-                window.removeEventListener('controllerchange', manejarControllerChange)
-                recargar()
-            }
-        }, 8000)
-    }
 
     const cerrar = () => setRegistration(null)
 
@@ -76,7 +52,7 @@ function PwaUpdateBanner () {
                 <button
                     type="button"
                     className="pwaupdate-btn"
-                    onClick={aplicarActualizacion}
+                    onClick={() => aplicarActualizacion(registration)}
                 >
                     Actualizar
                 </button>

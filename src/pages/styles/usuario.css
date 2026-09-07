@@ -27,6 +27,22 @@
     text-align: center;
 }
 
+.usuario-actualizacion {
+    background-color: var(--card-bg, #D5D5D5);
+    color: var(--text-color, #000000);
+    border: 1px solid var(--border-color, #E0E0E0);
+    border-radius: 8px;
+}
+
+.usuario-actualizacion-titulo {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.usuario-actualizacion-texto {
+    margin: 8px 0 0 0;
+}
+
 
 @media only screen and (min-width: 992px) {
     .barra_menu {

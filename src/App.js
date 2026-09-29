@@ -18,6 +18,7 @@ import HimnarioProvider from './context/himnario/Provider'
 import SesionProvider from './context/sesion/Provider'
 import MenuActivoProvider from './context/menuactivo/Provider'
 import ActividadesProvider from './context/actividades/Provider'
+import HomeProvider from './context/home/Provider'
 import TemaProvider from './context/tema/Provider'
 import EditTurnoSemana from './pages/EditTurnoSemana'
 import EditTurnoSemanaJov from './pages/EditTurnoSemanaJov'
@@ -29,28 +30,30 @@ function App () {
             <TemaProvider>
                 <MenuActivoProvider>
                     <SesionProvider>
-                        <ActividadesProvider>
-                            <HimnarioProvider>
-                                <Layout>
-                                <Switch>
-                                    <Route path="/" exact component={Home}/>
-                                    <Route path="/cancionero" exact component={Cancionero}/>
-                                    <Route path="/actividades" exact component={Actividades}/>
-                                    <Route path="/actividades/editarsemana/:id" exact component={EditTurnoSemana}/>
-                                    <Route path="/actividades/editarsemanajov/:id" exact component={EditTurnoSemanaJov}/>
-                                    <Route path="/actividades/editarmes/:id" exact component={EditMes}/>
-                                    <Route path="/ofrendas" exact component={Ofrendas}/>
-                                    <Route path="/login" exact component={Usuario}/>
-                                    <Route path="/verificar" exact component={VerificarEmail}/>
-                                    <Route path="/cancionero/:himnario/nuevacancion" exact component={Addcancion}/>
-                                    <Route path="/cancionero/:himnario/:id/editar" exact component={Editcancion}/>
-                                    <Route path="/cancionero/:himnario" exact component={Himnario}/>
-                                    <Route path="/cancionero/:himnario/:id" exact component={Showcancion}/>
-                                    <Route component={NotFound}/>
-                                </Switch>
-                            </Layout>
-                        </HimnarioProvider>
-                    </ActividadesProvider>
+                        <HomeProvider>
+                            <ActividadesProvider>
+                                <HimnarioProvider>
+                                    <Layout>
+                                    <Switch>
+                                        <Route path="/" exact component={Home}/>
+                                        <Route path="/cancionero" exact component={Cancionero}/>
+                                        <Route path="/actividades" exact component={Actividades}/>
+                                        <Route path="/actividades/editarsemana/:id" exact component={EditTurnoSemana}/>
+                                        <Route path="/actividades/editarsemanajov/:id" exact component={EditTurnoSemanaJov}/>
+                                        <Route path="/actividades/editarmes/:id" exact component={EditMes}/>
+                                        <Route path="/ofrendas" exact component={Ofrendas}/>
+                                        <Route path="/login" exact component={Usuario}/>
+                                        <Route path="/verificar" exact component={VerificarEmail}/>
+                                        <Route path="/cancionero/:himnario/nuevacancion" exact component={Addcancion}/>
+                                        <Route path="/cancionero/:himnario/:id/editar" exact component={Editcancion}/>
+                                        <Route path="/cancionero/:himnario" exact component={Himnario}/>
+                                        <Route path="/cancionero/:himnario/:id" exact component={Showcancion}/>
+                                        <Route component={NotFound}/>
+                                    </Switch>
+                                </Layout>
+                            </HimnarioProvider>
+                        </ActividadesProvider>
+                    </HomeProvider>
                 </SesionProvider>
             </MenuActivoProvider>
             </TemaProvider>

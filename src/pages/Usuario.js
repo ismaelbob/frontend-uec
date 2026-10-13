@@ -514,7 +514,10 @@ function Usuario () {
                     {nivel === 1 && (
                         <div className="mt-4">
                             <div className="barra_menu">
-                            <h4 style={{color: textColor, paddingTop: "0.5rem"}}>Lista de usuarios</h4>
+                            <div className="d-flex align-items-center justify-content-between w-100">
+                                <h4 style={{color: textColor, paddingTop: "0.5rem", marginBottom: 0}}>Lista de usuarios</h4>
+                                <button className="btn btn-outline-primary btn-sm" onClick={() => { window.location.href = '/admin/home' }}>Administrar Home</button>
+                            </div>
                                 <div className="barra_menu-buttom">
                                     <div className="barra_menu-buttom-toggle">
                                         <BtnToggleInactivos 

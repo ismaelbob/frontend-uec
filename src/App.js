@@ -23,6 +23,7 @@ import TemaProvider from './context/tema/Provider'
 import EditTurnoSemana from './pages/EditTurnoSemana'
 import EditTurnoSemanaJov from './pages/EditTurnoSemanaJov'
 import EditMes from './pages/EditNombreMes'
+import AdminHome from './pages/AdminHome'
 function App () {
     return (
         <BrowserRouter>
@@ -42,6 +43,7 @@ function App () {
                                         <Route path="/actividades/editarsemanajov/:id" exact component={EditTurnoSemanaJov}/>
                                         <Route path="/actividades/editarmes/:id" exact component={EditMes}/>
                                         <Route path="/ofrendas" exact component={Ofrendas}/>
+                                        <Route path="/admin/home" exact component={AdminHome}/>
                                         <Route path="/login" exact component={Usuario}/>
                                         <Route path="/verificar" exact component={VerificarEmail}/>
                                         <Route path="/cancionero/:himnario/nuevacancion" exact component={Addcancion}/>

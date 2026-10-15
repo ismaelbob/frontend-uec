@@ -1,4 +1,5 @@
 import React, {useEffect, useContext} from 'react'
+import $ from 'jquery'
 import avatar from '../img/avatar.svg'
 import placeholder from '../img/placeholder.svg'
 import './styles/home.css'
@@ -30,6 +31,20 @@ function Home () {
         }
         // eslint-disable-next-line
     }, [])
+
+    const totalCarrusel = (data && data.carousel && data.carousel.length) || 0
+
+    useEffect(() => {
+        const elemento = document.getElementById('carouselExampleCaptions')
+        if (!elemento || totalCarrusel <= 1) {
+            return undefined
+        }
+        const $carrusel = $(elemento)
+        $carrusel.carousel({ interval: 4000, ride: 'carousel', wrap: true })
+        return () => {
+            $carrusel.carousel('dispose')
+        }
+    }, [totalCarrusel])
 
     if (loading && !data) {
         return (

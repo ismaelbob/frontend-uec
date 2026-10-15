@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import TemaContext from '../context/tema'
+import ImagenPreview from './home_admin/ImagenPreview'
 
 const inputStyle = (temaEfectivo) => ({
     backgroundColor: temaEfectivo === 'dark' ? 'var(--input-bg)' : '#FFFFFF',
@@ -128,6 +129,7 @@ function ModalEditarSite({ show, onClose, onSave, site, mensaje }) {
                             <div className="form-group">
                                 <label>Logo URL (Google Drive)</label>
                                 <input type="text" className="form-control" name="logoUrl" value={datos.logoUrl} onChange={handleChange} style={inputStyle(temaEfectivo)} />
+                                <ImagenPreview url={datos.logoUrl} alt="Previsualización logo" />
                             </div>
                             <div className="form-group">
                                 <label>Dirección</label>

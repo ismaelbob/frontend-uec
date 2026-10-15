@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import TemaContext from '../context/tema'
+import ImagenPreview from './home_admin/ImagenPreview'
 
 const inputStyle = (temaEfectivo) => ({
     backgroundColor: temaEfectivo === 'dark' ? 'var(--input-bg)' : '#FFFFFF',
@@ -66,6 +67,7 @@ function ModalEditarLeader({ show, onClose, onSave, leader, mensaje }) {
                             <div className="form-group">
                                 <label>Foto URL (Google Drive)</label>
                                 <input type="text" className="form-control" name="fotoUrl" value={datos.fotoUrl} onChange={handleChange} style={inputStyle(temaEfectivo)} />
+                                <ImagenPreview url={datos.fotoUrl} alt="Previsualización líder" />
                             </div>
                             <div className="form-group">
                                 <label>Orden (menor = primero)</label>

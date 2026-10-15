@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import TemaContext from '../context/tema'
+import ImagenPreview from './home_admin/ImagenPreview'
 
 const inputStyle = (temaEfectivo) => ({
     backgroundColor: temaEfectivo === 'dark' ? 'var(--input-bg)' : '#FFFFFF',
@@ -54,6 +55,7 @@ function ModalEditarCarousel({ show, onClose, onSave, item, mensaje }) {
                             <div className="form-group">
                                 <label>URL Imagen (Google Drive) *</label>
                                 <input type="text" className="form-control" name="url" value={datos.url} onChange={handleChange} style={inputStyle(temaEfectivo)} required />
+                                <ImagenPreview url={datos.url} alt="Previsualización carrusel" />
                             </div>
                             <div className="form-group">
                                 <label>Título</label>

@@ -1,5 +1,6 @@
 import React, {useEffect, useContext} from 'react'
 import avatar from '../img/avatar.svg'
+import placeholder from '../img/placeholder.svg'
 import './styles/home.css'
 import Tarjeta from '../components/Tarjeta'
 import Footer from '../components/Footer'
@@ -7,6 +8,7 @@ import Loader from '../components/Loader'
 import SesionContext from '../context/sesion'
 import MenuActivoContext from '../context/menuactivo'
 import HomeContext from '../context/home'
+import {urlImagenDrive} from '../utils/driveUrl'
 
 const FOTO_LEADER = 'fotoUrl'
 
@@ -74,7 +76,18 @@ function Home () {
                 <div className="carousel-inner">
                     {carousel.map((img, indice) => (
                         <div key={img._id || indice} className={`carousel-item${indice === 0 ? ' active' : ''}`}>
-                            <img src={img.url} className="d-block w-100" alt={img.titulo || 'Carrusel'}/>
+                            <img
+                                src={urlImagenDrive(img.url)}
+                                className="d-block w-100"
+                                alt={img.titulo || 'Carrusel'}
+                                referrerPolicy="no-referrer"
+                                onError={(e) => {
+                                    if (!e.target.dataset.fallback) {
+                                        e.target.dataset.fallback = 'true'
+                                        e.target.src = placeholder
+                                    }
+                                }}
+                            />
                             {(img.titulo || img.descripcion) && (
                                 <div className="carousel-caption d-none d-md-block bg-transparente-primario">
                                     {img.titulo && <h5>{img.titulo}</h5>}
